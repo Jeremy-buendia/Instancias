@@ -1,4 +1,8 @@
 module Instancias.javafx_controls {
-    requires javafx.controls;
-    exports application;
+	requires javafx.controls;
+	requires java.sql;
+	requires javafx.fxml;
+	requires mysql.connector.j;
+
+	exports application;
 }
