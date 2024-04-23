@@ -29,16 +29,12 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
-
 		<dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>13</version>
+        </dependency>
 
-			<groupId>org.openjfx</groupId>
-
-			<artifactId>javafx-fxml</artifactId>
-
-			<version>23-ea+3</version>
-
-		</dependency>
     </dependencies>
     <build>
         <plugins>
