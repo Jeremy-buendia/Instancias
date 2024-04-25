@@ -1,8 +1,13 @@
 package application.model;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class ImagenDAO {
 
@@ -13,7 +18,7 @@ public class ImagenDAO {
 	 * @param imagen
 	 * @return
 	 */
-	public static int subirFoto(Connection con, ImagenDO imagen) {
+	public static int subirImagen(Connection con, ImagenDO imagen) {
 		try {
 
 			// Comprobamos si la carpeta de Instancias está creada
@@ -45,6 +50,34 @@ public class ImagenDAO {
 		}
 	}
 
+	public static int copiarImagen(File imagen, ImagenDO objetoImg) {
+		String rutaImagen = System.getProperty("user.home") + "\\Pictures\\Instancias\\imagen.jpg";
+
+		try {
+			FileInputStream fis = new FileInputStream(imagen);
+			FileOutputStream fos = new FileOutputStream(rutaImagen);
+
+			byte[] buffer1K = new byte[1024];
+			int numDatos = fis.read(buffer1K);
+
+			while (numDatos != -1) {
+				fos.write(buffer1K);
+				numDatos = fis.read(buffer1K);
+			}
+
+			fis.close();
+			fos.close();
+
+			return 0;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return -1;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
 	/**
 	 * Función que busca si la carpeta dónde irán todas las imágenes está creada o
 	 * no
@@ -63,4 +96,39 @@ public class ImagenDAO {
 		return -1;
 	}
 
+	/**
+	 * Función para cargar una Imagen de la BD
+	 * 
+	 * @param con
+	 * @param id
+	 * @return un ImagenDO o null
+	 */
+	public static ImagenDO getImagen(Connection con, int id) {
+		try {
+			String query = "SELECT * FROM imagen WHERE idImagen=?";
+
+			PreparedStatement pstmt = con.prepareStatement(query);
+
+			pstmt.setInt(1, id);
+
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				ImagenDO imagen = new ImagenDO();
+				imagen.setIdImagen(rs.getInt("idImagen"));
+				imagen.setNombre_imagen(rs.getString("Nombre_Imagen"));
+				imagen.setUbicacion(rs.getString("ubicacion"));
+				imagen.setFecha_Imagen(rs.getString("Fecha_Imagen"));
+				imagen.setUsuario_idUsuario(rs.getInt("Usuario_idUsuario"));
+				imagen.setMarcado(rs.getInt("Marcado"));
+				return imagen;
+			}
+
+			return null;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

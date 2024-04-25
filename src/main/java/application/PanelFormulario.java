@@ -1,5 +1,10 @@
 package application;
 
-public class PanelFormulario {
+import javafx.scene.layout.GridPane;
 
+public class PanelFormulario extends GridPane {
+
+	PanelFormulario() {
+
+	}
 }

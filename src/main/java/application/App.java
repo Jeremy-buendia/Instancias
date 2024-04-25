@@ -3,11 +3,14 @@ package application;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -88,8 +91,18 @@ public class App extends Application {
 		pnlDistribucion.setTop(menuSuperior);
 
 		/************** MENÚ INFERIOR ****************/
-		ToolBar menuInferior = new ToolBar(new Button("Marcados"), new Button("Subir Foto"),
-				new Button("Descargar Foto"), new Button("Abrir Cámara"));
+		ToolBar menuInferior = new ToolBar();
+
+		Button marcados = new Button("Marcados");
+		Button subirFoto = new Button("Subir foto");
+
+		subirFoto.setOnAction(e -> {
+
+		});
+
+		Button bajarFoto = new Button("Descargar foto");
+		Button abrirCamara = new Button("Abrir la cámara");
+
 		pnlDistribucion.setBottom(menuInferior);
 
 		/************** CALENDARIO ****************/
@@ -98,6 +111,24 @@ public class App extends Application {
 		var scene = new Scene(pnlDistribucion, 800, 600);
 		stage.setScene(scene);
 		stage.show();
+	}
+
+	public void abrirVentanaSubirImagen(Stage stage) {
+		Stage ventanaEmergente = new Stage();
+
+		StackPane stackPane = new StackPane();
+
+		stackPane.getChildren().add(new Label("Contenido de prueba"));
+
+		Scene scene = new Scene(stackPane, 300, 300);
+
+		// Bloqueamos la ventana padre definiendo cual es el padre y poner la modalidad
+		ventanaEmergente.initOwner(stage);
+		ventanaEmergente.initModality(Modality.WINDOW_MODAL);
+
+		ventanaEmergente.setScene(scene);
+		ventanaEmergente.setTitle("Contacto");
+		ventanaEmergente.show();
 	}
 
 	public static void main(String[] args) {
