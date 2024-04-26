@@ -16,7 +16,7 @@ public class PanelSubirImagen extends GridPane {
 	public PanelSubirImagen() {
 		Label lblNombreImg = new Label("Descripción: ");
 		Label lblUbicacion = new Label("Ubicación: ");
-		Label lblMarcado = new Label("¿Quieres marcar esta imagen?");
+		Label lblMarcado = new Label("Marca: ¿Quieres marcar esta imagen?");
 
 		txtNombreImg = new TextField();
 		txtUbicacion = new TextField();

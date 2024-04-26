@@ -226,5 +226,57 @@ public class OpcionesDAO {
 			return 0;
 		}
 }
+	public static int cambiarFuente(OpcionesDO Fuente, Connection con){
+		try {
 
+			boolean campoPrevio = false;
+			int numAff = -1;
+			String query = "UPDATE OPCIONES SET ";
+
+			// Si los campos no son nulos, los vamos añadiendo a la sentencia
+			if (Fuente.getFuente() != -1) {
+				query = query + "Idioma = ?";
+				campoPrevio = true;
+			}
+			
+			query = query + " WHERE idOpciones = ?";
+
+			// Generamos el preparedstatement con la
+			// query
+			PreparedStatement pstmt = con.prepareStatement(query);
+
+			// Enlazamos los datos a las ? del prepared
+			// statement
+
+			int posInterrogacion = 1;
+
+			// Si los campos no son nulos, los vamos
+			// añadiendo a la sentencia
+
+			if (Fuente.getFuente() != -1) {
+				pstmt.setInt(posInterrogacion, Fuente.getFuente());
+				// Incrementamos la posicion de la
+				// interrogacion para
+				// El siguiente posible campo
+				posInterrogacion++;
+
+			}
+
+			pstmt.setInt(posInterrogacion, Fuente.getIdOpciones());
+
+			if (campoPrevio) {
+
+				System.out.println(query);
+
+				numAff = pstmt.executeUpdate();
+
+			}
+
+			return numAff;
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return 0;
+		}
+}
 }
