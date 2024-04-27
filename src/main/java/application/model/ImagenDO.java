@@ -2,7 +2,7 @@ package application.model;
 
 public class ImagenDO {
 	private int idImagen;
-	private String Nombre_Imagen;
+	private String Descripcion_Imagen;
 	private String Ubicacion;
 	private String Fecha_Imagen;
 	private int Usuario_idUsuario;
@@ -17,11 +17,11 @@ public class ImagenDO {
 	}
 
 	public String getNombre_imagen() {
-		return Nombre_Imagen;
+		return Descripcion_Imagen;
 	}
 
 	public void setNombre_imagen(String nombre_imagen) {
-		Nombre_Imagen = nombre_imagen;
+		Descripcion_Imagen = nombre_imagen;
 	}
 
 	public String getUbicacion() {
@@ -60,7 +60,7 @@ public class ImagenDO {
 			int marcado) {
 		super();
 		this.idImagen = idImagen;
-		Nombre_Imagen = nombre_imagen;
+		Descripcion_Imagen = nombre_imagen;
 		Ubicacion = ubicacion;
 		Fecha_Imagen = fecha_Imagen;
 		Usuario_idUsuario = usuario_idUsuario;
@@ -74,7 +74,7 @@ public class ImagenDO {
 
 	@Override
 	public String toString() {
-		return "ImagenDO [idImagen=" + idImagen + ", Nombre_imagen=" + Nombre_Imagen + ", Ubicacion=" + Ubicacion
+		return "ImagenDO [idImagen=" + idImagen + ", Nombre_imagen=" + Descripcion_Imagen + ", Ubicacion=" + Ubicacion
 				+ ", Fecha_Imagen=" + Fecha_Imagen + ", Usuario_idUsuario=" + Usuario_idUsuario + ", Marcado=" + Marcado
 				+ "]";
 	}

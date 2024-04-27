@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 
 public class ImagenDAO {
 
+	public static int contador = 0;
+
 	/**
 	 * Función que sube una imagen a la carpeta de Instancias y a la base de datos
 	 * 
@@ -20,11 +22,9 @@ public class ImagenDAO {
 	 */
 	public static int subirImagen(Connection con, ImagenDO imagen) {
 		try {
-
+			String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias";
 			// Comprobamos si la carpeta de Instancias está creada
 			if (BuscarCarpeta() == -1) {
-				String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias";
-
 				File carpeta = new File(rutaCarpeta);
 				carpeta.mkdirs();
 			}
@@ -43,6 +43,7 @@ public class ImagenDAO {
 
 			pstmt.executeUpdate();
 
+			contador++;
 			return 0;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -51,11 +52,9 @@ public class ImagenDAO {
 	}
 
 	public static int copiarImagen(File imagen, ImagenDO objetoImg) {
-		String rutaImagen = System.getProperty("user.home") + "\\Pictures\\Instancias\\imagen.jpg";
-
 		try {
 			FileInputStream fis = new FileInputStream(imagen);
-			FileOutputStream fos = new FileOutputStream(rutaImagen);
+			FileOutputStream fos = new FileOutputStream(objetoImg.getUbicacion());
 
 			byte[] buffer1K = new byte[1024];
 			int numDatos = fis.read(buffer1K);
