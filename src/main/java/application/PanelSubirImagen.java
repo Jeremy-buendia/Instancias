@@ -54,10 +54,18 @@ public class PanelSubirImagen extends VBox {
 
 			File imagen = escogerImagen.showOpenDialog(null);
 
+			int marcado;
+
+			if (cbxMarcar.isSelected()) {
+				marcado = 1;
+			} else {
+				marcado = 0;
+			}
+
 			ImagenDO objImagen;
 			objImagen = new ImagenDO(-1, txtDescripcionImg.getText(),
-					System.getProperty("user.home") + "\\Pictures\\Instancias\\" + ImagenDAO.contador + 1, "-1",
-					UsuarioDAO.cargarId(con, "").getId(), 1);
+					System.getProperty("user.home") + "\\Pictures\\Instancias\\" + ImagenDAO.contador + 1 + ".jpg", "",
+					UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), marcado);
 			ImagenDAO.subirImagen(con, objImagen);
 			ImagenDAO.copiarImagen(imagen, objImagen);
 		});

@@ -16,7 +16,7 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
-	public static boolean estaLogueado = false;
+	private boolean cerrarVentana = false;
 
 	@Override
 	public void start(Stage stage) {
@@ -113,11 +113,8 @@ public class App extends Application {
 		var scene = new Scene(pnlDistribucion, 800, 600);
 		stage.setScene(scene);
 		stage.show();
-		if (!estaLogueado) {
-			abrirVentanaFormulario(stage);
-		} else {
 
-		}
+		abrirVentanaFormulario(stage);
 	}
 
 	public void abrirVentanaSubirImagen(Stage stage) {
@@ -148,6 +145,12 @@ public class App extends Application {
 		ventanaEmergente.setScene(scene);
 		ventanaEmergente.setTitle("Entrar");
 		ventanaEmergente.show();
+//
+//		ventanaEmergente.setOnCloseRequest(e -> {
+//			if (!cerrarVentana) {
+//				stage.close();
+//			}
+//		});
 	}
 
 	public static void main(String[] args) {

@@ -11,6 +11,8 @@ import javafx.scene.layout.VBox;
 
 public class PanelFormularioProv extends VBox {
 
+	public static String correoUsuario;
+
 	TextField nombre;
 	TextField apellido;
 	TextField correo;
@@ -18,7 +20,6 @@ public class PanelFormularioProv extends VBox {
 	Button enviar;
 
 	PanelFormularioProv() {
-
 		nombre = new TextField();
 		apellido = new TextField();
 		correo = new TextField();
@@ -28,17 +29,14 @@ public class PanelFormularioProv extends VBox {
 		this.getChildren().addAll(nombre, apellido, correo, contraseña, enviar);
 
 		Connection con = UtilsBD.conectarBD();
-		UsuarioDO usuario = new UsuarioDO(-1, nombre.getText(), apellido.getText(), correo.getText(),
-				contraseña.getText());
 
 		enviar.setOnAction(e -> {
-			System.out.println(nombre.getText());
-			System.out.println(apellido.getText());
-			System.out.println(correo.getText());
-			System.out.println(contraseña.getText());
+			UsuarioDO usuario = new UsuarioDO(-1, nombre.getText(), apellido.getText(), correo.getText(),
+					contraseña.getText());
 
 			UsuarioDAO.crearUsuario(con, usuario);
-
+			correoUsuario = correo.getText();
 		});
 	}
+
 }

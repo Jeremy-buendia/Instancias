@@ -30,16 +30,15 @@ public class ImagenDAO {
 			}
 
 			// Query para insertar la imagen en la BD
-			String query = "INSERT INTO imagen (Nombre_Imagen, Ubicación, Fecha_Imagen, Usuario_idUsuario, Marcado) VALUES(?, ?, ?, ?, ?)";
+			String query = "INSERT INTO imagen (Descripcion_Imagen, Ubicacion, Usuario_idUsuario, Marcado) VALUES(?, ?, ?, ?)";
 
 			// Creamos un PreparedStatement
 			PreparedStatement pstmt = con.prepareStatement(query);
 			// Asignamos los valores a los ?
 			pstmt.setString(1, imagen.getNombre_imagen());
 			pstmt.setString(2, imagen.getUbicacion());
-			pstmt.setString(3, imagen.getFecha_Imagen());
-			pstmt.setInt(4, imagen.getUsuario_idUsuario());
-			pstmt.setInt(5, imagen.getMarcado());
+			pstmt.setInt(3, imagen.getUsuario_idUsuario());
+			pstmt.setInt(4, imagen.getMarcado());
 
 			pstmt.executeUpdate();
 
@@ -115,7 +114,7 @@ public class ImagenDAO {
 			if (rs.next()) {
 				ImagenDO imagen = new ImagenDO();
 				imagen.setIdImagen(rs.getInt("idImagen"));
-				imagen.setNombre_imagen(rs.getString("Nombre_Imagen"));
+				imagen.setNombre_imagen(rs.getString("Descripcion_Imagen"));
 				imagen.setUbicacion(rs.getString("ubicacion"));
 				imagen.setFecha_Imagen(rs.getString("Fecha_Imagen"));
 				imagen.setUsuario_idUsuario(rs.getInt("Usuario_idUsuario"));
