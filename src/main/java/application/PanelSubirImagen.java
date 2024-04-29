@@ -63,8 +63,7 @@ public class PanelSubirImagen extends VBox {
 			}
 
 			ImagenDO objImagen;
-			objImagen = new ImagenDO(-1, txtDescripcionImg.getText(),
-					System.getProperty("user.home") + "\\Pictures\\Instancias\\" + ImagenDAO.contador + 1 + ".jpg", "",
+			objImagen = new ImagenDO(-1, txtDescripcionImg.getText(), "", "",
 					UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), marcado);
 			ImagenDAO.subirImagen(con, objImagen);
 			ImagenDAO.copiarImagen(imagen, objImagen);

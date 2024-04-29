@@ -36,6 +36,7 @@ public class PanelFormularioProv extends VBox {
 
 			UsuarioDAO.crearUsuario(con, usuario);
 			correoUsuario = correo.getText();
+			App.cerrarVentana = true;
 		});
 	}
 

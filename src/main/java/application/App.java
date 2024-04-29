@@ -20,7 +20,7 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
-	private boolean cerrarVentana = false;
+	public static boolean cerrarVentana = false;
 
 	@Override
 	public void start(Stage stage) {
@@ -161,12 +161,12 @@ public class App extends Application {
 		ventanaEmergente.setScene(scene);
 		ventanaEmergente.setTitle("Entrar");
 		ventanaEmergente.show();
-//
-//		ventanaEmergente.setOnCloseRequest(e -> {
-//			if (!cerrarVentana) {
-//				stage.close();
-//			}
-//		});
+
+		ventanaEmergente.setOnCloseRequest(e -> {
+			if (!cerrarVentana) {
+				stage.close();
+			}
+		});
 	}
 
 	public static void main(String[] args) {
