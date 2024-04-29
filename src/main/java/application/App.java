@@ -1,15 +1,17 @@
 package application;
 
+import java.time.LocalDate;
+
+import application.model.CalendarioDAO;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -17,6 +19,8 @@ import javafx.stage.Stage;
  * JavaFX App
  */
 public class App extends Application {
+
+	private boolean cerrarVentana = false;
 
 	@Override
 	public void start(Stage stage) {
@@ -43,6 +47,8 @@ public class App extends Application {
 		Menu mBuscar = new Menu("Buscar");
 
 		// MenuItems y Submenús de mBuscar
+		CalendarioDAO calendarioDAO = new CalendarioDAO();
+		DatePicker datePicker = new DatePicker();
 		MenuItem iBuscarFecha = new MenuItem("Buscar Fecha");
 
 		// Menú mConfig
@@ -88,6 +94,11 @@ public class App extends Application {
 		// Agregamos los menús al MenuBar
 		menuSuperior.getMenus().addAll(mPerfil, mBuscar, mConfig, mAyuda);
 
+		// Añadir un controlador de eventos al elemento de menú
+		iBuscarFecha.setOnAction(e -> {
+		    CalendarioDAO.buscarFecha();
+		});
+		
 		pnlDistribucion.setTop(menuSuperior);
 
 		/************** MENÚ INFERIOR ****************/
@@ -96,12 +107,20 @@ public class App extends Application {
 		Button marcados = new Button("Marcados");
 		Button subirFoto = new Button("Subir foto");
 
-		subirFoto.setOnAction(e -> {
-
+		iBuscarFecha.setOnAction(e -> {
+		    LocalDate fecha = CalendarioDAO.buscarFecha();
+		    if (fecha != null) {
+		        System.out.println("Fecha seleccionada: " + fecha);
+		    } else {
+		        System.out.println("No se seleccionó ninguna fecha.");
+		    }
 		});
+
 
 		Button bajarFoto = new Button("Descargar foto");
 		Button abrirCamara = new Button("Abrir la cámara");
+
+		menuInferior.getItems().addAll(marcados, subirFoto, bajarFoto, abrirCamara);
 
 		pnlDistribucion.setBottom(menuInferior);
 
@@ -111,24 +130,44 @@ public class App extends Application {
 		var scene = new Scene(pnlDistribucion, 800, 600);
 		stage.setScene(scene);
 		stage.show();
+
+		abrirVentanaFormulario(stage);
 	}
 
 	public void abrirVentanaSubirImagen(Stage stage) {
 		Stage ventanaEmergente = new Stage();
+		PanelSubirImagen pnlSubirImg = new PanelSubirImagen();
 
-		StackPane stackPane = new StackPane();
-
-		stackPane.getChildren().add(new Label("Contenido de prueba"));
-
-		Scene scene = new Scene(stackPane, 300, 300);
+		Scene scene = new Scene(pnlSubirImg, 300, 300);
 
 		// Bloqueamos la ventana padre definiendo cual es el padre y poner la modalidad
 		ventanaEmergente.initOwner(stage);
 		ventanaEmergente.initModality(Modality.WINDOW_MODAL);
 
 		ventanaEmergente.setScene(scene);
-		ventanaEmergente.setTitle("Contacto");
+		ventanaEmergente.setTitle("Subir Imagen");
 		ventanaEmergente.show();
+	}
+
+	public void abrirVentanaFormulario(Stage stage) {
+		Stage ventanaEmergente = new Stage();
+		PanelFormularioProv pnlForm = new PanelFormularioProv();
+
+		Scene scene = new Scene(pnlForm, 300, 300);
+
+		// Bloqueamos la ventana padre definiendo cual es el padre y poner la modalidad
+		ventanaEmergente.initOwner(stage);
+		ventanaEmergente.initModality(Modality.WINDOW_MODAL);
+
+		ventanaEmergente.setScene(scene);
+		ventanaEmergente.setTitle("Entrar");
+		ventanaEmergente.show();
+//
+//		ventanaEmergente.setOnCloseRequest(e -> {
+//			if (!cerrarVentana) {
+//				stage.close();
+//			}
+//		});
 	}
 
 	public static void main(String[] args) {

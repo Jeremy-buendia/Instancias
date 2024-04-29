@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 
 public class ImagenDAO {
 
+	public static int contador = 0;
+
 	/**
 	 * Función que sube una imagen a la carpeta de Instancias y a la base de datos
 	 * 
@@ -20,29 +22,27 @@ public class ImagenDAO {
 	 */
 	public static int subirImagen(Connection con, ImagenDO imagen) {
 		try {
-
+			String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias";
 			// Comprobamos si la carpeta de Instancias está creada
 			if (BuscarCarpeta() == -1) {
-				String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias";
-
 				File carpeta = new File(rutaCarpeta);
 				carpeta.mkdirs();
 			}
 
 			// Query para insertar la imagen en la BD
-			String query = "INSERT INTO imagen (Nombre_Imagen, Ubicación, Fecha_Imagen, Usuario_idUsuario, Marcado) VALUES(?, ?, ?, ?, ?)";
+			String query = "INSERT INTO imagen (Descripcion_Imagen, Ubicacion, Usuario_idUsuario, Marcado) VALUES(?, ?, ?, ?)";
 
 			// Creamos un PreparedStatement
 			PreparedStatement pstmt = con.prepareStatement(query);
 			// Asignamos los valores a los ?
 			pstmt.setString(1, imagen.getNombre_imagen());
 			pstmt.setString(2, imagen.getUbicacion());
-			pstmt.setString(3, imagen.getFecha_Imagen());
-			pstmt.setInt(4, imagen.getUsuario_idUsuario());
-			pstmt.setInt(5, imagen.getMarcado());
+			pstmt.setInt(3, imagen.getUsuario_idUsuario());
+			pstmt.setInt(4, imagen.getMarcado());
 
 			pstmt.executeUpdate();
 
+			contador++;
 			return 0;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -51,11 +51,9 @@ public class ImagenDAO {
 	}
 
 	public static int copiarImagen(File imagen, ImagenDO objetoImg) {
-		String rutaImagen = System.getProperty("user.home") + "\\Pictures\\Instancias\\imagen.jpg";
-
 		try {
 			FileInputStream fis = new FileInputStream(imagen);
-			FileOutputStream fos = new FileOutputStream(rutaImagen);
+			FileOutputStream fos = new FileOutputStream(objetoImg.getUbicacion());
 
 			byte[] buffer1K = new byte[1024];
 			int numDatos = fis.read(buffer1K);
@@ -116,7 +114,7 @@ public class ImagenDAO {
 			if (rs.next()) {
 				ImagenDO imagen = new ImagenDO();
 				imagen.setIdImagen(rs.getInt("idImagen"));
-				imagen.setNombre_imagen(rs.getString("Nombre_Imagen"));
+				imagen.setNombre_imagen(rs.getString("Descripcion_Imagen"));
 				imagen.setUbicacion(rs.getString("ubicacion"));
 				imagen.setFecha_Imagen(rs.getString("Fecha_Imagen"));
 				imagen.setUsuario_idUsuario(rs.getInt("Usuario_idUsuario"));
