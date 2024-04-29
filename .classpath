@@ -37,16 +37,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Jairo/.m2/repository/org/openjfx/javafx-fxml/13/javafx-fxml-13.jar" sourcepath="C:/Users/Usuario/.m2/repository/org/openjfx/javafx-fxml/13/javafx-fxml-13-sources.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-			<attribute name="maven.groupId" value="org.openjfx"/>
-			<attribute name="maven.artifactId" value="javafx-fxml"/>
-			<attribute name="maven.version" value="13"/>
-			<attribute name="maven.classifier" value="win"/>
-			<attribute name="maven.scope" value="compile"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

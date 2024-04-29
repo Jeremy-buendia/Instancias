@@ -22,9 +22,11 @@ public class ImagenDAO {
 	 */
 	public static int subirImagen(Connection con, ImagenDO imagen) {
 		try {
-			String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias";
+
+			String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias\\"
+					+ imagen.getUsuario_idUsuario() + "\\";
 			// Comprobamos si la carpeta de Instancias está creada
-			if (BuscarCarpeta() == -1) {
+			if (BuscarCarpeta(imagen) == -1) {
 				File carpeta = new File(rutaCarpeta);
 				carpeta.mkdirs();
 			}
@@ -36,7 +38,7 @@ public class ImagenDAO {
 			PreparedStatement pstmt = con.prepareStatement(query);
 			// Asignamos los valores a los ?
 			pstmt.setString(1, imagen.getNombre_imagen());
-			pstmt.setString(2, imagen.getUbicacion());
+			pstmt.setString(2, rutaCarpeta);
 			pstmt.setInt(3, imagen.getUsuario_idUsuario());
 			pstmt.setInt(4, imagen.getMarcado());
 
@@ -53,7 +55,8 @@ public class ImagenDAO {
 	public static int copiarImagen(File imagen, ImagenDO objetoImg) {
 		try {
 			FileInputStream fis = new FileInputStream(imagen);
-			FileOutputStream fos = new FileOutputStream(objetoImg.getUbicacion());
+			FileOutputStream fos = new FileOutputStream(System.getProperty("user.home") + "\\Pictures\\Instancias\\"
+					+ objetoImg.getUsuario_idUsuario() + "\\" + +contador + ".jpg");
 
 			byte[] buffer1K = new byte[1024];
 			int numDatos = fis.read(buffer1K);
@@ -82,8 +85,9 @@ public class ImagenDAO {
 	 * 
 	 * @return 0 si está creada o -1 si no está creada
 	 */
-	public static int BuscarCarpeta() {
-		String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias";
+	public static int BuscarCarpeta(ImagenDO imagen) {
+		String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias\\"
+				+ imagen.getUsuario_idUsuario();
 
 		File carpeta = new File(rutaCarpeta);
 
