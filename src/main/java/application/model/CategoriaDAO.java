@@ -110,6 +110,7 @@ public class CategoriaDAO {
 
 	/*
 	 *para añadir la categoria a la imagen una vez que tengamos el menu, segun chatgpt 
+	 * me lo guardo para revisarlo mañana 
 	 * 
 	 * import javafx.application.Application;
 import javafx.geometry.Insets;

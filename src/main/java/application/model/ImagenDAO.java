@@ -133,4 +133,51 @@ public class ImagenDAO {
 			return null;
 		}
 	}
+	
+	//remover imagen de la carpeta y la base de datos provisional necesito revisar
+	 public static int eliminarImagen(Connection con, ImagenDO imagen) {
+	        try {
+	            // Obtener la ubicación de la imagen
+	            String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias\\"
+	                    + imagen.getUsuario_idUsuario() + "\\";
+	            
+	            String ubicacionImagen = rutaCarpeta + imagen.getNombre_imagen();
+
+	            // Eliminar el archivo de la carpeta del usuario
+	            File imagenFile = new File(ubicacionImagen);
+	            if (imagenFile.exists()) {
+	                if (imagenFile.delete()) {
+	                    System.out.println("Archivo de imagen eliminado correctamente.");
+	                } else {
+	                    System.out.println("No se pudo eliminar el archivo de la imagen.");
+	                    return -1; // Error al eliminar el archivo de la imagen
+	                }
+	            } else {
+	                System.out.println("No se encontró el archivo de la imagen.");
+	                return -1; // No se encontró el archivo de la imagen
+	            }
+
+	            // Query para eliminar la imagen de la BD
+	            String query = "DELETE FROM imagen WHERE idImagen = ?";
+
+	            // Creamos un PreparedStatement
+	            PreparedStatement pstmt = con.prepareStatement(query);
+	            // Asignamos los valores a los parámetros
+	            pstmt.setInt(1, imagen.getIdImagen());
+
+	            // Ejecutamos la consulta
+	            int rowsAffected = pstmt.executeUpdate();
+
+	            if (rowsAffected > 0) {
+	                System.out.println("Imagen eliminada correctamente de la base de datos.");
+	                return 0; // Éxito
+	            } else {
+	                System.out.println("No se encontró la imagen en la base de datos para eliminar.");
+	                return -1; // No se encontró la imagen en la base de datos
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return -1; // Error SQL
+	        }
+	    }
 }
