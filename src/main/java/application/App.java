@@ -1,8 +1,12 @@
 package application;
 
+import java.time.LocalDate;
+
+import application.model.CalendarioDAO;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -43,6 +47,8 @@ public class App extends Application {
 		Menu mBuscar = new Menu("Buscar");
 
 		// MenuItems y Submenús de mBuscar
+		CalendarioDAO calendarioDAO = new CalendarioDAO();
+		DatePicker datePicker = new DatePicker();
 		MenuItem iBuscarFecha = new MenuItem("Buscar Fecha");
 
 		// Menú mConfig
@@ -88,6 +94,11 @@ public class App extends Application {
 		// Agregamos los menús al MenuBar
 		menuSuperior.getMenus().addAll(mPerfil, mBuscar, mConfig, mAyuda);
 
+		// Añadir un controlador de eventos al elemento de menú
+		iBuscarFecha.setOnAction(e -> {
+		    CalendarioDAO.buscarFecha();
+		});
+		
 		pnlDistribucion.setTop(menuSuperior);
 
 		/************** MENÚ INFERIOR ****************/
@@ -96,9 +107,15 @@ public class App extends Application {
 		Button marcados = new Button("Marcados");
 		Button subirFoto = new Button("Subir foto");
 
-		subirFoto.setOnAction(e -> {
-			abrirVentanaSubirImagen(stage);
+		iBuscarFecha.setOnAction(e -> {
+		    LocalDate fecha = CalendarioDAO.buscarFecha();
+		    if (fecha != null) {
+		        System.out.println("Fecha seleccionada: " + fecha);
+		    } else {
+		        System.out.println("No se seleccionó ninguna fecha.");
+		    }
 		});
+
 
 		Button bajarFoto = new Button("Descargar foto");
 		Button abrirCamara = new Button("Abrir la cámara");

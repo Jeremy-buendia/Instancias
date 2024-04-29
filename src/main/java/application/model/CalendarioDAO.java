@@ -9,36 +9,47 @@ import javax.swing.*;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Dialog;
 
 public class CalendarioDAO {
 
-	/**
-	 * Función buscarFecha: la función buscará una fecha y abrirá una 
-	 * ventana emergente con dicha fecha. Utilizaremos un datePicker.
-	 * @return
-	 */
-
-	    public static int buscarFecha() {
-	    	
-	    	
-	    	// ONclickEvent
+	    /**
+	     * Función buscarFecha: la función buscará una fecha.
+	     * @return
+	     */
+	    public static LocalDate buscarFecha() {
 	        // Crear el DatePicker
 	        DatePicker datePicker = new DatePicker();
 
-	        // Mostrar el DatePicker en una ventana emergente
-	        Optional<LocalDate> fecha = Optional.empty();
+	        // Crear una nueva ventana de diálogo
+	        Dialog<LocalDate> dialog = new Dialog<>();
+	        dialog.setTitle("Seleccionar Fecha");
+	        dialog.getDialogPane().setContent(datePicker);
 
-	        // Comprobar si se ha seleccionado una fecha
-	        if (fecha.isPresent()) {
-	            // Mostrar la fecha en una ventana emergente
-	            JOptionPane.showMessageDialog(null, "Fecha seleccionada: " + fecha.get());
-	            return 0; // Se ha encontrado la fecha
-	        } else {
-	            return -1; // No se ha encontrado la fecha
-	        }
+	        // Configurar el botón de confirmación
+	        ButtonType buttonTypeOk = new ButtonType("Confirmar", ButtonData.OK_DONE);
+	        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+
+	        // Manejar el evento de confirmación
+	        dialog.setResultConverter(b -> {
+	            if (b == buttonTypeOk) {
+	                return datePicker.getValue();
+	            }
+	            return null;
+	        });
+
+	        // Mostrar el diálogo y obtener la fecha seleccionada
+	        Optional<LocalDate> fecha = dialog.showAndWait();
+
+	        // Devolver la fecha
+	        return fecha.orElse(null);
 	    }
-}
+	}
+
+
 
 	 //public static int buscarFecha() {
 		  // DatePicker fecha= new DatePicker();
