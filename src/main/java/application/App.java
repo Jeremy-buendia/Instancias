@@ -1,5 +1,6 @@
 package application;
 
+import java.sql.ResultSet;
 import java.time.LocalDate;
 
 import application.model.CalendarioDAO;
@@ -45,21 +46,51 @@ public class App extends Application {
 
 		// Menú mBuscar
 		Menu mBuscar = new Menu("Buscar");
+<<<<<<< HEAD
 
 		// MenuItems y Submenús de mBuscar
 		CalendarioDAO calendarioDAO = new CalendarioDAO();
 		DatePicker datePicker = new DatePicker();
 		MenuItem iBuscarFecha = new MenuItem("Buscar Fecha");
+
+		iBuscarFecha.setOnAction(e -> {
+			LocalDate fecha = CalendarioDAO.buscarFecha();
+			if (fecha != null) {
+				System.out.println("Fecha seleccionada: " + fecha);
+			} else {
+				System.out.println("No se seleccionó ninguna fecha.");
+			}
+		});
+
+=======
 		
+		// MenuItems y Submenús de mBuscar y datePiicker
+		CalendarioDAO calendarioDAO = new CalendarioDAO();
+		MenuItem iBuscarFecha = new MenuItem("Buscar Fecha");
+
 		iBuscarFecha.setOnAction(e -> {
 		    LocalDate fecha = CalendarioDAO.buscarFecha();
 		    if (fecha != null) {
 		        System.out.println("Fecha seleccionada: " + fecha);
+		        ResultSet rs = CalendarioDAO.buscarDatos(fecha);
+		        try {
+		            if (rs != null) {
+		                while (rs.next()) {
+		                    System.out.println("Datos: " + rs.getString("Fecha"));
+		                }
+		            }
+		        } catch (Exception ex) {
+		            System.out.println(ex);
+		        }
 		    } else {
 		        System.out.println("No se seleccionó ninguna fecha.");
 		    }
 		});
+
+		mBuscar.getItems().add(iBuscarFecha);
+
 		
+>>>>>>> 0def1e948aaa18052a87130b29985b9b5f9e9e53
 		// Menú mConfig
 		Menu mConfig = new Menu("Configuración");
 
