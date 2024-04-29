@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 
 public class ImagenDAO {
 
@@ -30,6 +31,8 @@ public class ImagenDAO {
 				File carpeta = new File(rutaCarpeta);
 				carpeta.mkdirs();
 			}
+
+			rutaCarpeta += contador + 1 + ".jpg";
 
 			// Query para insertar la imagen en la BD
 			String query = "INSERT INTO imagen (Descripcion_Imagen, Ubicacion, Usuario_idUsuario, Marcado) VALUES(?, ?, ?, ?)";
@@ -56,7 +59,7 @@ public class ImagenDAO {
 		try {
 			FileInputStream fis = new FileInputStream(imagen);
 			FileOutputStream fos = new FileOutputStream(System.getProperty("user.home") + "\\Pictures\\Instancias\\"
-					+ objetoImg.getUsuario_idUsuario() + "\\" + +contador + ".jpg");
+					+ objetoImg.getUsuario_idUsuario() + "\\" + contador + ".jpg");
 
 			byte[] buffer1K = new byte[1024];
 			int numDatos = fis.read(buffer1K);
@@ -160,51 +163,67 @@ public class ImagenDAO {
 			return null;
 		}
 	}
-	
-	//remover imagen de la carpeta y la base de datos provisional necesito revisar
-	 public static int eliminarImagen(Connection con, ImagenDO imagen) {
-	        try {
-	            // Obtener la ubicación de la imagen
-	            String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias\\"
-	                    + imagen.getUsuario_idUsuario() + "\\";
-	            
-	            String ubicacionImagen = rutaCarpeta + imagen.getNombre_imagen();
 
-	            // Eliminar el archivo de la carpeta del usuario
-	            File imagenFile = new File(ubicacionImagen);
-	            if (imagenFile.exists()) {
-	                if (imagenFile.delete()) {
-	                    System.out.println("Archivo de imagen eliminado correctamente.");
-	                } else {
-	                    System.out.println("No se pudo eliminar el archivo de la imagen.");
-	                    return -1; // Error al eliminar el archivo de la imagen
-	                }
-	            } else {
-	                System.out.println("No se encontró el archivo de la imagen.");
-	                return -1; // No se encontró el archivo de la imagen
-	            }
+	public static ResultSet getDia(Connection con, LocalDate fecha) {
+		String query = "SELECT * FROM imagen WHERE Fecha_Imagen LIKE ?%";
 
-	            // Query para eliminar la imagen de la BD
-	            String query = "DELETE FROM imagen WHERE idImagen = ?";
+		try {
+			PreparedStatement pstmt = con.prepareStatement(query);
 
-	            // Creamos un PreparedStatement
-	            PreparedStatement pstmt = con.prepareStatement(query);
-	            // Asignamos los valores a los parámetros
-	            pstmt.setInt(1, imagen.getIdImagen());
+			pstmt.setString(1, fecha.toString());
 
-	            // Ejecutamos la consulta
-	            int rowsAffected = pstmt.executeUpdate();
+			ResultSet rs = pstmt.executeQuery();
+			return rs;
+		} catch (Exception e) {
+			return null;
+		}
 
-	            if (rowsAffected > 0) {
-	                System.out.println("Imagen eliminada correctamente de la base de datos.");
-	                return 0; // Éxito
-	            } else {
-	                System.out.println("No se encontró la imagen en la base de datos para eliminar.");
-	                return -1; // No se encontró la imagen en la base de datos
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            return -1; // Error SQL
-	        }
-	    }
+	}
+
+	// remover imagen de la carpeta y la base de datos provisional necesito revisar
+	public static int eliminarImagen(Connection con, ImagenDO imagen) {
+		try {
+			// Obtener la ubicación de la imagen
+			String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias\\"
+					+ imagen.getUsuario_idUsuario() + "\\";
+
+			String ubicacionImagen = rutaCarpeta + imagen.getNombre_imagen();
+
+			// Eliminar el archivo de la carpeta del usuario
+			File imagenFile = new File(ubicacionImagen);
+			if (imagenFile.exists()) {
+				if (imagenFile.delete()) {
+					System.out.println("Archivo de imagen eliminado correctamente.");
+				} else {
+					System.out.println("No se pudo eliminar el archivo de la imagen.");
+					return -1; // Error al eliminar el archivo de la imagen
+				}
+			} else {
+				System.out.println("No se encontró el archivo de la imagen.");
+				return -1; // No se encontró el archivo de la imagen
+			}
+
+			// Query para eliminar la imagen de la BD
+			String query = "DELETE FROM imagen WHERE idImagen = ?";
+
+			// Creamos un PreparedStatement
+			PreparedStatement pstmt = con.prepareStatement(query);
+			// Asignamos los valores a los parámetros
+			pstmt.setInt(1, imagen.getIdImagen());
+
+			// Ejecutamos la consulta
+			int rowsAffected = pstmt.executeUpdate();
+
+			if (rowsAffected > 0) {
+				System.out.println("Imagen eliminada correctamente de la base de datos.");
+				return 0; // Éxito
+			} else {
+				System.out.println("No se encontró la imagen en la base de datos para eliminar.");
+				return -1; // No se encontró la imagen en la base de datos
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1; // Error SQL
+		}
+	}
 }

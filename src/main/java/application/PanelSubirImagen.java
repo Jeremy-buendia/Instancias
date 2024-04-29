@@ -1,12 +1,5 @@
 package application;
 
-import java.io.File;
-import java.sql.Connection;
-
-import application.model.ImagenDAO;
-import application.model.ImagenDO;
-import application.model.UsuarioDAO;
-import application.utils.UtilsBD;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -23,8 +16,6 @@ public class PanelSubirImagen extends VBox {
 	public Button btnEscogerImg;
 
 	public PanelSubirImagen() {
-		Connection con = UtilsBD.conectarBD();
-
 		/******* ELEMENTOS *******/
 		Label lblDescripcionImg = new Label("Descripción: ");
 
@@ -45,28 +36,5 @@ public class PanelSubirImagen extends VBox {
 
 		/******* AGREGACIÓN AL PANEL *******/
 		this.getChildren().addAll(lblDescripcionImg, txtDescripcionImg, cbxMarcar, btnEscogerImg);
-
-		/******* EVENTO AL PULSAR EL BOTÓN btnEscogerImg *******/
-		btnEscogerImg.setOnAction(e -> {
-			FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("*.png", "*.jpg", "*.jpeg");
-			escogerImagen.getExtensionFilters().add(extFilter);
-			escogerImagen.setTitle("Selecciona una imagen");
-
-			File imagen = escogerImagen.showOpenDialog(null);
-
-			int marcado;
-
-			if (cbxMarcar.isSelected()) {
-				marcado = 1;
-			} else {
-				marcado = 0;
-			}
-
-			ImagenDO objImagen;
-			objImagen = new ImagenDO(-1, txtDescripcionImg.getText(), "", "",
-					UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), marcado);
-			ImagenDAO.subirImagen(con, objImagen);
-			ImagenDAO.copiarImagen(imagen, objImagen);
-		});
 	}
 }
