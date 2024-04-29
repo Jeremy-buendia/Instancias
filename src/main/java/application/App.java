@@ -1,7 +1,5 @@
 package application;
 
-import java.time.LocalDate;
-
 import application.model.CalendarioDAO;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -107,15 +105,9 @@ public class App extends Application {
 		Button marcados = new Button("Marcados");
 		Button subirFoto = new Button("Subir foto");
 
-		iBuscarFecha.setOnAction(e -> {
-		    LocalDate fecha = CalendarioDAO.buscarFecha();
-		    if (fecha != null) {
-		        System.out.println("Fecha seleccionada: " + fecha);
-		    } else {
-		        System.out.println("No se seleccionó ninguna fecha.");
-		    }
+		subirFoto.setOnAction(e -> {
+			abrirVentanaSubirImagen(stage);
 		});
-
 
 		Button bajarFoto = new Button("Descargar foto");
 		Button abrirCamara = new Button("Abrir la cámara");
