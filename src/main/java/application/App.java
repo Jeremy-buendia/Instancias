@@ -1,5 +1,7 @@
 package application;
 
+import java.time.LocalDate;
+
 import application.model.CalendarioDAO;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -48,7 +50,16 @@ public class App extends Application {
 		CalendarioDAO calendarioDAO = new CalendarioDAO();
 		DatePicker datePicker = new DatePicker();
 		MenuItem iBuscarFecha = new MenuItem("Buscar Fecha");
-
+		
+		iBuscarFecha.setOnAction(e -> {
+		    LocalDate fecha = CalendarioDAO.buscarFecha();
+		    if (fecha != null) {
+		        System.out.println("Fecha seleccionada: " + fecha);
+		    } else {
+		        System.out.println("No se seleccionó ninguna fecha.");
+		    }
+		});
+		
 		// Menú mConfig
 		Menu mConfig = new Menu("Configuración");
 
@@ -93,10 +104,6 @@ public class App extends Application {
 		menuSuperior.getMenus().addAll(mPerfil, mBuscar, mConfig, mAyuda);
 
 		// Añadir un controlador de eventos al elemento de menú
-		iBuscarFecha.setOnAction(e -> {
-		    CalendarioDAO.buscarFecha();
-		});
-		
 		pnlDistribucion.setTop(menuSuperior);
 
 		/************** MENÚ INFERIOR ****************/
