@@ -18,7 +18,7 @@ public class OpcionesDAO {
 	        // Si los campos no son nulos, los vamos añadiendo a la sentencia
 	        if (activo.getNotificaciones() != -1) {
 	            if (activo.getNotificaciones() == 1) {
-	                query = query + "Notificaciones = 'activo'";
+	                query = query + "Notificaciones = 'activado'";
 	            } else if (activo.getNotificaciones() == 0) {
 	                query = query + "Notificaciones = 'desactivado'";
 	            }
@@ -189,7 +189,7 @@ public class OpcionesDAO {
 	            if (idioma.getIdioma() == 1) {
 	                query = query + "Idioma = 'Ingles'";
 	            } else if (idioma.getIdioma() == 0) {
-	                query = query + "Modo = 'Español'";
+	                query = query + "Idioma = 'Español'";
 	            }
 	            campoPrevio = true;
 	        }			
@@ -244,11 +244,11 @@ public class OpcionesDAO {
 			// Si los campos no son nulos, los vamos añadiendo a la sentencia
 			if (Fuente.getFuente() != -1) {
 	            if (Fuente.getFuente() == 0) {
-	                query = query + "Idioma = 'Arial'";
+	                query = query + "Fuente = '100%'";
 	            } else if (Fuente.getFuente() == 1) {
-	                query = query + "Modo = 'Calibri'";
+	                query = query + "Fuente = '50%'";
 	            } else if (Fuente.getFuente() == 2) {
-	                query = query + "Modo = 'Gerogia'";
+	                query = query + "Fuente = '200%'";
 	            }
 	            campoPrevio = true;
 	        }	
