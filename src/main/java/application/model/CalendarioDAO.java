@@ -1,6 +1,7 @@
 package application.model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -49,10 +50,10 @@ public class CalendarioDAO {
         try {
  
             // Crear una consulta SQL para buscar datos que correspondan a la fecha seleccionada
-            String query = "SELECT * FROM calendario WHERE fecha = ?";
+            String query = "SELECT * FROM calendario WHERE Fecha = ?";
             PreparedStatement pstmt = con.prepareStatement(query);
             // Establecer el valor del parámetro en la consulta SQL
-            pstmt.setDate(1, java.sql.Date.valueOf(fecha));
+            pstmt.setDate(1, Date.valueOf(fecha));
             // Ejecutar la consulta y obtener los resultados
             rs = pstmt.executeQuery();
         } catch (Exception e) {
