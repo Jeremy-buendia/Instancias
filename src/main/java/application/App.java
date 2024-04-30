@@ -1,7 +1,5 @@
 package application;
 
-import java.awt.event.ActionEvent;
-import java.beans.EventHandler;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,8 +11,6 @@ import java.util.ArrayList;
 import application.model.CalendarioDAO;
 import application.model.ImagenDAO;
 import application.model.ImagenDO;
-import application.model.OpcionesDAO;
-import application.model.OpcionesDO;
 import application.model.UsuarioDAO;
 import application.model.UsuarioDO;
 import application.utils.UtilsBD;
@@ -27,7 +23,9 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -94,27 +92,27 @@ public class App extends Application {
 
 		// CheckMenuItem para Notificaciones
 		CheckMenuItem iNotificaciones = new CheckMenuItem("Notificaciones");
-		
-		iNotificaciones.setOnAction(new EventHandler<ActionEvent>() {
-		    @Override
-		    public void handle(ActionEvent event) {
-		        // Obtén el estado actual del CheckMenuItem
-		        int estado = iNotificaciones.isSelected() ? 1 : 0;
 
-		        // Actualiza el objeto 'activo' con el nuevo estado
-		        activo.setNotificaciones(estado);
-
-		        // Llama a la función para actualizar la base de datos
-		        int numAff = funcion(); // Asegúrate de que 'funcion' es el nombre de tu método de actualización
-
-		        // Comprueba si la actualización fue exitosa
-		        if (numAff > 0) {
-		            System.out.println("La base de datos se ha actualizado correctamente.");
-		        } else {
-		            System.out.println("Hubo un problema al actualizar la base de datos.");
-		        }
-		    }
-		});
+//		iNotificaciones.setOnAction(new EventHandler<ActionEvent>() {
+//		    @Override
+//		    public void handle(ActionEvent event) {
+//		        // Obtén el estado actual del CheckMenuItem
+//		        int estado = iNotificaciones.isSelected() ? 1 : 0;
+//
+//		        // Actualiza el objeto 'activo' con el nuevo estado
+//		        activo.setNotificaciones(estado);
+//
+//		        // Llama a la función para actualizar la base de datos
+//		        int numAff = funcion(); // Asegúrate de que 'funcion' es el nombre de tu método de actualización
+//
+//		        // Comprueba si la actualización fue exitosa
+//		        if (numAff > 0) {
+//		            System.out.println("La base de datos se ha actualizado correctamente.");
+//		        } else {
+//		            System.out.println("Hubo un problema al actualizar la base de datos.");
+//		        }
+//		    }
+//		});
 
 		Menu mIdioma = new Menu("Perfil");
 
@@ -160,6 +158,11 @@ public class App extends Application {
 		ToolBar menuInferior = new ToolBar();
 
 		Button marcados = new Button("Marcados");
+
+		marcados.setOnAction(e -> {
+			abrirVentanaVisualizarMarcados(stage, con);
+		});
+
 		Button subirFoto = new Button("Subir foto");
 
 		subirFoto.setOnAction(e -> {
@@ -168,22 +171,66 @@ public class App extends Application {
 
 		Button bajarFoto = new Button("Descargar foto");
 
-		LocalDate fechaDia = LocalDate.of(2024, 05, 01);
+		LocalDate fechaDia = LocalDate.of(2024, 04, 30);
 		bajarFoto.setOnAction(e -> {
-			abrirVentanaVisualizarImg(stage, con, fechaDia);
+			// abrirVentanaVisualizarImg(stage, con, fechaDia);
+			DirectoryChooser directorio = new DirectoryChooser();
+			directorio.setTitle("Selecciona una carpeta");
+			ArrayList<String> rutasCarpeta = ImagenDAO.getDia(con, fechaDia);
+
+			File directorioSeleccionado = directorio.showDialog(null);
+
+			for (int i = 0; i < rutasCarpeta.size(); i++) {
+				File imagen = new File(rutasCarpeta.get(i));
+				ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
+			}
+
 		});
 
 		Button abrirCamara = new Button("Abrir la cámara");
 
-		menuInferior.getItems().addAll(marcados, subirFoto, bajarFoto, abrirCamara);
+		Button mesAnterior = new Button("<--");
+		Button mesPosterior = new Button("-->");
+
+		menuInferior.getItems().addAll(marcados, subirFoto, bajarFoto, abrirCamara, mesAnterior, mesPosterior);
 
 		pnlDistribucion.setBottom(menuInferior);
 
 		/************** CALENDARIO ****************/
 
+		try {
+			Image calendario = new Image(new FileInputStream("img\\2024-05.jpg"));
+			ImageView vistaCalendario = new ImageView(calendario);
+			vistaCalendario.setPreserveRatio(true);
+			vistaCalendario.setFitWidth(800);
+
+			mesAnterior.setOnAction(e -> {
+				try {
+					vistaCalendario.setImage(new Image(new FileInputStream("img\\2024-04.jpg")));
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			});
+
+			mesPosterior.setOnAction(e -> {
+				try {
+					vistaCalendario.setImage(new Image(new FileInputStream("img\\2024-06.jpg")));
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			});
+
+			pnlDistribucion.setCenter(vistaCalendario);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		/************** ESCENA ****************/
 		try {
-			Image icon = new Image(new FileInputStream(".\\img\\favicon.png"));
+			Image icon = new Image(new FileInputStream("img\\favicon.png"));
 			stage.getIcons().add(icon);
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
@@ -216,35 +263,41 @@ public class App extends Application {
 		ventanaEmergente.setScene(scene);
 		ventanaEmergente.setTitle("Subir Imagen");
 		ventanaEmergente.show();
+
+		try {
+			Image icon = new Image(new FileInputStream("img\\favicon.png"));
+			ventanaEmergente.getIcons().add(icon);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		pnlSubirImg.btnEscogerImg.setOnAction(e -> {
-			FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("*.png", "*.jpg", "*.jpeg");
+			FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Archivos de Imagen", "*.png",
+					"*.jpg", "*.jpeg");
 			pnlSubirImg.escogerImagen.getExtensionFilters().add(extFilter);
 			pnlSubirImg.escogerImagen.setTitle("Selecciona una imagen");
 
 			File imagen = pnlSubirImg.escogerImagen.showOpenDialog(null);
 
-			int marcado;
+			if (imagen != null) {
+				int marcado;
 
-			if (pnlSubirImg.cbxMarcar.isSelected()) {
-				marcado = 1;
-			} else {
-				marcado = 0;
+				if (pnlSubirImg.cbxMarcar.isSelected()) {
+					marcado = 1;
+				} else {
+					marcado = 0;
+				}
+
+				ImagenDO objImagen;
+				objImagen = new ImagenDO(-1, pnlSubirImg.txtDescripcionImg.getText(), "", "",
+						UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), marcado);
+				ImagenDAO.subirImagen(con, objImagen, imagen);
+				ImagenDAO.copiarImagen(imagen, objImagen);
+
+				ventanaEmergente.close();
 			}
 
-			ImagenDO objImagen;
-			objImagen = new ImagenDO(-1, pnlSubirImg.txtDescripcionImg.getText(), "", "",
-					UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), marcado);
-			ImagenDAO.subirImagen(con, objImagen);
-			ImagenDAO.copiarImagen(imagen, objImagen);
-
-			ventanaEmergente.close();
-			try {
-				Image icon = new Image(new FileInputStream(".\\img\\favicon.png"));
-				ventanaEmergente.getIcons().add(icon);
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 		});
 	}
 
@@ -268,7 +321,7 @@ public class App extends Application {
 		ventanaEmergente.setTitle("Entrar");
 		ventanaEmergente.show();
 		try {
-			Image icon = new Image(new FileInputStream(".\\img\\favicon.png"));
+			Image icon = new Image(new FileInputStream("img\\favicon.png"));
 			ventanaEmergente.getIcons().add(icon);
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
@@ -311,8 +364,8 @@ public class App extends Application {
 
 		try {
 			pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(0)));
+			pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -358,7 +411,82 @@ public class App extends Application {
 		ventanaEmergente.setTitle("Imagen");
 		ventanaEmergente.show();
 		try {
-			Image icon = new Image(new FileInputStream(".\\img\\favicon.png"));
+			Image icon = new Image(new FileInputStream("img\\favicon.png"));
+			ventanaEmergente.getIcons().add(icon);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		stage.setOnCloseRequest(e -> {
+			ventanaEmergente.close();
+		});
+	}
+
+	/**
+	 * Función que abre una ventanaEmergente con las imagenes que han sido marcadas
+	 * 
+	 * @param stage
+	 * @param con
+	 */
+	public static void abrirVentanaVisualizarMarcados(Stage stage, Connection con) {
+		Stage ventanaEmergente = new Stage();
+		PanelVisualizarImagen pnlVisualizarImg = new PanelVisualizarImagen();
+
+		Scene scene = new Scene(pnlVisualizarImg, 300, 300);
+
+		ArrayList<String> rutasCarpeta = ImagenDAO.getMarcados(con);
+
+		try {
+			pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(0)));
+			pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		pnlVisualizarImg.anterior.setOnAction(e -> {
+			if (pnlVisualizarImg.idFoto > 1) {
+				pnlVisualizarImg.idFoto -= 1;
+				try {
+					Image imagenAnterior = new Image(
+							new FileInputStream(rutasCarpeta.get(pnlVisualizarImg.idFoto - 1)));
+					pnlVisualizarImg.vistaImg.setImage(imagenAnterior);
+
+					pnlVisualizarImg.vistaImg.setPreserveRatio(true);
+					// Cambiamos ancho de la imagen
+					pnlVisualizarImg.vistaImg.setFitWidth(200);
+
+					pnlVisualizarImg.getChildren().add(pnlVisualizarImg.vistaImg);
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+
+			}
+		});
+
+		pnlVisualizarImg.siguiente.setOnAction(e -> {
+			if (pnlVisualizarImg.idFoto < rutasCarpeta.size()) {
+				pnlVisualizarImg.idFoto += 1;
+			}
+			try {
+				Image imagenSiguiente = new Image(new FileInputStream(rutasCarpeta.get(pnlVisualizarImg.idFoto - 1)));
+				pnlVisualizarImg.vistaImg.setImage(imagenSiguiente);
+
+				pnlVisualizarImg.vistaImg.setPreserveRatio(true);
+				// Cambiamos ancho de la imagen
+				pnlVisualizarImg.vistaImg.setFitWidth(200);
+				pnlVisualizarImg.getChildren().add(pnlVisualizarImg.vistaImg);
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+		});
+
+		ventanaEmergente.setScene(scene);
+		ventanaEmergente.setTitle("Imagen");
+		ventanaEmergente.show();
+		try {
+			Image icon = new Image(new FileInputStream("img\\favicon.png"));
 			ventanaEmergente.getIcons().add(icon);
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block

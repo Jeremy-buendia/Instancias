@@ -22,21 +22,31 @@ public class ImagenDAO {
 	 * Función que sube una imagen a la carpeta de Instancias y a la base de datos
 	 * 
 	 * @param con
-	 * @param imagen
+	 * @param objetoImg
 	 * @return
 	 */
-	public static int subirImagen(Connection con, ImagenDO imagen) {
+	public static int subirImagen(Connection con, ImagenDO objetoImg, File imagen) {
 		try {
 
 			String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias\\"
-					+ imagen.getUsuario_idUsuario() + "\\";
+					+ objetoImg.getUsuario_idUsuario() + "\\";
 			// Comprobamos si la carpeta de Instancias está creada
-			if (BuscarCarpeta(imagen) == -1) {
+			if (BuscarCarpeta(objetoImg) == -1) {
 				File carpeta = new File(rutaCarpeta);
 				carpeta.mkdirs();
 			}
 
-			rutaCarpeta += contador + 1 + ".jpg";
+			if (imagen.getName().substring(imagen.getName().length() - 4).equals(".jpg")) {
+				rutaCarpeta += contador + 1 + ".jpg";
+			}
+
+			if (imagen.getName().substring(imagen.getName().length() - 4).equals(".png")) {
+				rutaCarpeta += contador + 1 + ".png";
+			}
+
+			if (imagen.getName().substring(imagen.getName().length() - 4).equals(".jpeg")) {
+				rutaCarpeta += contador + 1 + ".jpeg";
+			}
 
 			// Query para insertar la imagen en la BD
 			String query = "INSERT INTO imagen (Descripcion_Imagen, Ubicacion, Usuario_idUsuario, Marcado) VALUES(?, ?, ?, ?)";
@@ -44,10 +54,10 @@ public class ImagenDAO {
 			// Creamos un PreparedStatement
 			PreparedStatement pstmt = con.prepareStatement(query);
 			// Asignamos los valores a los ?
-			pstmt.setString(1, imagen.getNombre_imagen());
+			pstmt.setString(1, objetoImg.getNombre_imagen());
 			pstmt.setString(2, rutaCarpeta);
-			pstmt.setInt(3, imagen.getUsuario_idUsuario());
-			pstmt.setInt(4, imagen.getMarcado());
+			pstmt.setInt(3, objetoImg.getUsuario_idUsuario());
+			pstmt.setInt(4, objetoImg.getMarcado());
 
 			pstmt.executeUpdate();
 
@@ -62,19 +72,48 @@ public class ImagenDAO {
 	public static int copiarImagen(File imagen, ImagenDO objetoImg) {
 		try {
 			FileInputStream fis = new FileInputStream(imagen);
-			FileOutputStream fos = new FileOutputStream(System.getProperty("user.home") + "\\Pictures\\Instancias\\"
-					+ objetoImg.getUsuario_idUsuario() + "\\" + contador + ".jpg");
+			FileOutputStream fos;
 
-			byte[] buffer1K = new byte[1024];
-			int numDatos = fis.read(buffer1K);
+			if (imagen.getName().substring(imagen.getName().length() - 4).equals(".jpg")) {
+				fos = new FileOutputStream(System.getProperty("user.home") + "\\Pictures\\Instancias\\"
+						+ objetoImg.getUsuario_idUsuario() + "\\" + contador + ".jpg");
+				byte[] buffer1K = new byte[1024];
+				int numDatos = fis.read(buffer1K);
 
-			while (numDatos != -1) {
-				fos.write(buffer1K);
-				numDatos = fis.read(buffer1K);
+				while (numDatos != -1) {
+					fos.write(buffer1K);
+					numDatos = fis.read(buffer1K);
+				}
+				fos.close();
+			}
+
+			if (imagen.getName().substring(imagen.getName().length() - 4).equals(".png")) {
+				fos = new FileOutputStream(System.getProperty("user.home") + "\\Pictures\\Instancias\\"
+						+ objetoImg.getUsuario_idUsuario() + "\\" + contador + ".png");
+				byte[] buffer1K = new byte[1024];
+				int numDatos = fis.read(buffer1K);
+
+				while (numDatos != -1) {
+					fos.write(buffer1K);
+					numDatos = fis.read(buffer1K);
+				}
+				fos.close();
+			}
+
+			if (imagen.getName().substring(imagen.getName().length() - 4).equals(".jpeg")) {
+				fos = new FileOutputStream(System.getProperty("user.home") + "\\Pictures\\Instancias\\"
+						+ objetoImg.getUsuario_idUsuario() + "\\" + contador + ".jpeg");
+				byte[] buffer1K = new byte[1024];
+				int numDatos = fis.read(buffer1K);
+
+				while (numDatos != -1) {
+					fos.write(buffer1K);
+					numDatos = fis.read(buffer1K);
+				}
+				fos.close();
 			}
 
 			fis.close();
-			fos.close();
 
 			return 0;
 		} catch (FileNotFoundException e) {
@@ -86,11 +125,17 @@ public class ImagenDAO {
 		}
 	}
 
-	public static int descargarImagen(File imagen, ImagenDO objetoImg) {
+	/**
+	 * Función que coge una imagen y la copia a otro directorio
+	 * 
+	 * @param imagen
+	 * @param directorio
+	 * @return
+	 */
+	public static int descargarImagen(File imagen, File directorio) {
 		try {
 			FileInputStream fis = new FileInputStream(imagen);
-			FileOutputStream fos = new FileOutputStream(System.getProperty("user.home") + "\\Pictures\\Instancias\\"
-					+ objetoImg.getUsuario_idUsuario() + "\\" + +contador + ".jpg");
+			FileOutputStream fos = new FileOutputStream(directorio + "\\" + imagen.getName());
 
 			byte[] buffer1K = new byte[1024];
 			int numDatos = fis.read(buffer1K);
@@ -194,6 +239,23 @@ public class ImagenDAO {
 			return null;
 		}
 
+	}
+
+	public static ArrayList<String> getMarcados(Connection con) {
+		ArrayList<String> rutasCarpeta = new ArrayList<>();
+		String query = "SELECT * FROM imagen WHERE Marcado = 1 AND Usuario_IdUsuario = ?";
+		try {
+			PreparedStatement pstmt = con.prepareStatement(query);
+			pstmt.setInt(1, UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId());
+
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				rutasCarpeta.add(rs.getString("ubicacion"));
+			}
+			return rutasCarpeta;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	// remover imagen de la carpeta y la base de datos provisional necesito revisar

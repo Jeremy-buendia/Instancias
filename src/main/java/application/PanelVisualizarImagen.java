@@ -27,7 +27,7 @@ public class PanelVisualizarImagen extends VBox {
 			// + UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId() + "\\"
 			// + 1 + ".jpg");
 
-			vistaImg = new ImageView(imagen);
+			vistaImg = new ImageView();
 
 			vistaImg.setPreserveRatio(true);
 			// Cambiamos ancho de la imagen
