@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 
 public class PanelVisualizarImagen extends VBox {
 
+	private ImageView vistaImg;
 	Button anterior;
 	Button siguiente;
 	int idFoto;
@@ -32,31 +33,31 @@ public class PanelVisualizarImagen extends VBox {
 			// + UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId() + "\\"
 			// + 1 + ".jpg");
 
-			ImageView imgCaptura = new ImageView(imagen);
+			vistaImg = new ImageView(imagen);
 
-			imgCaptura.setPreserveRatio(true);
+			vistaImg.setPreserveRatio(true);
 			// Cambiamos ancho de la imagen
-			imgCaptura.setFitWidth(200);
+			vistaImg.setFitWidth(200);
 
 			anterior = new Button("<--");
 			siguiente = new Button("-->");
-			this.getChildren().addAll(imgCaptura, anterior, siguiente);
+			this.getChildren().addAll(vistaImg, anterior, siguiente);
 
 			anterior.setOnAction(e -> {
 				if (idFoto > 1) {
 					idFoto -= 1;
 					try {
-						Image imagen2 = new Image(
+						Image imagenAnterior = new Image(
 								new FileInputStream(System.getProperty("user.home") + "\\Pictures\\Instancias\\"
 										+ UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId() + "\\"
 										+ idFoto + ".jpg"));
-						imgCaptura.setImage(imagen);
+						vistaImg.setImage(imagenAnterior);
 
-						imgCaptura.setPreserveRatio(true);
+						vistaImg.setPreserveRatio(true);
 						// Cambiamos ancho de la imagen
-						imgCaptura.setFitWidth(200);
+						vistaImg.setFitWidth(200);
 
-						this.getChildren().add(imgCaptura);
+						this.getChildren().add(vistaImg);
 					} catch (Exception e2) {
 						// TODO: handle exception
 					}
@@ -67,16 +68,16 @@ public class PanelVisualizarImagen extends VBox {
 			siguiente.setOnAction(e -> {
 				idFoto += 1;
 				try {
-					Image imagen2 = new Image(
+					Image imagenSiguiente = new Image(
 							new FileInputStream(System.getProperty("user.home") + "\\Pictures\\Instancias\\"
 									+ UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId() + "\\"
 									+ idFoto + ".jpg"));
-					imgCaptura.setImage(imagen);
+					vistaImg.setImage(imagenSiguiente);
 
-					imgCaptura.setPreserveRatio(true);
+					vistaImg.setPreserveRatio(true);
 					// Cambiamos ancho de la imagen
-					imgCaptura.setFitWidth(200);
-					this.getChildren().add(imgCaptura);
+					vistaImg.setFitWidth(200);
+					this.getChildren().add(vistaImg);
 				} catch (Exception e2) {
 					// TODO: handle exception
 				}

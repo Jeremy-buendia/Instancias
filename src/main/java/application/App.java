@@ -32,6 +32,7 @@ public class App extends Application {
 
 	@Override
 	public void start(Stage stage) {
+		Connection con = UtilsBD.conectarBD();
 		// Panel
 		BorderPane pnlDistribucion = new BorderPane();
 
@@ -132,13 +133,13 @@ public class App extends Application {
 		Button subirFoto = new Button("Subir foto");
 
 		subirFoto.setOnAction(e -> {
-			abrirVentanaSubirImagen(stage);
+			abrirVentanaSubirImagen(stage, con);
 		});
 
 		Button bajarFoto = new Button("Descargar foto");
 
 		bajarFoto.setOnAction(e -> {
-			abrirVentanaVisualizarImg(stage);
+			abrirVentanaVisualizarImg(stage, con);
 		});
 
 		Button abrirCamara = new Button("Abrir la cámara");
@@ -150,14 +151,18 @@ public class App extends Application {
 		/************** CALENDARIO ****************/
 
 		/************** ESCENA ****************/
+//		Image icon = new Image("C:\\1º DAW\\[PROGRAMACIÓN]\\Proyectos\\Instancias\\img\\favicon.ico");
+//
+//		stage.getIcons().add(icon);
+
 		var scene = new Scene(pnlDistribucion, 800, 600);
 		stage.setScene(scene);
 		stage.show();
 
-		abrirVentanaFormulario(stage);
+		abrirVentanaFormulario(stage, con);
 	}
 
-	public void abrirVentanaSubirImagen(Stage stage) {
+	public void abrirVentanaSubirImagen(Stage stage, Connection con) {
 		Stage ventanaEmergente = new Stage();
 		PanelSubirImagen pnlSubirImg = new PanelSubirImagen();
 
@@ -171,8 +176,6 @@ public class App extends Application {
 		ventanaEmergente.setTitle("Subir Imagen");
 		ventanaEmergente.show();
 		pnlSubirImg.btnEscogerImg.setOnAction(e -> {
-			Connection con = UtilsBD.conectarBD();
-
 			FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("*.png", "*.jpg", "*.jpeg");
 			pnlSubirImg.escogerImagen.getExtensionFilters().add(extFilter);
 			pnlSubirImg.escogerImagen.setTitle("Selecciona una imagen");
@@ -197,7 +200,7 @@ public class App extends Application {
 		});
 	}
 
-	public void abrirVentanaFormulario(Stage stage) {
+	public void abrirVentanaFormulario(Stage stage, Connection con) {
 		Stage ventanaEmergente = new Stage();
 		PanelFormularioProv pnlForm = new PanelFormularioProv();
 
@@ -218,7 +221,6 @@ public class App extends Application {
 		});
 
 		pnlForm.enviar.setOnAction(e -> {
-			Connection con = UtilsBD.conectarBD();
 
 			UsuarioDO usuario = new UsuarioDO(-1, pnlForm.nombre.getText(), pnlForm.apellido.getText(),
 					pnlForm.correo.getText(), pnlForm.contraseña.getText());
@@ -230,16 +232,24 @@ public class App extends Application {
 		;
 	}
 
-	public void abrirVentanaVisualizarImg(Stage stage) {
+	public void abrirVentanaVisualizarImg(Stage stage, Connection con) {
 		Stage ventanaEmergente = new Stage();
 		PanelVisualizarImagen pnlVisualizarImg = new PanelVisualizarImagen();
 
 		Scene scene = new Scene(pnlVisualizarImg, 300, 300);
 
-		// Connection con = UtilsBD.conectarBD();
+		LocalDate fechaDia = CalendarioDAO.buscarFecha();
+		System.out.println(fechaDia);
 
-		// LocalDate dia = CalendarioDAO.buscarFecha();
-		// ImagenDAO.getDia(con, dia);
+//		ArrayList<String> rutasCarpeta = new ArrayList<>();
+//		try {
+//			while (ImagenDAO.getDia(con, fechaDia).next()) {
+//				rutasCarpeta.add(ImagenDAO.getDia(con, fechaDia).getString("ubicacion"));
+//			}
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 		ventanaEmergente.setScene(scene);
 		ventanaEmergente.setTitle("Imagen");

@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 
+import application.PanelFormularioProv;
+
 public class ImagenDAO {
 
 	public static int contador = 0;
@@ -165,12 +167,13 @@ public class ImagenDAO {
 	}
 
 	public static ResultSet getDia(Connection con, LocalDate fecha) {
-		String query = "SELECT * FROM imagen WHERE Fecha_Imagen LIKE ?%";
+		String query = "SELECT * FROM imagen WHERE Fecha_Imagen LIKE ?% AND Usuario_IdUsuario = ?";
 
 		try {
 			PreparedStatement pstmt = con.prepareStatement(query);
 
 			pstmt.setString(1, fecha.toString());
+			pstmt.setInt(1, UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId());
 
 			ResultSet rs = pstmt.executeQuery();
 			return rs;
