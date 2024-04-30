@@ -1,18 +1,25 @@
 package application;
 
+import java.io.File;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 
 import application.model.CalendarioDAO;
+import application.model.ImagenDAO;
+import application.model.ImagenDO;
+import application.model.UsuarioDAO;
+import application.model.UsuarioDO;
+import application.utils.UtilsBD;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -25,6 +32,7 @@ public class App extends Application {
 
 	@Override
 	public void start(Stage stage) {
+		Connection con = UtilsBD.conectarBD();
 		// Panel
 		BorderPane pnlDistribucion = new BorderPane();
 
@@ -46,33 +54,32 @@ public class App extends Application {
 
 		// Menú mBuscar
 		Menu mBuscar = new Menu("Buscar");
-		
+
 		// MenuItems y Submenús de mBuscar y datePiicker
 		CalendarioDAO calendarioDAO = new CalendarioDAO();
 		MenuItem iBuscarFecha = new MenuItem("Buscar Fecha");
 
 		iBuscarFecha.setOnAction(e -> {
-		    LocalDate fecha = CalendarioDAO.buscarFecha();
-		    if (fecha != null) {
-		        System.out.println("Fecha seleccionada: " + fecha);
-		        ResultSet rs = CalendarioDAO.buscarDatos(fecha);
-		        try {
-		            if (rs != null) {
-		                while (rs.next()) {
-		                    System.out.println("Datos: " + rs.getString("Fecha"));
-		                }
-		            }
-		        } catch (Exception ex) {
-		            System.out.println(ex);
-		        }
-		    } else {
-		        System.out.println("No se seleccionó ninguna fecha.");
-		    }
+			LocalDate fecha = CalendarioDAO.buscarFecha();
+			if (fecha != null) {
+				System.out.println("Fecha seleccionada: " + fecha);
+				ResultSet rs = CalendarioDAO.buscarDatos(fecha);
+				try {
+					if (rs != null) {
+						while (rs.next()) {
+							System.out.println("Datos: " + rs.getString("Fecha"));
+						}
+					}
+				} catch (Exception ex) {
+					System.out.println(ex);
+				}
+			} else {
+				System.out.println("No se seleccionó ninguna fecha.");
+			}
 		});
 
-		mBuscar.getItems().add(iBuscarFecha);
+		// mBuscar.getItems().add(iBuscarFecha);
 
-		
 		// Menú mConfig
 		Menu mConfig = new Menu("Configuración");
 
@@ -126,10 +133,15 @@ public class App extends Application {
 		Button subirFoto = new Button("Subir foto");
 
 		subirFoto.setOnAction(e -> {
-			abrirVentanaSubirImagen(stage);
+			abrirVentanaSubirImagen(stage, con);
 		});
 
 		Button bajarFoto = new Button("Descargar foto");
+
+		bajarFoto.setOnAction(e -> {
+			abrirVentanaVisualizarImg(stage, con);
+		});
+
 		Button abrirCamara = new Button("Abrir la cámara");
 
 		menuInferior.getItems().addAll(marcados, subirFoto, bajarFoto, abrirCamara);
@@ -139,14 +151,18 @@ public class App extends Application {
 		/************** CALENDARIO ****************/
 
 		/************** ESCENA ****************/
+//		Image icon = new Image("C:\\1º DAW\\[PROGRAMACIÓN]\\Proyectos\\Instancias\\img\\favicon.ico");
+//
+//		stage.getIcons().add(icon);
+
 		var scene = new Scene(pnlDistribucion, 800, 600);
 		stage.setScene(scene);
 		stage.show();
 
-		abrirVentanaFormulario(stage);
+		abrirVentanaFormulario(stage, con);
 	}
 
-	public void abrirVentanaSubirImagen(Stage stage) {
+	public void abrirVentanaSubirImagen(Stage stage, Connection con) {
 		Stage ventanaEmergente = new Stage();
 		PanelSubirImagen pnlSubirImg = new PanelSubirImagen();
 
@@ -159,9 +175,32 @@ public class App extends Application {
 		ventanaEmergente.setScene(scene);
 		ventanaEmergente.setTitle("Subir Imagen");
 		ventanaEmergente.show();
+		pnlSubirImg.btnEscogerImg.setOnAction(e -> {
+			FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("*.png", "*.jpg", "*.jpeg");
+			pnlSubirImg.escogerImagen.getExtensionFilters().add(extFilter);
+			pnlSubirImg.escogerImagen.setTitle("Selecciona una imagen");
+
+			File imagen = pnlSubirImg.escogerImagen.showOpenDialog(null);
+
+			int marcado;
+
+			if (pnlSubirImg.cbxMarcar.isSelected()) {
+				marcado = 1;
+			} else {
+				marcado = 0;
+			}
+
+			ImagenDO objImagen;
+			objImagen = new ImagenDO(-1, pnlSubirImg.txtDescripcionImg.getText(), "", "",
+					UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), marcado);
+			ImagenDAO.subirImagen(con, objImagen);
+			ImagenDAO.copiarImagen(imagen, objImagen);
+
+			ventanaEmergente.close();
+		});
 	}
 
-	public void abrirVentanaFormulario(Stage stage) {
+	public void abrirVentanaFormulario(Stage stage, Connection con) {
 		Stage ventanaEmergente = new Stage();
 		PanelFormularioProv pnlForm = new PanelFormularioProv();
 
@@ -179,6 +218,45 @@ public class App extends Application {
 			if (!cerrarVentana) {
 				stage.close();
 			}
+		});
+
+		pnlForm.enviar.setOnAction(e -> {
+
+			UsuarioDO usuario = new UsuarioDO(-1, pnlForm.nombre.getText(), pnlForm.apellido.getText(),
+					pnlForm.correo.getText(), pnlForm.contraseña.getText());
+
+			UsuarioDAO.crearUsuario(con, usuario);
+			PanelFormularioProv.correoUsuario = pnlForm.correo.getText();
+			ventanaEmergente.close();
+		});
+		;
+	}
+
+	public void abrirVentanaVisualizarImg(Stage stage, Connection con) {
+		Stage ventanaEmergente = new Stage();
+		PanelVisualizarImagen pnlVisualizarImg = new PanelVisualizarImagen();
+
+		Scene scene = new Scene(pnlVisualizarImg, 300, 300);
+
+		LocalDate fechaDia = CalendarioDAO.buscarFecha();
+		System.out.println(fechaDia);
+
+//		ArrayList<String> rutasCarpeta = new ArrayList<>();
+//		try {
+//			while (ImagenDAO.getDia(con, fechaDia).next()) {
+//				rutasCarpeta.add(ImagenDAO.getDia(con, fechaDia).getString("ubicacion"));
+//			}
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+
+		ventanaEmergente.setScene(scene);
+		ventanaEmergente.setTitle("Imagen");
+		ventanaEmergente.show();
+
+		stage.setOnCloseRequest(e -> {
+			ventanaEmergente.close();
 		});
 	}
 
