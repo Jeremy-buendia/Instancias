@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import application.model.CalendarioDAO;
@@ -23,7 +24,6 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -171,8 +171,9 @@ public class App extends Application {
 
 		Button bajarFoto = new Button("Descargar foto");
 
-		LocalDate fechaDia = LocalDate.of(2024, 04, 30);
 		bajarFoto.setOnAction(e -> {
+			// LocalDate fechaDia = LocalDate.of(2024, 05, 1);
+			LocalDate fechaDia = LocalDate.now();
 			// abrirVentanaVisualizarImg(stage, con, fechaDia);
 			DirectoryChooser directorio = new DirectoryChooser();
 			directorio.setTitle("Selecciona una carpeta");
@@ -198,35 +199,52 @@ public class App extends Application {
 
 		/************** CALENDARIO ****************/
 
-		try {
-			Image calendario = new Image(new FileInputStream("img\\2024-05.jpg"));
-			ImageView vistaCalendario = new ImageView(calendario);
-			vistaCalendario.setPreserveRatio(true);
-			vistaCalendario.setFitWidth(800);
-
-			mesAnterior.setOnAction(e -> {
-				try {
-					vistaCalendario.setImage(new Image(new FileInputStream("img\\2024-04.jpg")));
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			});
-
-			mesPosterior.setOnAction(e -> {
-				try {
-					vistaCalendario.setImage(new Image(new FileInputStream("img\\2024-06.jpg")));
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			});
-
-			pnlDistribucion.setCenter(vistaCalendario);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+//		try {
+//
+//			int[] indice = { 1 };
+//
+//			LocalDate fechaActual = LocalDate.now();
+//			DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy-MM");
+//			String fechaFormateada = fechaActual.format(formatoFecha);
+//
+//			if (fechaFormateada.substring(0, 7).equals("")) {
+//
+//			}
+//
+//			System.out.println(fechaFormateada);
+//
+//			Image calendario = new Image(new FileInputStream("img\\2024-05.jpg"));
+//			ImageView vistaCalendario = new ImageView(calendario);
+//			vistaCalendario.setPreserveRatio(true);
+//			vistaCalendario.setFitWidth(800);
+//
+//			mesAnterior.setOnAction(e -> {
+//				try {
+//					ArrayList<String> rutasCarpeta = CalendarioDAO.getCalendario(con);
+//					indice[0] -= 1;
+//					vistaCalendario.setImage(new Image(new FileInputStream(rutasCarpeta.get(indice[0]))));
+//				} catch (FileNotFoundException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			});
+//
+//			mesPosterior.setOnAction(e -> {
+//				try {
+//					ArrayList<String> rutasCarpeta = CalendarioDAO.getCalendario(con);
+//					indice[0] += 1;
+//					vistaCalendario.setImage(new Image(new FileInputStream(rutasCarpeta.get(indice[0]))));
+//				} catch (FileNotFoundException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			});
+//
+//		pnlDistribucion.setCenter(vistaCalendario);
+//		} catch (FileNotFoundException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 
 		/************** ESCENA ****************/
 		try {
@@ -241,7 +259,7 @@ public class App extends Application {
 		stage.setScene(scene);
 		stage.show();
 
-		abrirVentanaFormulario(stage, con);
+		abrirVentanaFormulario(stage, con, mesAnterior, mesPosterior, pnlDistribucion);
 	}
 
 	/**
@@ -307,7 +325,8 @@ public class App extends Application {
 	 * @param stage
 	 * @param con
 	 */
-	public void abrirVentanaFormulario(Stage stage, Connection con) {
+	public void abrirVentanaFormulario(Stage stage, Connection con, Button mesAnterior, Button mesPosterior,
+			BorderPane pnlDistribucion) {
 		Stage ventanaEmergente = new Stage();
 		PanelFormularioProv pnlForm = new PanelFormularioProv();
 
@@ -341,6 +360,7 @@ public class App extends Application {
 
 			UsuarioDAO.crearUsuario(con, usuario);
 			PanelFormularioProv.correoUsuario = pnlForm.correo.getText();
+			visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
 			ventanaEmergente.close();
 		});
 		;
@@ -496,6 +516,56 @@ public class App extends Application {
 		stage.setOnCloseRequest(e -> {
 			ventanaEmergente.close();
 		});
+	}
+
+	public static void visualizarCalendario(Connection con, Button mesAnterior, Button mesPosterior,
+			BorderPane pnlDistribucion) {
+		PanelVisualizarCalendario pnlCalendario = new PanelVisualizarCalendario();
+		pnlDistribucion.setCenter(pnlCalendario);
+		try {
+			ArrayList<String> rutasCarpeta = CalendarioDAO.getCalendario(con);
+			int[] indice = { 0 };
+
+			LocalDate fechaActual = LocalDate.now();
+			DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy-MM");
+			String fechaFormateada = fechaActual.format(formatoFecha);
+
+			for (int i = 0; i < rutasCarpeta.size(); i++) {
+				if (fechaFormateada.equals(rutasCarpeta.get(i).substring(4, 11))) {
+					pnlCalendario.imagen = new Image(new FileInputStream(rutasCarpeta.get(i)));
+					pnlCalendario.vistaCalendario.setImage(pnlCalendario.imagen);
+					indice[0] = i;
+				}
+			}
+
+			mesAnterior.setOnAction(e -> {
+				if (indice[0] > 0) {
+					try {
+						indice[0] -= 1;
+						pnlCalendario.vistaCalendario
+								.setImage(new Image(new FileInputStream(rutasCarpeta.get(indice[0]))));
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			});
+
+			mesPosterior.setOnAction(e -> {
+				if (indice[0] < rutasCarpeta.size() - 1) {
+					try {
+						indice[0] += 1;
+						pnlCalendario.vistaCalendario
+								.setImage(new Image(new FileInputStream(rutasCarpeta.get(indice[0]))));
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {
