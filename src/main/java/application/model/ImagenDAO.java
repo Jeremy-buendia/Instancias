@@ -6,9 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import application.PanelFormularioProv;
 
@@ -166,17 +168,28 @@ public class ImagenDAO {
 		}
 	}
 
-	public static ResultSet getDia(Connection con, LocalDate fecha) {
-		String query = "SELECT * FROM imagen WHERE Fecha_Imagen LIKE ?% AND Usuario_IdUsuario = ?";
+	/**
+	 * Función que recibe una fecha y devuelve todas las fotos de esa fecha
+	 * 
+	 * @param con
+	 * @param fecha
+	 * @return
+	 */
+	public static ArrayList<String> getDia(Connection con, LocalDate fecha) {
+		String query = "SELECT * FROM imagen WHERE Fecha_Imagen = ? AND Usuario_IdUsuario = ?";
+		ArrayList<String> rutasCarpeta = new ArrayList<>();
 
 		try {
 			PreparedStatement pstmt = con.prepareStatement(query);
 
-			pstmt.setString(1, fecha.toString());
-			pstmt.setInt(1, UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId());
+			pstmt.setDate(1, Date.valueOf(fecha));
+			pstmt.setInt(2, UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId());
 
 			ResultSet rs = pstmt.executeQuery();
-			return rs;
+			while (rs.next()) {
+				rutasCarpeta.add(rs.getString("ubicacion"));
+			}
+			return rutasCarpeta;
 		} catch (Exception e) {
 			return null;
 		}
