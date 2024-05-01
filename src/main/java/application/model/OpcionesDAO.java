@@ -10,57 +10,42 @@ public class OpcionesDAO {
 
 	//Función activarNotificaciones: la función activará y desactivará las notificaciones.
 	public static int activarNotificaciones(OpcionesDO activo, Connection con) {
-			try {
+	    try {
+	        boolean campoPrevio = false;
+	        int numAff = -1;
+	        String query = "UPDATE OPCIONES SET ";
 
-				boolean campoPrevio = false;
-				int numAff = -1;
-				String query = "UPDATE OPCIONES SET ";
+	        // Si los campos no son nulos, los vamos añadiendo a la sentencia
+	        if (activo.getNotificaciones() != -1) {
+	            if (activo.getNotificaciones() == 1) {
+	                query = query + "Notificaciones = 'activado'";
+	            } else if (activo.getNotificaciones() == 0) {
+	                query = query + "Notificaciones = 'desactivado'";
+	            }
+	            campoPrevio = true;
+	        }
 
-				// Si los campos no son nulos, los vamos añadiendo a la sentencia
-				if (activo.getNotificaciones() != -1) {
-					query = query + "Notificaciones = ?";
-					campoPrevio = true;
-				}
-				
-				query = query + " WHERE idOpciones = ?";
+	        query = query + " WHERE idOpciones = ?";
 
-				// Generamos el preparedstatement con la
-				// query
-				PreparedStatement pstmt = con.prepareStatement(query);
+	        // Generamos el preparedstatement con la query
+	        PreparedStatement pstmt = con.prepareStatement(query);
 
-				// Enlazamos los datos a las ? del prepared
-				// statement
+	        // Enlazamos los datos a las ? del prepared statement
+	        int posInterrogacion = 1;
 
-				int posInterrogacion = 1;
+	        pstmt.setInt(posInterrogacion, activo.getIdOpciones());
 
-				// Si los campos no son nulos, los vamos
-				// añadiendo a la sentencia
+	        if (campoPrevio) {
+	            System.out.println(query);
+	            numAff = pstmt.executeUpdate();
+	        }
 
-				if (activo.getNotificaciones() != -1) {
-					pstmt.setInt(posInterrogacion, activo.getNotificaciones());
-					// Incrementamos la posicion de la
-					// interrogacion para
-					// El siguiente posible campo
-					posInterrogacion++;
-
-				}
-
-				pstmt.setInt(posInterrogacion, activo.getIdOpciones());
-
-				if (campoPrevio) {
-
-					System.out.println(query);
-
-					numAff = pstmt.executeUpdate();
-
-				}
-
-				return numAff;
-			} catch (SQLException e) {
-				// TODO: handle exception
-				e.printStackTrace();
-				return 0;
-			}
+	        return numAff;
+	    } catch (SQLException e) {
+	        // TODO: handle exception
+	        e.printStackTrace();
+	        return 0;
+	    }
 	}
 	
 	//Función cambiarModo: la función cambiará el modo (claro u oscuro) de la aplicación.
@@ -73,10 +58,13 @@ public class OpcionesDAO {
 
 			// Si los campos no son nulos, los vamos añadiendo a la sentencia
 			if (modo.getModo() != -1) {
-				query = query + "Modo = ?";
-				campoPrevio = true;
-			}
-			
+	            if (modo.getModo() == 1) {
+	                query = query + "Modo = 'oscuro'";
+	            } else if (modo.getModo() == 0) {
+	                query = query + "Modo = 'claro'";
+	            }
+	            campoPrevio = true;
+	        }			
 			query = query + " WHERE idOpciones = ?";
 
 			// Generamos el preparedstatement con la
@@ -127,9 +115,25 @@ public class OpcionesDAO {
 
 			// Si los campos no son nulos, los vamos añadiendo a la sentencia
 			if (diseño.getDiseño() != -1) {
-				query = query + "Diseño = ?";
-				campoPrevio = true;
-			}
+	            if (diseño.getDiseño() == 0) {
+	                query = query + "Diseño = 'Predeterminado'";
+	            } else if (diseño.getDiseño() == 1) {
+	                query = query + "Diseño = 'San Valentin'";
+	            } else if (diseño.getDiseño() == 2) {
+	                query = query + "Diseño = 'Verano'";
+	            } else if (diseño.getDiseño() == 3) {
+	                query = query + "Diseño = 'Primavera'";
+	            } else if (diseño.getDiseño() == 4) {
+	                query = query + "Diseño = 'Otoño'";
+	            } else if (diseño.getDiseño() == 5) {
+	                query = query + "Diseño = 'Invierno'";
+	            } else if (diseño.getDiseño() == 6) {
+	                query = query + "Diseño = 'Halloween'";
+	            } else if (diseño.getDiseño() == 7) {
+	                query = query + "Diseño = 'Navidad'";
+	            }
+	            campoPrevio = true;
+	        }		
 			
 			query = query + " WHERE idOpciones = ?";
 
@@ -182,9 +186,13 @@ public class OpcionesDAO {
 
 			// Si los campos no son nulos, los vamos añadiendo a la sentencia
 			if (idioma.getIdioma() != -1) {
-				query = query + "Idioma = ?";
-				campoPrevio = true;
-			}
+	            if (idioma.getIdioma() == 1) {
+	                query = query + "Idioma = 'Ingles'";
+	            } else if (idioma.getIdioma() == 0) {
+	                query = query + "Idioma = 'Español'";
+	            }
+	            campoPrevio = true;
+	        }			
 			
 			query = query + " WHERE idOpciones = ?";
 
@@ -235,9 +243,15 @@ public class OpcionesDAO {
 
 			// Si los campos no son nulos, los vamos añadiendo a la sentencia
 			if (Fuente.getFuente() != -1) {
-				query = query + "Idioma = ?";
-				campoPrevio = true;
-			}
+	            if (Fuente.getFuente() == 0) {
+	                query = query + "Fuente = '100%'";
+	            } else if (Fuente.getFuente() == 1) {
+	                query = query + "Fuente = '50%'";
+	            } else if (Fuente.getFuente() == 2) {
+	                query = query + "Fuente = '200%'";
+	            }
+	            campoPrevio = true;
+	        }	
 			
 			query = query + " WHERE idOpciones = ?";
 

@@ -1,5 +1,7 @@
 package application;
 
+import java.awt.event.ActionEvent;
+import java.beans.EventHandler;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,12 +13,15 @@ import java.util.ArrayList;
 import application.model.CalendarioDAO;
 import application.model.ImagenDAO;
 import application.model.ImagenDO;
+import application.model.OpcionesDAO;
+import application.model.OpcionesDO;
 import application.model.UsuarioDAO;
 import application.model.UsuarioDO;
 import application.utils.UtilsBD;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -87,8 +92,29 @@ public class App extends Application {
 		// Menú mConfig
 		Menu mConfig = new Menu("Configuración");
 
-		// MenuItems y Submenús de mConfig
-		MenuItem iNotificaciones = new MenuItem("Notificaciones");
+		// CheckMenuItem para Notificaciones
+		CheckMenuItem iNotificaciones = new CheckMenuItem("Notificaciones");
+		
+		iNotificaciones.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override
+		    public void handle(ActionEvent event) {
+		        // Obtén el estado actual del CheckMenuItem
+		        int estado = iNotificaciones.isSelected() ? 1 : 0;
+
+		        // Actualiza el objeto 'activo' con el nuevo estado
+		        activo.setNotificaciones(estado);
+
+		        // Llama a la función para actualizar la base de datos
+		        int numAff = funcion(); // Asegúrate de que 'funcion' es el nombre de tu método de actualización
+
+		        // Comprueba si la actualización fue exitosa
+		        if (numAff > 0) {
+		            System.out.println("La base de datos se ha actualizado correctamente.");
+		        } else {
+		            System.out.println("Hubo un problema al actualizar la base de datos.");
+		        }
+		    }
+		});
 
 		Menu mIdioma = new Menu("Perfil");
 
