@@ -16,6 +16,8 @@ import application.model.UsuarioDAO;
 import application.model.UsuarioDO;
 import application.utils.UtilsBD;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
@@ -93,26 +95,27 @@ public class App extends Application {
 		// CheckMenuItem para Notificaciones
 		CheckMenuItem iNotificaciones = new CheckMenuItem("Notificaciones");
 
-//		iNotificaciones.setOnAction(new EventHandler<ActionEvent>() {
-//		    @Override
-//		    public void handle(ActionEvent event) {
-//		        // Obtén el estado actual del CheckMenuItem
-//		        int estado = iNotificaciones.isSelected() ? 1 : 0;
-//
-//		        // Actualiza el objeto 'activo' con el nuevo estado
-//		        activo.setNotificaciones(estado);
-//
-//		        // Llama a la función para actualizar la base de datos
-//		        int numAff = funcion(); // Asegúrate de que 'funcion' es el nombre de tu método de actualización
-//
-//		        // Comprueba si la actualización fue exitosa
-//		        if (numAff > 0) {
-//		            System.out.println("La base de datos se ha actualizado correctamente.");
-//		        } else {
-//		            System.out.println("Hubo un problema al actualizar la base de datos.");
-//		        }
-//		    }
-//		});
+		iNotificaciones.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// Obtén el estado actual del CheckMenuItem
+				int estado = iNotificaciones.isSelected() ? 1 : 0;
+
+				// Actualiza el objeto 'activo' con el nuevo estado
+//				 activo.setNotificaciones(estado);
+
+				// Llama a la función para actualizar la base de datos
+//				 int numAff = funcion(); // Asegúrate de que 'funcion' es el nombre de tu
+				// método de actualización
+
+				// Comprueba si la actualización fue exitosa
+//				if (numAff > 0) {
+//					System.out.println("La base de datos se ha actualizado correctamente.");
+//				} else {
+//					System.out.println("Hubo un problema al actualizar la base de datos.");
+//				}
+			}
+		});
 
 		Menu mIdioma = new Menu("Perfil");
 
@@ -198,53 +201,6 @@ public class App extends Application {
 		pnlDistribucion.setBottom(menuInferior);
 
 		/************** CALENDARIO ****************/
-
-//		try {
-//
-//			int[] indice = { 1 };
-//
-//			LocalDate fechaActual = LocalDate.now();
-//			DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy-MM");
-//			String fechaFormateada = fechaActual.format(formatoFecha);
-//
-//			if (fechaFormateada.substring(0, 7).equals("")) {
-//
-//			}
-//
-//			System.out.println(fechaFormateada);
-//
-//			Image calendario = new Image(new FileInputStream("img\\2024-05.jpg"));
-//			ImageView vistaCalendario = new ImageView(calendario);
-//			vistaCalendario.setPreserveRatio(true);
-//			vistaCalendario.setFitWidth(800);
-//
-//			mesAnterior.setOnAction(e -> {
-//				try {
-//					ArrayList<String> rutasCarpeta = CalendarioDAO.getCalendario(con);
-//					indice[0] -= 1;
-//					vistaCalendario.setImage(new Image(new FileInputStream(rutasCarpeta.get(indice[0]))));
-//				} catch (FileNotFoundException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			});
-//
-//			mesPosterior.setOnAction(e -> {
-//				try {
-//					ArrayList<String> rutasCarpeta = CalendarioDAO.getCalendario(con);
-//					indice[0] += 1;
-//					vistaCalendario.setImage(new Image(new FileInputStream(rutasCarpeta.get(indice[0]))));
-//				} catch (FileNotFoundException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			});
-//
-//		pnlDistribucion.setCenter(vistaCalendario);
-//		} catch (FileNotFoundException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
 
 		/************** ESCENA ****************/
 		try {
