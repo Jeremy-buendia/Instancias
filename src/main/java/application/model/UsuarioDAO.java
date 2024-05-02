@@ -83,34 +83,6 @@ public class UsuarioDAO {
 		}
 
 	}
-	
-	/**
-	 * Funcion que comprueba la contraseña del correo introducido
-	 * @param con
-	 * @param correo
-	 * @param contraseña
-	 * @return
-	 */
-	public static boolean verificarContraseña(Connection con, String correo, String contraseña) {
-	    try {
-	        // Obtener el usuario correspondiente al correo proporcionado
-	        UsuarioDO usuario = cargarCorreo(con, correo);
-	        
-	        // Si no se encuentra ningún usuario con el correo proporcionado, la contraseña es incorrecta
-	        if (usuario == null) {
-	            return false;
-	        }
-	        
-	        // Verificar si la contraseña proporcionada coincide con la contraseña almacenada en la base de datos
-	        if(usuario.getContraseña().equals(contraseña)) {
-	        return true;
-	        }
-	        return false;
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return false;
-	    }
-	}
 
 	/**
 	 * Funcion que elemina el usuario de la id introducida
