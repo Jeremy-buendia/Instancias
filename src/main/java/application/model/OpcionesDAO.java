@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import application.model.OpcionesDO;
+import application.utils.UtilsBD;
 
 public class OpcionesDAO {
 
@@ -177,6 +178,25 @@ public class OpcionesDAO {
 }
 	
 	//Función cambiarIdioma: la función cambiará el idioma (español o inglés) de la aplicación.
+    public static void cambiarIdioma(int idioma) {
+        // Crear una nueva instancia de OpcionesDO y establecer el idioma
+        OpcionesDO opciones = new OpcionesDO();
+        opciones.setIdioma(idioma);
+
+        // Obtener la conexión a la base de datos
+		Connection con = UtilsBD.conectarBD();
+
+        // Llamar a la función para cambiar el idioma en la base de datos
+        int numAff = cambiarIdioma(opciones, con);
+
+        // Comprobar si la actualización fue exitosa
+        if (numAff > 0) {
+            System.out.println("Idioma actualizado con éxito.");
+        } else {
+            System.out.println("Error al actualizar el idioma.");
+        }
+    }
+
 	public static int cambiarIdioma(OpcionesDO idioma, Connection con){
 		try {
 

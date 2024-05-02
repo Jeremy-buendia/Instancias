@@ -8,10 +8,13 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import application.model.CalendarioDAO;
 import application.model.ImagenDAO;
 import application.model.ImagenDO;
+import application.model.OpcionesDAO;
+import application.model.OpcionesDO;
 import application.model.UsuarioDAO;
 import application.model.UsuarioDO;
 import application.utils.UtilsBD;
@@ -25,6 +28,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -97,27 +103,52 @@ public class App extends Application {
 			// Obtén el estado actual del CheckMenuItem
 			int estado = ((CheckMenuItem) iNotificaciones).isSelected() ? 1 : 0;
 
-			// Actualiza el objeto 'activo' con el nuevo estado
-			// activo.setNotificaciones(estado);
-
-			// Llama a la función para actualizar la base de datos
-//		    int numAff = funcion(); // Asegúrate de que 'funcion' es el nombre de tu método de actualización
-//
-//		    // Comprueba si la actualización fue exitosa
-//		    if (numAff > 0) {
-//		        System.out.println("La base de datos se ha actualizado correctamente.");
-//		    } else {
-//		        System.out.println("Hubo un problema al actualizar la base de datos.");
 		});
 
 		Menu mIdioma = new Menu("Perfil");
+        MenuItem iEspanol = new MenuItem("Español");
+        MenuItem iIngles = new MenuItem("Inglés");
 
-		MenuItem iEspañol = new MenuItem("Español");
-		MenuItem iIngles = new MenuItem("Inglés");
+        // Añadir los elementos del menú al menú
+        mIdioma.getItems().addAll(iEspanol, iIngles);
+
+        // Añadir los oyentes de acción a los elementos del menú
+        // 0 para español
+        iEspanol.setOnAction(e -> cambiarIdioma(0));  
+        // 1 para inglés
+        iIngles.setOnAction(e -> cambiarIdioma(1)); 
+    
 
 		Menu mApariencia = new Menu("Apariencia");
 
 		MenuItem iModo = new MenuItem("Modo");
+		iModo.setOnAction(event -> {
+			Scene scene = new Scene(null);
+			// Verifica si iModo está seleccionado
+			int estado = ((CheckMenuItem) iModo).isSelected() ? 1 : 0; 
+			if (estado == 1) {
+				// Cambia el color de fondo a negro
+				scene.setFill(Color.BLACK); 
+				OpcionesDO modo = new OpcionesDO();
+				//Establece el modo oscuro
+				modo.setModo(1); 
+				// Actualiza la base de datos
+				OpcionesDAO.cambiarModo(modo, con); 
+			} else {
+				// Actualiza la base de datos
+				scene.setFill(Color.WHITE); 
+				OpcionesDO modo = new OpcionesDO();
+				// Establece el modo claro
+				modo.setModo(0); 
+				// Actualiza la base de datos
+				OpcionesDAO.cambiarModo(modo, con); 
+			}
+		});
+
+
+
+
+		
 		MenuItem iFuente = new MenuItem("Fuente");
 		MenuItem iDiseño = new MenuItem("Diseño");
 
@@ -209,6 +240,11 @@ public class App extends Application {
 		stage.show();
 
 		abrirVentanaFormulario(stage, con, mesAnterior, mesPosterior, pnlDistribucion);
+	}
+
+	private Object cambiarIdioma(int i) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private int funcion() {
@@ -525,7 +561,6 @@ public class App extends Application {
 			e.printStackTrace();
 		}
 	}
-
 	public static void main(String[] args) {
 		launch();
 	}
