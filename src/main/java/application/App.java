@@ -8,13 +8,11 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import application.model.CalendarioDAO;
 import application.model.ImagenDAO;
 import application.model.ImagenDO;
 import application.model.OpcionesDAO;
-import application.model.OpcionesDO;
 import application.model.UsuarioDAO;
 import application.model.UsuarioDO;
 import application.utils.UtilsBD;
@@ -28,9 +26,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Scale;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -102,53 +98,41 @@ public class App extends Application {
 		iNotificaciones.setOnAction(event -> {
 			// Obtén el estado actual del CheckMenuItem
 			int estado = ((CheckMenuItem) iNotificaciones).isSelected() ? 1 : 0;
+			System.out.println(estado);
+			// Actualiza el objeto 'activo' con el nuevo estado
 
-		});
+			int numAff = OpcionesDAO.activarNotificaciones(
+					UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), estado, con);
 
-		Menu mIdioma = new Menu("Perfil");
-        MenuItem iEspanol = new MenuItem("Español");
-        MenuItem iIngles = new MenuItem("Inglés");
+			// Llama a la función para actualizar la base de datos
+			// Asegúrate de que 'funcion' es el nombre de tu método de actualización
 
-        // Añadir los elementos del menú al menú
-        mIdioma.getItems().addAll(iEspanol, iIngles);
+			// Comprueba si la actualización fue exitosa
 
-        // Añadir los oyentes de acción a los elementos del menú
-        // 0 para español
-        iEspanol.setOnAction(e -> cambiarIdioma(0));  
-        // 1 para inglés
-        iIngles.setOnAction(e -> cambiarIdioma(1)); 
-    
+			if (numAff > 0) {
 
-		Menu mApariencia = new Menu("Apariencia");
+				System.out.println("La base de datos se ha actualizado correctamente.");
 
-		MenuItem iModo = new MenuItem("Modo");
-		iModo.setOnAction(event -> {
-			Scene scene = new Scene(null);
-			// Verifica si iModo está seleccionado
-			int estado = ((CheckMenuItem) iModo).isSelected() ? 1 : 0; 
-			if (estado == 1) {
-				// Cambia el color de fondo a negro
-				scene.setFill(Color.BLACK); 
-				OpcionesDO modo = new OpcionesDO();
-				//Establece el modo oscuro
-				modo.setModo(1); 
-				// Actualiza la base de datos
-				OpcionesDAO.cambiarModo(modo, con); 
 			} else {
-				// Actualiza la base de datos
-				scene.setFill(Color.WHITE); 
-				OpcionesDO modo = new OpcionesDO();
-				// Establece el modo claro
-				modo.setModo(0); 
-				// Actualiza la base de datos
-				OpcionesDAO.cambiarModo(modo, con); 
+
+				System.out.println("Hubo un problema al actualizar la base de datos.");
 			}
 		});
 
+		Menu mIdioma = new Menu("Perfil");
+		MenuItem iEspanol = new MenuItem("Español");
+		MenuItem iIngles = new MenuItem("Inglés");
 
+		// Añadir los oyentes de acción a los elementos del menú
+		// 0 para español
+		iEspanol.setOnAction(e -> OpcionesDAO.cambiarIdioma(0));
+		// 1 para inglés
+		iIngles.setOnAction(e -> OpcionesDAO.cambiarIdioma(1));
 
+		Menu mApariencia = new Menu("Apariencia");
 
-		
+		CheckMenuItem iModo = new CheckMenuItem("Modo");
+
 		MenuItem iFuente = new MenuItem("Fuente");
 		MenuItem iDiseño = new MenuItem("Diseño");
 
@@ -171,7 +155,7 @@ public class App extends Application {
 		mAyuda.getItems().addAll(mAcercaDe, iContactanos);
 
 		mOpcSesion.getItems().addAll(iCerrarSesion, iCambiarSesion);
-		mIdioma.getItems().addAll(iEspañol, iIngles);
+		mIdioma.getItems().addAll(iEspanol, iIngles);
 		mApariencia.getItems().addAll(iModo, iFuente, iDiseño);
 		mAcercaDe.getItems().addAll(iVersion, iNosotros, iActualizaciones);
 
@@ -236,20 +220,32 @@ public class App extends Application {
 		}
 
 		var scene = new Scene(pnlDistribucion, 800, 600);
+
+		iModo.setOnAction(event -> {
+			// Verifica si iModo está seleccionado
+			int estado = ((CheckMenuItem) iModo).isSelected() ? 1 : 0;
+			if (estado == 1) {
+				// Cambia el color de fondo a negro
+				scene.setFill(Color.BLACK);
+
+				// Actualiza la base de datos
+				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), estado,
+						con);
+			} else {
+				// Actualiza la base de datos
+				scene.setFill(Color.WHITE);
+
+				// Actualiza la base de datos
+				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), estado,
+						con);
+			}
+		});
+
 		stage.setScene(scene);
+
 		stage.show();
 
 		abrirVentanaFormulario(stage, con, mesAnterior, mesPosterior, pnlDistribucion);
-	}
-
-	private Object cambiarIdioma(int i) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private int funcion() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	/**
@@ -565,6 +561,7 @@ public class App extends Application {
 			e.printStackTrace();
 		}
 	}
+
 	public static void main(String[] args) {
 		launch();
 	}
