@@ -5,6 +5,7 @@ import javafx.scene.layout.GridPane;
 
 public class PanelLayoutBotones extends GridPane {
 
+	// Meter parametro de fecha, alomejor el array no sé
 	PanelLayoutBotones() {
 		int x = 0;
 		int y = 0;
@@ -12,7 +13,6 @@ public class PanelLayoutBotones extends GridPane {
 		for (int i = 1; i <= 35; i++) {
 			Button dia = new Button();
 			dia.setPrefSize(136, 70);
-			this.add(dia, x, y);
 
 			dia.setStyle("-fx-background-color: transparent;");
 
@@ -23,6 +23,8 @@ public class PanelLayoutBotones extends GridPane {
 			dia.setOnMouseExited(e -> {
 				dia.setStyle("-fx-background-color: transparent;");
 			});
+
+			this.add(dia, x, y);
 
 			dia.setOnAction(e -> {
 				System.out.println("illo");
