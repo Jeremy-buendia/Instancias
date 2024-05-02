@@ -5,6 +5,6 @@ module Instancias.javafx_controls {
 	requires mysql.connector.j;
 	requires javafx.graphics;
 	requires java.desktop;
-
+	 opens application to javafx.fxml;
 	exports application;
 }

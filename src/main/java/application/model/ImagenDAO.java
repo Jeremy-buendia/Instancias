@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import application.PanelFormularioProv;
+import application.LoginController;
 
 public class ImagenDAO {
 
@@ -228,7 +228,7 @@ public class ImagenDAO {
 			PreparedStatement pstmt = con.prepareStatement(query);
 
 			pstmt.setDate(1, Date.valueOf(fecha));
-			pstmt.setInt(2, UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId());
+			pstmt.setInt(2, UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
 
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -246,7 +246,7 @@ public class ImagenDAO {
 		String query = "SELECT * FROM imagen WHERE Marcado = 1 AND Usuario_IdUsuario = ?";
 		try {
 			PreparedStatement pstmt = con.prepareStatement(query);
-			pstmt.setInt(1, UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId());
+			pstmt.setInt(1, UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
 
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
