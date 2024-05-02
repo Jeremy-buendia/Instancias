@@ -17,6 +17,7 @@ import application.model.UsuarioDAO;
 import application.model.UsuarioDO;
 import application.utils.UtilsBD;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
@@ -26,6 +27,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -102,7 +104,7 @@ public class App extends Application {
 			// Actualiza el objeto 'activo' con el nuevo estado
 
 			int numAff = OpcionesDAO.activarNotificaciones(
-					UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), estado, con);
+					UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
 
 			// Llama a la función para actualizar la base de datos
 			// Asegúrate de que 'funcion' es el nombre de tu método de actualización
@@ -229,14 +231,14 @@ public class App extends Application {
 				scene.setFill(Color.BLACK);
 
 				// Actualiza la base de datos
-				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), estado,
+				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado,
 						con);
 			} else {
 				// Actualiza la base de datos
 				scene.setFill(Color.WHITE);
 
 				// Actualiza la base de datos
-				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), estado,
+				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado,
 						con);
 			}
 		});
@@ -245,7 +247,7 @@ public class App extends Application {
 
 		stage.show();
 
-		abrirVentanaFormulario(stage, con, mesAnterior, mesPosterior, pnlDistribucion);
+		abrirVentanaFormulario(stage);
 	}
 
 	/**
@@ -295,7 +297,7 @@ public class App extends Application {
 
 				ImagenDO objImagen;
 				objImagen = new ImagenDO(-1, pnlSubirImg.txtDescripcionImg.getText(), "", "",
-						UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), marcado);
+						UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), marcado);
 				ImagenDAO.subirImagen(con, objImagen, imagen);
 				ImagenDAO.copiarImagen(imagen, objImagen);
 
@@ -311,50 +313,28 @@ public class App extends Application {
 	 * @param stage
 	 * @param con
 	 */
-	public void abrirVentanaFormulario(Stage stage, Connection con, Button mesAnterior, Button mesPosterior,
-			BorderPane pnlDistribucion) {
-		Stage ventanaEmergente = new Stage();
-		PanelFormularioProv pnlForm = new PanelFormularioProv();
+	public void abrirVentanaFormulario(Stage stage) {
+	    try {
+	        // Cargar el archivo FXML de la ventana emergente
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("IniciarSesion.fxml"));
+	        Pane ventanaEmergente = loader.load();
 
-		Scene scene = new Scene(pnlForm, 300, 300);
+	        // Crear una nueva escena para la ventana emergente
+	        Scene scene = new Scene(ventanaEmergente);
 
-		// Bloqueamos la ventana padre definiendo cual es el padre y poner la modalidad
-		ventanaEmergente.initOwner(stage);
-		ventanaEmergente.initModality(Modality.WINDOW_MODAL);
+	        // Crear una nueva ventana emergente...
+	        Stage ventana = new Stage();
+	        ventana.setScene(scene);
+	        ventana.show();
 
-		ventanaEmergente.setScene(scene);
-		ventanaEmergente.setTitle("Entrar");
-		ventanaEmergente.show();
-		try {
-			Image icon = new Image(new FileInputStream("img\\favicon.png"));
-			ventanaEmergente.getIcons().add(icon);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		ventanaEmergente.setOnCloseRequest(e -> {
-			if (!cerrarVentana) {
-				stage.close();
-			}
-		});
-
-		pnlForm.enviar.setOnAction(e -> {
-
-			UsuarioDO usuario = new UsuarioDO(-1, pnlForm.nombre.getText(), pnlForm.apellido.getText(),
-					pnlForm.correo.getText(), pnlForm.contraseña.getText());
-
-			if (UsuarioDAO.cargarId(con, pnlForm.correo.getText()) != null) {
-
-			} else {
-				UsuarioDAO.crearUsuario(con, usuario);
-				PanelFormularioProv.correoUsuario = pnlForm.correo.getText();
-				visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
-				ventanaEmergente.close();
-			}
-		});
-		;
+	        // Obtener el controlador de la ventana emergente...
+	        LoginController controller = loader.getController();
+	        // Puedes llamar a métodos o pasar datos al controlador si es necesario
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
+
 
 	/**
 	 * Función que abre una ventana para visualizar las imágenes de un día
