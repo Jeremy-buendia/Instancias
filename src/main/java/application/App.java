@@ -93,6 +93,27 @@ public class App extends Application {
 		Menu mConfig = new Menu("Configuración");
 
 		// CheckMenuItem para Notificaciones
+<<<<<<< HEAD
+		MenuItem iNotificaciones = new CheckMenuItem("Notificaciones");
+		
+	
+		iNotificaciones.setOnAction(event -> {
+		    // Obtén el estado actual del CheckMenuItem
+		    int estado = ((CheckMenuItem) iNotificaciones).isSelected() ? 1 : 0;
+
+		    // Actualiza el objeto 'activo' con el nuevo estado
+		    activo.setNotificaciones(estado);
+
+		    // Llama a la función para actualizar la base de datos
+		    int numAff = funcion(); // Asegúrate de que 'funcion' es el nombre de tu método de actualización
+
+		    // Comprueba si la actualización fue exitosa
+		    if (numAff > 0) {
+		        System.out.println("La base de datos se ha actualizado correctamente.");
+		    } else {
+		        System.out.println("Hubo un problema al actualizar la base de datos.");
+		    }
+=======
 		CheckMenuItem iNotificaciones = new CheckMenuItem("Notificaciones");
 
 		iNotificaciones.setOnAction(new EventHandler<ActionEvent>() {
@@ -115,7 +136,9 @@ public class App extends Application {
 //					System.out.println("Hubo un problema al actualizar la base de datos.");
 //				}
 			}
+>>>>>>> b0ba490b2b8b3e90fce3de6d272d702fea4affd9
 		});
+
 
 		Menu mIdioma = new Menu("Perfil");
 
@@ -218,12 +241,20 @@ public class App extends Application {
 		abrirVentanaFormulario(stage, con, mesAnterior, mesPosterior, pnlDistribucion);
 	}
 
+<<<<<<< HEAD
+	private int funcion() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+=======
 	/**
 	 * Función que abre una ventana emergente para poder subir una foto
 	 * 
 	 * @param stage
 	 * @param con
 	 */
+>>>>>>> b0ba490b2b8b3e90fce3de6d272d702fea4affd9
 	public void abrirVentanaSubirImagen(Stage stage, Connection con) {
 		Stage ventanaEmergente = new Stage();
 		PanelSubirImagen pnlSubirImg = new PanelSubirImagen();
