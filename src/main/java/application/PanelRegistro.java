@@ -11,21 +11,23 @@ import javafx.stage.Modality;
 	import java.io.IOException;
 import java.sql.Connection;
 
-	public class PanelFormulario extends GridPane {
+	public class PanelRegistro extends GridPane {
 
 	
 
 		    public void start(Stage primaryStage) throws Exception {
-		        // Cargar el archivo FXML
-		        FXMLLoader loader = new FXMLLoader(getClass().getResource("IniciarSesion.fxml"));
+		        FXMLLoader loader = new FXMLLoader(getClass().getResource("Registro.fxml"));
 		        Parent root = loader.load();
 
-		        // Crear la escena
-		        Scene scene = new Scene(root, 600, 400);
+		        // Obtener el controlador del archivo FXML
+		        RegistroController controller = loader.getController();
 
-		        // Configurar la escena en el escenario (stage)
+		        // Configurar la escena
+		        Scene scene = new Scene(root, 800, 600);
+
+		        // Configurar el escenario principal
+		        primaryStage.setTitle("Registro");
 		        primaryStage.setScene(scene);
-		        primaryStage.setTitle("Login");
 		        primaryStage.show();
 		    }
 		    
