@@ -1,21 +1,23 @@
 package application;
 
-import java.awt.event.ActionEvent;
-import java.beans.EventHandler;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import application.model.CalendarioDAO;
 import application.model.ImagenDAO;
 import application.model.ImagenDO;
-import application.model.OpcionesDAO;
-import application.model.OpcionesDO;
 import application.model.UsuarioDAO;
 import application.model.UsuarioDO;
 import application.utils.UtilsBD;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
@@ -23,7 +25,9 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToolBar;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -89,6 +93,7 @@ public class App extends Application {
 		Menu mConfig = new Menu("Configuración");
 
 		// CheckMenuItem para Notificaciones
+<<<<<<< HEAD
 		MenuItem iNotificaciones = new CheckMenuItem("Notificaciones");
 		
 	
@@ -108,6 +113,30 @@ public class App extends Application {
 		    } else {
 		        System.out.println("Hubo un problema al actualizar la base de datos.");
 		    }
+=======
+		CheckMenuItem iNotificaciones = new CheckMenuItem("Notificaciones");
+
+		iNotificaciones.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// Obtén el estado actual del CheckMenuItem
+				int estado = iNotificaciones.isSelected() ? 1 : 0;
+
+				// Actualiza el objeto 'activo' con el nuevo estado
+//				 activo.setNotificaciones(estado);
+
+				// Llama a la función para actualizar la base de datos
+//				 int numAff = funcion(); // Asegúrate de que 'funcion' es el nombre de tu
+				// método de actualización
+
+				// Comprueba si la actualización fue exitosa
+//				if (numAff > 0) {
+//					System.out.println("La base de datos se ha actualizado correctamente.");
+//				} else {
+//					System.out.println("Hubo un problema al actualizar la base de datos.");
+//				}
+			}
+>>>>>>> b0ba490b2b8b3e90fce3de6d272d702fea4affd9
 		});
 
 
@@ -155,6 +184,11 @@ public class App extends Application {
 		ToolBar menuInferior = new ToolBar();
 
 		Button marcados = new Button("Marcados");
+
+		marcados.setOnAction(e -> {
+			abrirVentanaVisualizarMarcados(stage, con);
+		});
+
 		Button subirFoto = new Button("Subir foto");
 
 		subirFoto.setOnAction(e -> {
@@ -164,34 +198,63 @@ public class App extends Application {
 		Button bajarFoto = new Button("Descargar foto");
 
 		bajarFoto.setOnAction(e -> {
-			abrirVentanaVisualizarImg(stage, con);
+			// LocalDate fechaDia = LocalDate.of(2024, 05, 1);
+			LocalDate fechaDia = LocalDate.now();
+			// abrirVentanaVisualizarImg(stage, con, fechaDia);
+			DirectoryChooser directorio = new DirectoryChooser();
+			directorio.setTitle("Selecciona una carpeta");
+			ArrayList<String> rutasCarpeta = ImagenDAO.getDia(con, fechaDia);
+
+			File directorioSeleccionado = directorio.showDialog(null);
+
+			for (int i = 0; i < rutasCarpeta.size(); i++) {
+				File imagen = new File(rutasCarpeta.get(i));
+				ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
+			}
+
 		});
 
 		Button abrirCamara = new Button("Abrir la cámara");
 
-		menuInferior.getItems().addAll(marcados, subirFoto, bajarFoto, abrirCamara);
+		Button mesAnterior = new Button("<--");
+		Button mesPosterior = new Button("-->");
+
+		menuInferior.getItems().addAll(marcados, subirFoto, bajarFoto, abrirCamara, mesAnterior, mesPosterior);
 
 		pnlDistribucion.setBottom(menuInferior);
 
 		/************** CALENDARIO ****************/
 
 		/************** ESCENA ****************/
-//		Image icon = new Image("C:\\1º DAW\\[PROGRAMACIÓN]\\Proyectos\\Instancias\\img\\favicon.ico");
-//
-//		stage.getIcons().add(icon);
+		try {
+			Image icon = new Image(new FileInputStream("img\\favicon.png"));
+			stage.getIcons().add(icon);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		var scene = new Scene(pnlDistribucion, 800, 600);
 		stage.setScene(scene);
 		stage.show();
 
-		abrirVentanaFormulario(stage, con);
+		abrirVentanaFormulario(stage, con, mesAnterior, mesPosterior, pnlDistribucion);
 	}
 
+<<<<<<< HEAD
 	private int funcion() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+=======
+	/**
+	 * Función que abre una ventana emergente para poder subir una foto
+	 * 
+	 * @param stage
+	 * @param con
+	 */
+>>>>>>> b0ba490b2b8b3e90fce3de6d272d702fea4affd9
 	public void abrirVentanaSubirImagen(Stage stage, Connection con) {
 		Stage ventanaEmergente = new Stage();
 		PanelSubirImagen pnlSubirImg = new PanelSubirImagen();
@@ -205,32 +268,52 @@ public class App extends Application {
 		ventanaEmergente.setScene(scene);
 		ventanaEmergente.setTitle("Subir Imagen");
 		ventanaEmergente.show();
+
+		try {
+			Image icon = new Image(new FileInputStream("img\\favicon.png"));
+			ventanaEmergente.getIcons().add(icon);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		pnlSubirImg.btnEscogerImg.setOnAction(e -> {
-			FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("*.png", "*.jpg", "*.jpeg");
+			FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Archivos de Imagen", "*.png",
+					"*.jpg", "*.jpeg");
 			pnlSubirImg.escogerImagen.getExtensionFilters().add(extFilter);
 			pnlSubirImg.escogerImagen.setTitle("Selecciona una imagen");
 
 			File imagen = pnlSubirImg.escogerImagen.showOpenDialog(null);
 
-			int marcado;
+			if (imagen != null) {
+				int marcado;
 
-			if (pnlSubirImg.cbxMarcar.isSelected()) {
-				marcado = 1;
-			} else {
-				marcado = 0;
+				if (pnlSubirImg.cbxMarcar.isSelected()) {
+					marcado = 1;
+				} else {
+					marcado = 0;
+				}
+
+				ImagenDO objImagen;
+				objImagen = new ImagenDO(-1, pnlSubirImg.txtDescripcionImg.getText(), "", "",
+						UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), marcado);
+				ImagenDAO.subirImagen(con, objImagen, imagen);
+				ImagenDAO.copiarImagen(imagen, objImagen);
+
+				ventanaEmergente.close();
 			}
 
-			ImagenDO objImagen;
-			objImagen = new ImagenDO(-1, pnlSubirImg.txtDescripcionImg.getText(), "", "",
-					UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), marcado);
-			ImagenDAO.subirImagen(con, objImagen);
-			ImagenDAO.copiarImagen(imagen, objImagen);
-
-			ventanaEmergente.close();
 		});
 	}
 
-	public void abrirVentanaFormulario(Stage stage, Connection con) {
+	/**
+	 * Función que abre la ventana para registrarse
+	 * 
+	 * @param stage
+	 * @param con
+	 */
+	public void abrirVentanaFormulario(Stage stage, Connection con, Button mesAnterior, Button mesPosterior,
+			BorderPane pnlDistribucion) {
 		Stage ventanaEmergente = new Stage();
 		PanelFormularioProv pnlForm = new PanelFormularioProv();
 
@@ -243,6 +326,13 @@ public class App extends Application {
 		ventanaEmergente.setScene(scene);
 		ventanaEmergente.setTitle("Entrar");
 		ventanaEmergente.show();
+		try {
+			Image icon = new Image(new FileInputStream("img\\favicon.png"));
+			ventanaEmergente.getIcons().add(icon);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		ventanaEmergente.setOnCloseRequest(e -> {
 			if (!cerrarVentana) {
@@ -257,37 +347,212 @@ public class App extends Application {
 
 			UsuarioDAO.crearUsuario(con, usuario);
 			PanelFormularioProv.correoUsuario = pnlForm.correo.getText();
+			visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
 			ventanaEmergente.close();
 		});
 		;
 	}
 
-	public void abrirVentanaVisualizarImg(Stage stage, Connection con) {
+	/**
+	 * Función que abre una ventana para visualizar las imágenes de un día
+	 * 
+	 * @param stage
+	 * @param con
+	 * @param fechaDia
+	 */
+	public void abrirVentanaVisualizarImg(Stage stage, Connection con, LocalDate fechaDia) {
+		Stage ventanaEmergente = new Stage();
+		PanelVisualizarImagen pnlVisualizarImg = new PanelVisualizarImagen();
+
+		Scene scene = new Scene(pnlVisualizarImg, 300, 300);
+		System.out.println(fechaDia);
+
+		ArrayList<String> rutasCarpeta = ImagenDAO.getDia(con, fechaDia);
+
+		try {
+			pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(0)));
+			pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		pnlVisualizarImg.anterior.setOnAction(e -> {
+			if (pnlVisualizarImg.idFoto > 1) {
+				pnlVisualizarImg.idFoto -= 1;
+				try {
+					Image imagenAnterior = new Image(
+							new FileInputStream(rutasCarpeta.get(pnlVisualizarImg.idFoto - 1)));
+					pnlVisualizarImg.vistaImg.setImage(imagenAnterior);
+
+					pnlVisualizarImg.vistaImg.setPreserveRatio(true);
+					// Cambiamos ancho de la imagen
+					pnlVisualizarImg.vistaImg.setFitWidth(200);
+
+					pnlVisualizarImg.getChildren().add(pnlVisualizarImg.vistaImg);
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+
+			}
+		});
+
+		pnlVisualizarImg.siguiente.setOnAction(e -> {
+			if (pnlVisualizarImg.idFoto < rutasCarpeta.size()) {
+				pnlVisualizarImg.idFoto += 1;
+			}
+			try {
+				Image imagenSiguiente = new Image(new FileInputStream(rutasCarpeta.get(pnlVisualizarImg.idFoto - 1)));
+				pnlVisualizarImg.vistaImg.setImage(imagenSiguiente);
+
+				pnlVisualizarImg.vistaImg.setPreserveRatio(true);
+				// Cambiamos ancho de la imagen
+				pnlVisualizarImg.vistaImg.setFitWidth(200);
+				pnlVisualizarImg.getChildren().add(pnlVisualizarImg.vistaImg);
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+		});
+
+		ventanaEmergente.setScene(scene);
+		ventanaEmergente.setTitle("Imagen");
+		ventanaEmergente.show();
+		try {
+			Image icon = new Image(new FileInputStream("img\\favicon.png"));
+			ventanaEmergente.getIcons().add(icon);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		stage.setOnCloseRequest(e -> {
+			ventanaEmergente.close();
+		});
+	}
+
+	/**
+	 * Función que abre una ventanaEmergente con las imagenes que han sido marcadas
+	 * 
+	 * @param stage
+	 * @param con
+	 */
+	public static void abrirVentanaVisualizarMarcados(Stage stage, Connection con) {
 		Stage ventanaEmergente = new Stage();
 		PanelVisualizarImagen pnlVisualizarImg = new PanelVisualizarImagen();
 
 		Scene scene = new Scene(pnlVisualizarImg, 300, 300);
 
-		LocalDate fechaDia = CalendarioDAO.buscarFecha();
-		System.out.println(fechaDia);
+		ArrayList<String> rutasCarpeta = ImagenDAO.getMarcados(con);
 
-//		ArrayList<String> rutasCarpeta = new ArrayList<>();
-//		try {
-//			while (ImagenDAO.getDia(con, fechaDia).next()) {
-//				rutasCarpeta.add(ImagenDAO.getDia(con, fechaDia).getString("ubicacion"));
-//			}
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(0)));
+			pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		pnlVisualizarImg.anterior.setOnAction(e -> {
+			if (pnlVisualizarImg.idFoto > 1) {
+				pnlVisualizarImg.idFoto -= 1;
+				try {
+					Image imagenAnterior = new Image(
+							new FileInputStream(rutasCarpeta.get(pnlVisualizarImg.idFoto - 1)));
+					pnlVisualizarImg.vistaImg.setImage(imagenAnterior);
+
+					pnlVisualizarImg.vistaImg.setPreserveRatio(true);
+					// Cambiamos ancho de la imagen
+					pnlVisualizarImg.vistaImg.setFitWidth(200);
+
+					pnlVisualizarImg.getChildren().add(pnlVisualizarImg.vistaImg);
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+
+			}
+		});
+
+		pnlVisualizarImg.siguiente.setOnAction(e -> {
+			if (pnlVisualizarImg.idFoto < rutasCarpeta.size()) {
+				pnlVisualizarImg.idFoto += 1;
+			}
+			try {
+				Image imagenSiguiente = new Image(new FileInputStream(rutasCarpeta.get(pnlVisualizarImg.idFoto - 1)));
+				pnlVisualizarImg.vistaImg.setImage(imagenSiguiente);
+
+				pnlVisualizarImg.vistaImg.setPreserveRatio(true);
+				// Cambiamos ancho de la imagen
+				pnlVisualizarImg.vistaImg.setFitWidth(200);
+				pnlVisualizarImg.getChildren().add(pnlVisualizarImg.vistaImg);
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+		});
 
 		ventanaEmergente.setScene(scene);
 		ventanaEmergente.setTitle("Imagen");
 		ventanaEmergente.show();
+		try {
+			Image icon = new Image(new FileInputStream("img\\favicon.png"));
+			ventanaEmergente.getIcons().add(icon);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		stage.setOnCloseRequest(e -> {
 			ventanaEmergente.close();
 		});
+	}
+
+	public static void visualizarCalendario(Connection con, Button mesAnterior, Button mesPosterior,
+			BorderPane pnlDistribucion) {
+		PanelVisualizarCalendario pnlCalendario = new PanelVisualizarCalendario();
+		pnlDistribucion.setCenter(pnlCalendario);
+		try {
+			ArrayList<String> rutasCarpeta = CalendarioDAO.getCalendario(con);
+			int[] indice = { 0 };
+
+			LocalDate fechaActual = LocalDate.now();
+			DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy-MM");
+			String fechaFormateada = fechaActual.format(formatoFecha);
+
+			for (int i = 0; i < rutasCarpeta.size(); i++) {
+				if (fechaFormateada.equals(rutasCarpeta.get(i).substring(4, 11))) {
+					pnlCalendario.imagen = new Image(new FileInputStream(rutasCarpeta.get(i)));
+					pnlCalendario.vistaCalendario.setImage(pnlCalendario.imagen);
+					indice[0] = i;
+				}
+			}
+
+			mesAnterior.setOnAction(e -> {
+				if (indice[0] > 0) {
+					try {
+						indice[0] -= 1;
+						pnlCalendario.vistaCalendario
+								.setImage(new Image(new FileInputStream(rutasCarpeta.get(indice[0]))));
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			});
+
+			mesPosterior.setOnAction(e -> {
+				if (indice[0] < rutasCarpeta.size() - 1) {
+					try {
+						indice[0] += 1;
+						pnlCalendario.vistaCalendario
+								.setImage(new Image(new FileInputStream(rutasCarpeta.get(indice[0]))));
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {
