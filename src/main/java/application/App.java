@@ -14,7 +14,6 @@ import application.model.ImagenDAO;
 import application.model.ImagenDO;
 import application.model.OpcionesDAO;
 import application.model.UsuarioDAO;
-import application.model.UsuarioDO;
 import application.utils.UtilsBD;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -231,15 +230,13 @@ public class App extends Application {
 				scene.setFill(Color.BLACK);
 
 				// Actualiza la base de datos
-				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado,
-						con);
+				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
 			} else {
 				// Actualiza la base de datos
 				scene.setFill(Color.WHITE);
 
 				// Actualiza la base de datos
-				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado,
-						con);
+				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
 			}
 		});
 
@@ -247,7 +244,7 @@ public class App extends Application {
 
 		stage.show();
 
-		abrirVentanaFormulario(stage);
+		abrirVentanaFormulario(stage, con, mesAnterior, mesPosterior, pnlDistribucion);
 	}
 
 	/**
@@ -313,28 +310,42 @@ public class App extends Application {
 	 * @param stage
 	 * @param con
 	 */
-	public void abrirVentanaFormulario(Stage stage) {
-	    try {
-	        // Cargar el archivo FXML de la ventana emergente
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("IniciarSesion.fxml"));
-	        Pane ventanaEmergente = loader.load();
+	public void abrirVentanaFormulario(Stage stage, Connection con, Button mesAnterior, Button mesPosterior,
+			BorderPane pnlDistribucion) {
+		try {
+			// Cargar el archivo FXML de la ventana emergente
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("IniciarSesion.fxml"));
+			Pane ventanaEmergente = loader.load();
 
-	        // Crear una nueva escena para la ventana emergente
-	        Scene scene = new Scene(ventanaEmergente);
+			// Crear una nueva escena para la ventana emergente
+			Scene scene = new Scene(ventanaEmergente);
 
-	        // Crear una nueva ventana emergente...
-	        Stage ventana = new Stage();
-	        ventana.setScene(scene);
-	        ventana.show();
+			// Crear una nueva ventana emergente...
+			Stage ventana = new Stage();
+			ventana.initOwner(stage);
+			ventana.initModality(Modality.WINDOW_MODAL);
+			ventana.setScene(scene);
+			ventana.show();
 
-	        // Obtener el controlador de la ventana emergente...
-	        LoginController controller = loader.getController();
-	        // Puedes llamar a métodos o pasar datos al controlador si es necesario
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+			ventana.setOnCloseRequest(e -> {
+				stage.close();
+			});
+
+			// Obtener el controlador de la ventana emergente...
+			LoginController controller = loader.getController();
+
+//			controller.setEnviarAction(e -> {
+//				if (LoginController.correoUsuario != null) {
+//					visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
+//				}
+//			});
+
+			// Puedes llamar a métodos o pasar datos al controlador si es necesario
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-
 
 	/**
 	 * Función que abre una ventana para visualizar las imágenes de un día
