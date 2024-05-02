@@ -1,5 +1,6 @@
 package application;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -37,6 +38,9 @@ public class PanelVisualizarCalendario extends StackPane {
 		dia1.setOnAction(e -> {
 			System.out.println("illo");
 		});
+
+		this.setAlignment(vistaCalendario, Pos.TOP_LEFT);
+		this.setAlignment(pnlBotones, Pos.TOP_LEFT);
 
 		this.getChildren().addAll(vistaCalendario, pnlBotones);
 	}

@@ -312,10 +312,14 @@ public class App extends Application {
 			UsuarioDO usuario = new UsuarioDO(-1, pnlForm.nombre.getText(), pnlForm.apellido.getText(),
 					pnlForm.correo.getText(), pnlForm.contraseña.getText());
 
-			UsuarioDAO.crearUsuario(con, usuario);
-			PanelFormularioProv.correoUsuario = pnlForm.correo.getText();
-			visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
-			ventanaEmergente.close();
+			if (UsuarioDAO.cargarId(con, pnlForm.correo.getText()) != null) {
+
+			} else {
+				UsuarioDAO.crearUsuario(con, usuario);
+				PanelFormularioProv.correoUsuario = pnlForm.correo.getText();
+				visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
+				ventanaEmergente.close();
+			}
 		});
 		;
 	}
