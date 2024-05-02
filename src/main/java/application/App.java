@@ -383,6 +383,10 @@ public class App extends Application {
 
 		});
 
+		pnlVisualizarImg.descargar.setOnAction(e -> {
+			// Aquí va el código de cuando te quieres descargar una imagen concreta
+		});
+
 		ventanaEmergente.setScene(scene);
 		ventanaEmergente.setTitle("Imagen");
 		ventanaEmergente.show();
