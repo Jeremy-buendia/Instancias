@@ -36,7 +36,8 @@ public class PanelVisualizarImagen extends VBox {
 
 			anterior = new Button("<--");
 			siguiente = new Button("-->");
-			this.getChildren().addAll(vistaImg, anterior, siguiente, descargar);
+			descargar = new Button("Descargar");
+			this.getChildren().addAll(descargar, vistaImg, anterior, siguiente);
 
 //			anterior.setOnAction(e -> {
 //				if (idFoto > 1) {

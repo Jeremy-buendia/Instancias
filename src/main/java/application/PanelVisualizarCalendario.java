@@ -18,6 +18,8 @@ public class PanelVisualizarCalendario extends StackPane {
 		// Cambiamos ancho de la imagen
 		vistaCalendario.setFitWidth(800);
 
+		PanelLayoutBotones pnlBotones = new PanelLayoutBotones();
+
 		dia1 = new Button("");
 
 		dia1.setPrefSize(100, 50);
@@ -36,6 +38,6 @@ public class PanelVisualizarCalendario extends StackPane {
 			System.out.println("illo");
 		});
 
-		this.getChildren().addAll(vistaCalendario, dia1);
+		this.getChildren().addAll(vistaCalendario, pnlBotones);
 	}
 }
