@@ -333,6 +333,7 @@ public class App extends Application {
 
 			// Obtener el controlador de la ventana emergente...
 			LoginController controller = loader.getController();
+			controller.setVentanaActual(ventana);
 
 //			controller.setEnviarAction(e -> {
 //				if (LoginController.correoUsuario != null) {

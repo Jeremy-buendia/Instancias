@@ -27,8 +27,14 @@ public class LoginController {
 	public PasswordField IContraseña;
 
 	@FXML
-	public Button enviar;
+	public Button BttnIniciar;
 
+	  private Stage ventanaActual;
+
+	    // Método para establecer la referencia a la ventana
+     public void setVentanaActual(Stage ventanaActual) {
+	        this.ventanaActual = ventanaActual;
+	    }
 	@FXML
 	void enviarFormulario(ActionEvent event) {
 		// Obtener los valores del correo y la contraseña introducidos por el usuario
@@ -44,6 +50,9 @@ public class LoginController {
 		// según tu lógica)
 		if (contraseñaCorrecta) {
 			System.out.println("Contraseña correcta. Abriendo siguiente ventana...");
+			 if (ventanaActual != null) {
+		            ventanaActual.close();
+		        }
 			// Aquí puedes abrir la siguiente ventana
 		} else {
 			// Si la contraseña es incorrecta, mostrar un mensaje de error
@@ -53,7 +62,7 @@ public class LoginController {
 	}
 
 	public void setEnviarAction(EventHandler<ActionEvent> eventHandler) {
-		enviar.setOnAction(eventHandler);
+		BttnIniciar.setOnAction(eventHandler);
 	}
 
 	@FXML

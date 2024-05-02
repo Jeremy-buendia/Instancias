@@ -10,6 +10,7 @@ import application.model.UsuarioDO;
 import application.utils.UtilsBD;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -60,20 +61,40 @@ public class RegistroController {
         if (contraseñaText.equals(ConfContraseñaText)) {
             // Las contraseñas coinciden, hacer algo con los datos
             // Por ejemplo, puedes guardar los datos en un objeto UsuarioDO
-        	 UsuarioDO usuario = new UsuarioDO();
-             usuario.setNombre(nombreText);
-             usuario.setApellido(apellidoText);
-             usuario.setCorreo(correoText);
-             usuario.setContraseña(contraseñaText);
-             Connection con = UtilsBD.conectarBD();
+            UsuarioDO usuario = new UsuarioDO();
+            usuario.setNombre(nombreText);
+            usuario.setApellido(apellidoText);
+            usuario.setCorreo(correoText);
+            usuario.setContraseña(contraseñaText);
+            
+            Connection con = UtilsBD.conectarBD();
             // Llamar a una función para hacer algo con el usuario, como guardarlo en una base de datos
-   UsuarioDAO.crearUsuario(con, usuario);
-         
+            UsuarioDAO.crearUsuario(con, usuario);
+
+            // Cerrar la ventana actual de registro
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.close();
+
+            // Abrir la ventana de inicio de sesión
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("IniciarSesion.fxml"));
+            Parent root = null;
+			try {
+				root = loader.load();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            Scene scene = new Scene(root);
+            Stage loginStage = new Stage();
+            loginStage.setScene(scene);
+            loginStage.setTitle("Login");
+            loginStage.show();
         } else {
             // Las contraseñas no coinciden, mostrar un mensaje de error
             System.out.println("Error Las contraseñas no coinciden");
         }
     }
+
     @FXML
     void volverAIniciarSesion(ActionEvent event) throws IOException {
         // Cargar la página de inicio de sesión (IniciarSesion.fxml)
