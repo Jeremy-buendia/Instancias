@@ -516,7 +516,7 @@ public class App extends Application {
 		PanelVisualizarCalendario pnlCalendario = new PanelVisualizarCalendario();
 		pnlDistribucion.setCenter(pnlCalendario);
 		try {
-			ArrayList<String> rutasCarpeta = CalendarioDAO.getCalendario(0, con);
+			ArrayList<String> rutasCarpeta = CalendarioDAO.getCalendario(con);
 			int[] indice = { 0 };
 
 			LocalDate fechaActual = LocalDate.now();
