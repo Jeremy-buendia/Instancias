@@ -228,22 +228,22 @@ public class App extends Application {
 		var scene = new Scene(pnlDistribucion, 800, 600);
 
 		iModo.setOnAction(event -> {
-			// Verifica si iModo está seleccionado
-			int estado = ((CheckMenuItem) iModo).isSelected() ? 1 : 0;
-			if (estado == 1) {
-				// Cambia el color de fondo a negro
-				scene.setFill(Color.BLACK);
+		    // Verifica si iModo está seleccionado
+		    int estado = ((CheckMenuItem) iModo).isSelected() ? 1 : 0;
+		    if (estado == 1) {
+		        // Cambia el color de fondo a negro
+		        scene.setFill(Color.BLACK);
+		    } else {
+		        // Cambia el color de fondo a blanco
+		        scene.setFill(Color.WHITE);
+		    }
+		    // Actualiza la base de datos
+		    OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
 
-				// Actualiza la base de datos
-				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
-			} else {
-				// Actualiza la base de datos
-				scene.setFill(Color.WHITE);
-
-				// Actualiza la base de datos
-				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
-			}
+		    // Llama a la función getCalendario
+		    CalendarioDAO.getCalendario(estado, con);
 		});
+
 
 		stage.setScene(scene);
 

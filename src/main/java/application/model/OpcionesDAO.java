@@ -316,8 +316,9 @@ public class OpcionesDAO {
 			return 0;
 		}
 	}
-	 public void crearOpcionesPredeterminadas(int idUsuario, Connection con) {
+	 public void crearOpcionesPredeterminadas(int id, Connection con) {
 
+		 //Inserta las opciones predeterminadas
 	        String sql = "INSERT INTO opciones (Idioma, Modo, Notificaciones, Fuente, Diseño, Usuario_idUsuario) VALUES (?, ?, ?, ?, ?, ?)";
 
 	        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -326,7 +327,7 @@ public class OpcionesDAO {
 	            pstmt.setInt(3, 0); // Notificaciones predeterminadas
 	            pstmt.setInt(4, 0); // Fuente predeterminada
 	            pstmt.setInt(5, 0); // Diseño predeterminado
-	            pstmt.setInt(6, idUsuario); // ID del usuario
+	            pstmt.setInt(6, id); // ID del usuario
 
 	            pstmt.executeUpdate();
 	        } catch (SQLException e) {
