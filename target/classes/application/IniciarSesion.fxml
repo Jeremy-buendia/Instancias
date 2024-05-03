@@ -16,7 +16,7 @@
    <children>
       <ImageView fitHeight="153.0" fitWidth="273.0" layoutX="68.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../git/Instancias/img/favicon.png" />
+            <Image url="@../img/favicon.png" />
          </image>
       </ImageView>
       <SplitPane dividerPositions="0.6736842105263158" layoutX="43.0" layoutY="167.0" orientation="VERTICAL" prefHeight="287.0" prefWidth="218.0">

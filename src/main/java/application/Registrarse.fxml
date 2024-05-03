@@ -39,7 +39,7 @@
          </cursor></Button>
       <ImageView fitHeight="153.0" fitWidth="273.0" layoutX="85.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../git/Instancias/img/favicon.png" />
+            <Image url="@../img/favicon.png" />
          </image>
       </ImageView>
    </children>

@@ -336,17 +336,27 @@ public class App extends Application {
 			loginStage.initModality(Modality.WINDOW_MODAL);
 			loginStage.setScene(loginScene);
 
+			try {
+				Image icon = new Image(new FileInputStream("img\\favicon.png"));
+				loginStage.getIcons().add(icon);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			loginStage.setOnCloseRequest(e -> {
+				if (!LoginController.cargarCalendario) {
+					stage.close();
+				}
+			});
+
 			loginStage.showAndWait();
 
 			loginController.setVentanaActual(loginStage);
 
-			loginStage.setOnCloseRequest(e -> {
-			stage.close();
-				}
-			);
-			
 			if (LoginController.cargarCalendario) {
-				visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);}
+				visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
