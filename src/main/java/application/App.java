@@ -341,10 +341,7 @@ public class App extends Application {
 			loginStage.showAndWait();
 
 			loginStage.setOnCloseRequest(e -> {
-			
-			
 						stage.close();
-
 			});
 			if (LoginController.cargarCalendario) {
 			visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
@@ -516,7 +513,7 @@ public class App extends Application {
 		PanelVisualizarCalendario pnlCalendario = new PanelVisualizarCalendario();
 		pnlDistribucion.setCenter(pnlCalendario);
 		try {
-			ArrayList<String> rutasCarpeta = CalendarioDAO.getCalendario(con);
+			ArrayList<String> rutasCarpeta = CalendarioDAO.getCalendario(0, con);
 			int[] indice = { 0 };
 
 			LocalDate fechaActual = LocalDate.now();
