@@ -8,6 +8,7 @@ import application.utils.UtilsBD;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -38,6 +39,7 @@ public class LoginController {
 	public void setVentanaActual(Stage ventanaActual) {
 		this.ventanaActual = ventanaActual;
 	}
+	
 
 	@FXML
 	public void enviarFormulario(ActionEvent event) {
@@ -75,18 +77,27 @@ public class LoginController {
 
 	@FXML
 	void abrirPaginaRegistrarse(ActionEvent event) throws IOException {
-		// Cargar la nueva página (por ejemplo, Registrarse.fxml)
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("Registrarse.fxml"));
-		Parent paginaRegistrarseParent = loader.load();
-		Scene paginaRegistrarseScene = new Scene(paginaRegistrarseParent);
+	    // Cargar la nueva página de registro (Registrarse.fxml)
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("Registrarse.fxml"));
+	    Parent paginaRegistrarseParent = loader.load();
+	    
+	    // Obtener el controlador de registro y establecer la referencia de loginScene
+	    RegistroController registroController = loader.getController();
+	    registroController.setLoginScene(registerScene);
+	    
 
-		// Obtener la etapa actual y establecer la nueva escena
-		Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-		stage.setScene(paginaRegistrarseScene);
-		stage.show();
+	    // Obtener la etapa actual y establecer la nueva escena
+	    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	    stage.setScene(new Scene(paginaRegistrarseParent));
+	    stage.show();
 	}
 
 	public void setRegisterScene(Scene registerScene) {
 		this.registerScene = registerScene;
 	}
+	   public void onCloseRequest(ActionEvent event) {
+	        if (ventanaActual != null) {
+	            ventanaActual.close();
+	        }
+	        }
 }

@@ -325,12 +325,15 @@ public class App extends Application {
 
 			RegistroController registerController = registerLoader.getController();
 			registerController.setLoginScene(loginScene);
+		
 
 			LoginController loginController = loginLoader.getController();
 			loginController.setRegisterScene(registerScene);
+			
 
 			// Pane ventanaEmergente = loader.load();
 			Stage loginStage = new Stage();
+			loginController.setVentanaActual(loginStage);
 			loginStage.initOwner(stage);
 			loginStage.initModality(Modality.WINDOW_MODAL);
 			loginStage.setScene(loginScene);
