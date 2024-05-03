@@ -24,12 +24,12 @@ public class PanelVisualizarImagen extends VBox {
 	Image anteriorImg;
 	Image siguienteImg;
 
-	int idFoto;
+	// int idFoto;
 
 	PanelVisualizarImagen() {
 		Connection con = UtilsBD.conectarBD();
 
-		idFoto = 1;
+		// idFoto = 1;
 
 		vistaImg = new ImageView();
 

@@ -228,22 +228,21 @@ public class App extends Application {
 		var scene = new Scene(pnlDistribucion, 800, 600);
 
 		iModo.setOnAction(event -> {
-		    // Verifica si iModo está seleccionado
-		    int estado = ((CheckMenuItem) iModo).isSelected() ? 1 : 0;
-		    if (estado == 1) {
-		        // Cambia el color de fondo a negro
-		        scene.setFill(Color.BLACK);
-		    } else {
-		        // Cambia el color de fondo a blanco
-		        scene.setFill(Color.WHITE);
-		    }
-		    // Actualiza la base de datos
-		    OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
+			// Verifica si iModo está seleccionado
+			int estado = ((CheckMenuItem) iModo).isSelected() ? 1 : 0;
+			if (estado == 1) {
+				// Cambia el color de fondo a negro
+				scene.setFill(Color.BLACK);
+			} else {
+				// Cambia el color de fondo a blanco
+				scene.setFill(Color.WHITE);
+			}
+			// Actualiza la base de datos
+			OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
 
-		    // Llama a la función getCalendario
-		    CalendarioDAO.getCalendario(estado, con);
+			// Llama a la función getCalendario
+			CalendarioDAO.getCalendario(estado, con);
 		});
-
 
 		stage.setScene(scene);
 
@@ -379,6 +378,8 @@ public class App extends Application {
 		Stage ventanaEmergente = new Stage();
 		PanelVisualizarImagen pnlVisualizarImg = new PanelVisualizarImagen();
 
+		int idFoto[] = { 1 };
+
 		Scene scene = new Scene(pnlVisualizarImg, 300, 300);
 		System.out.println(fechaDia);
 
@@ -392,11 +393,10 @@ public class App extends Application {
 		}
 
 		pnlVisualizarImg.anterior.setOnAction(e -> {
-			if (pnlVisualizarImg.idFoto > 1) {
-				pnlVisualizarImg.idFoto -= 1;
+			if (idFoto[0] > 1) {
+				idFoto[0] -= 1;
 				try {
-					Image imagenAnterior = new Image(
-							new FileInputStream(rutasCarpeta.get(pnlVisualizarImg.idFoto - 1)));
+					Image imagenAnterior = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
 					pnlVisualizarImg.vistaImg.setImage(imagenAnterior);
 
 					pnlVisualizarImg.vistaImg.setPreserveRatio(true);
@@ -412,11 +412,11 @@ public class App extends Application {
 		});
 
 		pnlVisualizarImg.siguiente.setOnAction(e -> {
-			if (pnlVisualizarImg.idFoto < rutasCarpeta.size()) {
-				pnlVisualizarImg.idFoto += 1;
+			if (idFoto[0] < rutasCarpeta.size()) {
+				idFoto[0] += 1;
 			}
 			try {
-				Image imagenSiguiente = new Image(new FileInputStream(rutasCarpeta.get(pnlVisualizarImg.idFoto - 1)));
+				Image imagenSiguiente = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
 				pnlVisualizarImg.vistaImg.setImage(imagenSiguiente);
 
 				pnlVisualizarImg.vistaImg.setPreserveRatio(true);
@@ -427,6 +427,17 @@ public class App extends Application {
 				// TODO: handle exception
 			}
 
+		});
+
+		pnlVisualizarImg.descargar.setOnAction(e -> {
+			System.out.println(idFoto[0]);
+			DirectoryChooser directorio = new DirectoryChooser();
+			directorio.setTitle("Selecciona una carpeta");
+			File directorioSeleccionado = directorio.showDialog(null);
+			File imagen = new File(rutasCarpeta.get(idFoto[0] - 1));
+			System.out.println(directorioSeleccionado);
+
+			ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
 		});
 
 		pnlVisualizarImg.categoria.setOnAction(e -> {
@@ -463,6 +474,7 @@ public class App extends Application {
 	public static void abrirVentanaVisualizarMarcados(Stage stage, Connection con) {
 		Stage ventanaEmergente = new Stage();
 		PanelVisualizarImagen pnlVisualizarImg = new PanelVisualizarImagen();
+		int idFoto[] = { 1 };
 
 		Scene scene = new Scene(pnlVisualizarImg, 300, 300);
 
@@ -476,11 +488,10 @@ public class App extends Application {
 		}
 
 		pnlVisualizarImg.anterior.setOnAction(e -> {
-			if (pnlVisualizarImg.idFoto > 1) {
-				pnlVisualizarImg.idFoto -= 1;
+			if (idFoto[0] > 1) {
+				idFoto[0] -= 1;
 				try {
-					Image imagenAnterior = new Image(
-							new FileInputStream(rutasCarpeta.get(pnlVisualizarImg.idFoto - 1)));
+					Image imagenAnterior = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
 					pnlVisualizarImg.vistaImg.setImage(imagenAnterior);
 
 					pnlVisualizarImg.vistaImg.setPreserveRatio(true);
@@ -496,11 +507,11 @@ public class App extends Application {
 		});
 
 		pnlVisualizarImg.siguiente.setOnAction(e -> {
-			if (pnlVisualizarImg.idFoto < rutasCarpeta.size()) {
-				pnlVisualizarImg.idFoto += 1;
+			if (idFoto[0] < rutasCarpeta.size()) {
+				idFoto[0] += 1;
 			}
 			try {
-				Image imagenSiguiente = new Image(new FileInputStream(rutasCarpeta.get(pnlVisualizarImg.idFoto - 1)));
+				Image imagenSiguiente = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
 				pnlVisualizarImg.vistaImg.setImage(imagenSiguiente);
 
 				pnlVisualizarImg.vistaImg.setPreserveRatio(true);
@@ -514,10 +525,11 @@ public class App extends Application {
 		});
 
 		pnlVisualizarImg.descargar.setOnAction(e -> {
+			System.out.println(idFoto[0]);
 			DirectoryChooser directorio = new DirectoryChooser();
 			directorio.setTitle("Selecciona una carpeta");
 			File directorioSeleccionado = directorio.showDialog(null);
-			File imagen = new File(rutasCarpeta.get(pnlVisualizarImg.idFoto));
+			File imagen = new File(rutasCarpeta.get(idFoto[0] - 1));
 			System.out.println(directorioSeleccionado);
 
 			ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
