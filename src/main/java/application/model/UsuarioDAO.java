@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class UsuarioDAO {
 
@@ -158,16 +159,23 @@ public class UsuarioDAO {
 
 			// Si existe, insertamos sin el campo ID
 			String queryInsert = "INSERT INTO usuario (nombre, apellido, correo, contraseña) VALUES(?,?,?,?)";
-			PreparedStatement pstmt = con.prepareStatement(queryInsert);
+			PreparedStatement pstmt = con.prepareStatement(queryInsert, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, usuario.getNombre());
 			pstmt.setString(2, usuario.getApellido());
 			pstmt.setString(3, usuario.getCorreo());
 			pstmt.setString(4, usuario.getContraseña());
-
-			OpcionesDAO opcionesDAO = new OpcionesDAO();
-	        opcionesDAO.crearOpcionesPredeterminadas(usuario.getId(), con);
 	        
 			pstmt.executeUpdate();
+			
+			 // Recuperamos el ID generado para el usuario
+	        ResultSet rs = pstmt.getGeneratedKeys();
+	        if (rs.next()) {
+	            int idUsuario = rs.getInt(1);
+
+	            // Ahora que el usuario está insertado, podemos insertar las opciones predeterminadas
+	            OpcionesDAO opcionesDAO = new OpcionesDAO();
+	            opcionesDAO.crearOpcionesPredeterminadas(idUsuario, con);
+	        }
 			return 0;
 
 		} catch (SQLException e) {
