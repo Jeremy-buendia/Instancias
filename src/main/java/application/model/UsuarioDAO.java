@@ -164,6 +164,9 @@ public class UsuarioDAO {
 			pstmt.setString(3, usuario.getCorreo());
 			pstmt.setString(4, usuario.getContraseña());
 
+			OpcionesDAO opcionesDAO = new OpcionesDAO();
+	        opcionesDAO.crearOpcionesPredeterminadas(usuario.getId(), con);
+	        
 			pstmt.executeUpdate();
 			return 0;
 

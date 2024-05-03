@@ -11,6 +11,7 @@ public class OpcionesDO {
 	
 	public OpcionesDO() {
 		super();
+		
 		// TODO Auto-generated constructor stub
 	}
 	

@@ -1,7 +1,9 @@
 package application.model;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import application.utils.UtilsBD;
@@ -314,4 +316,21 @@ public class OpcionesDAO {
 			return 0;
 		}
 	}
+	 public void crearOpcionesPredeterminadas(int idUsuario, Connection con) {
+
+	        String sql = "INSERT INTO opciones (Idioma, Modo, Notificaciones, Fuente, Diseño, Usuario_idUsuario) VALUES (?, ?, ?, ?, ?, ?)";
+
+	        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+	            pstmt.setInt(1, 0); // Idioma predeterminado
+	            pstmt.setInt(2, 0); // Modo predeterminado
+	            pstmt.setInt(3, 0); // Notificaciones predeterminadas
+	            pstmt.setInt(4, 0); // Fuente predeterminada
+	            pstmt.setInt(5, 0); // Diseño predeterminado
+	            pstmt.setInt(6, idUsuario); // ID del usuario
+
+	            pstmt.executeUpdate();
+	        } catch (SQLException e) {
+	            System.out.println(e.getMessage());
+	        }
+	    }
 }
