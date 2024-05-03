@@ -39,7 +39,6 @@ public class LoginController {
 	public void setVentanaActual(Stage ventanaActual) {
 		this.ventanaActual = ventanaActual;
 	}
-	
 
 	@FXML
 	public void enviarFormulario(ActionEvent event) {
@@ -54,12 +53,11 @@ public class LoginController {
 		// Verificar la contraseña
 		boolean contraseñaCorrecta = UsuarioDAO.verificarContraseña(con, correoText, contraseñaText);
 
-		cargarCalendario = true;
-
 		// Si la contraseña es correcta, abrir la siguiente ventana (puedes cambiar esto
 		// según tu lógica)
 		if (contraseñaCorrecta) {
 			System.out.println("Contraseña correcta. Abriendo siguiente ventana...");
+			cargarCalendario = true;
 			if (ventanaActual != null) {
 				ventanaActual.close();
 			}
@@ -77,27 +75,27 @@ public class LoginController {
 
 	@FXML
 	void abrirPaginaRegistrarse(ActionEvent event) throws IOException {
-	    // Cargar la nueva página de registro (Registrarse.fxml)
-	    FXMLLoader loader = new FXMLLoader(getClass().getResource("Registrarse.fxml"));
-	    Parent paginaRegistrarseParent = loader.load();
-	    
-	    // Obtener el controlador de registro y establecer la referencia de loginScene
-	    RegistroController registroController = loader.getController();
-	    registroController.setLoginScene(registerScene);
-	    
+		// Cargar la nueva página de registro (Registrarse.fxml)
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("Registrarse.fxml"));
+		Parent paginaRegistrarseParent = loader.load();
 
-	    // Obtener la etapa actual y establecer la nueva escena
-	    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	    stage.setScene(new Scene(paginaRegistrarseParent));
-	    stage.show();
+		// Obtener el controlador de registro y establecer la referencia de loginScene
+		RegistroController registroController = loader.getController();
+		registroController.setLoginScene(registerScene);
+
+		// Obtener la etapa actual y establecer la nueva escena
+		Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		stage.setScene(new Scene(paginaRegistrarseParent));
+		stage.show();
 	}
 
 	public void setRegisterScene(Scene registerScene) {
 		this.registerScene = registerScene;
 	}
-	   public void onCloseRequest(ActionEvent event) {
-	        if (ventanaActual != null) {
-	            ventanaActual.close();
-	        }
-	        }
+
+	public void onCloseRequest(ActionEvent event) {
+		if (ventanaActual != null) {
+			ventanaActual.close();
+		}
+	}
 }

@@ -325,11 +325,9 @@ public class App extends Application {
 
 			RegistroController registerController = registerLoader.getController();
 			registerController.setLoginScene(loginScene);
-		
 
 			LoginController loginController = loginLoader.getController();
 			loginController.setRegisterScene(registerScene);
-			
 
 			// Pane ventanaEmergente = loader.load();
 			Stage loginStage = new Stage();
@@ -340,11 +338,15 @@ public class App extends Application {
 
 			loginStage.show();
 
-			loginStage.setOnCloseRequest(e -> {
-				stage.close();
-			});
-
 			loginController.setVentanaActual(loginStage);
+
+			loginStage.setOnCloseRequest(e -> {
+				if (LoginController.cargarCalendario) {
+					visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
+				} else {
+					stage.close();
+				}
+			});
 
 //			loginController.BttnIniciar.setOnAction(e -> {
 //				if (LoginController.cargarCalendario) {
