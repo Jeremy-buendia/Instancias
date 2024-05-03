@@ -1,5 +1,7 @@
 package application;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 
 import application.utils.UtilsBD;
@@ -9,12 +11,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
 public class PanelVisualizarImagen extends VBox {
-
+	ImageView anteriorImgView;
+	ImageView siguienteImgView;
 	ImageView vistaImg;
+
 	Button anterior;
 	Button siguiente;
 	Button descargar;
+	Button categoria;
+
 	Image imagen;
+	Image anteriorImg;
+	Image siguienteImg;
+
 	int idFoto;
 
 	PanelVisualizarImagen() {
@@ -22,65 +31,36 @@ public class PanelVisualizarImagen extends VBox {
 
 		idFoto = 1;
 
+		vistaImg = new ImageView();
+
+		vistaImg.setPreserveRatio(true);
+		// Cambiamos ancho de la imagen
+		vistaImg.setFitWidth(200);
+
 		try {
-			// System.out.println(System.getProperty("user.home") +
-			// "\\Pictures\\Instancias\\"
-			// + UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId() + "\\"
-			// + 1 + ".jpg");
-
-			vistaImg = new ImageView();
-
-			vistaImg.setPreserveRatio(true);
-			// Cambiamos ancho de la imagen
-			vistaImg.setFitWidth(200);
-
-			anterior = new Button("<--");
-			siguiente = new Button("-->");
-			descargar = new Button("Descargar");
-			this.getChildren().addAll(descargar, vistaImg, anterior, siguiente);
-
-//			anterior.setOnAction(e -> {
-//				if (idFoto > 1) {
-//					idFoto -= 1;
-//					try {
-//						Image imagenAnterior = new Image(
-//								new FileInputStream(System.getProperty("user.home") + "\\Pictures\\Instancias\\"
-//										+ UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId() + "\\"
-//										+ idFoto + ".jpg"));
-//						vistaImg.setImage(imagenAnterior);
-//
-//						vistaImg.setPreserveRatio(true);
-//						// Cambiamos ancho de la imagen
-//						vistaImg.setFitWidth(200);
-//
-//						this.getChildren().add(vistaImg);
-//					} catch (Exception e2) {
-//						// TODO: handle exception
-//					}
-//
-//				}
-//			});
-//
-//			siguiente.setOnAction(e -> {
-//				idFoto += 1;
-//				try {
-//					Image imagenSiguiente = new Image(
-//							new FileInputStream(System.getProperty("user.home") + "\\Pictures\\Instancias\\"
-//									+ UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId() + "\\"
-//									+ idFoto + ".jpg"));
-//					vistaImg.setImage(imagenSiguiente);
-//
-//					vistaImg.setPreserveRatio(true);
-//					// Cambiamos ancho de la imagen
-//					vistaImg.setFitWidth(200);
-//					this.getChildren().add(vistaImg);
-//				} catch (Exception e2) {
-//					// TODO: handle exception
-//				}
-//
-//			});
-		} catch (Exception e) {
-			// TODO: handle exception
+			anteriorImg = new Image(new FileInputStream("img/izq.png"));
+			siguienteImg = new Image(new FileInputStream("img/der.png"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		anteriorImgView = new ImageView(anteriorImg);
+		anteriorImgView.setPreserveRatio(true);
+		anteriorImgView.setFitWidth(30);
+
+		siguienteImgView = new ImageView(siguienteImg);
+		siguienteImgView.setPreserveRatio(true);
+		siguienteImgView.setFitWidth(30);
+
+		anterior = new Button("");
+		anterior.setGraphic(anteriorImgView);
+
+		siguiente = new Button("");
+		siguiente.setGraphic(siguienteImgView);
+
+		descargar = new Button("Descargar");
+		categoria = new Button("Asignar Categoria");
+
+		this.getChildren().addAll(descargar, categoria, vistaImg, anterior, siguiente);
 	}
 }

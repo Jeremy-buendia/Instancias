@@ -21,24 +21,6 @@ public class PanelVisualizarCalendario extends StackPane {
 
 		PanelLayoutBotones pnlBotones = new PanelLayoutBotones();
 
-		dia1 = new Button("");
-
-		dia1.setPrefSize(100, 50);
-
-		dia1.setStyle("-fx-background-color: transparent;");
-
-		dia1.setOnMouseEntered(e -> {
-			dia1.setStyle("-fx-background-color: lightblue;");
-		});
-
-		dia1.setOnMouseExited(e -> {
-			dia1.setStyle("-fx-background-color: transparent;");
-		});
-
-		dia1.setOnAction(e -> {
-			System.out.println("illo");
-		});
-
 		this.setAlignment(vistaCalendario, Pos.TOP_LEFT);
 		this.setAlignment(pnlBotones, Pos.TOP_LEFT);
 
