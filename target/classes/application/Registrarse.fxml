@@ -31,13 +31,13 @@
       <TextField fx:id="CcCorreo" layoutX="220.0" layoutY="262.0" prefHeight="25.0" prefWidth="301.0" />
       <Label layoutX="166.0" layoutY="224.0" text="Apellido" />
       <TextField fx:id="CcApellido" layoutX="220.0" layoutY="220.0" prefHeight="25.0" prefWidth="301.0" />
-      <CheckBox id="Terminos" layoutX="237.0" layoutY="380.0" mnemonicParsing="false" text="Acepto los Términos y Servicios" />
+      <CheckBox fx:id="Terminos" layoutX="237.0" layoutY="380.0" mnemonicParsing="false" text="Acepto los Términos y Servicios" />
       <ImageView fitHeight="153.0" fitWidth="273.0" layoutX="85.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../git/Instancias/img/favicon.png" />
          </image>
       </ImageView>
-      <Button id="BttnCcVolver" layoutX="237.0" layoutY="417.0" mnemonicParsing="false" text="Volver" onAction="#volverAIniciarSesion">
+      <Button fx:id="BttnCcVolver" layoutX="237.0" layoutY="417.0" mnemonicParsing="false" text="Volver" onAction="#volverAIniciarSesion">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></Button>

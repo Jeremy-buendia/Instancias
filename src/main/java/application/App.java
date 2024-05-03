@@ -17,6 +17,7 @@ import application.model.UsuarioDAO;
 import application.utils.UtilsBD;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
@@ -26,7 +27,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -314,33 +314,44 @@ public class App extends Application {
 			BorderPane pnlDistribucion) {
 		try {
 			// Cargar el archivo FXML de la ventana emergente
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("IniciarSesion.fxml"));
-			Pane ventanaEmergente = loader.load();
+			FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("IniciarSesion.fxml"));
+			FXMLLoader registerLoader = new FXMLLoader(getClass().getResource("Registrarse.fxml"));
 
-			// Crear una nueva escena para la ventana emergente
-			Scene scene = new Scene(ventanaEmergente);
+			Parent loginRoot = loginLoader.load();
+			Scene loginScene = new Scene(loginRoot);
 
-			// Crear una nueva ventana emergente...
-			Stage ventana = new Stage();
-			ventana.initOwner(stage);
-			ventana.initModality(Modality.WINDOW_MODAL);
-			ventana.setScene(scene);
-			ventana.show();
+			Parent registerRoot = registerLoader.load();
+			Scene registerScene = new Scene(registerRoot);
 
-			ventana.setOnCloseRequest(e -> {
+			RegistroController registerController = registerLoader.getController();
+			registerController.setLoginScene(loginScene);
+
+			LoginController loginController = loginLoader.getController();
+			loginController.setRegisterScene(registerScene);
+
+			// Pane ventanaEmergente = loader.load();
+			Stage loginStage = new Stage();
+			loginStage.initOwner(stage);
+			loginStage.initModality(Modality.WINDOW_MODAL);
+			loginStage.setScene(loginScene);
+
+			loginStage.show();
+
+			loginStage.setOnCloseRequest(e -> {
 				stage.close();
 			});
 
 			// Obtener el controlador de la ventana emergente...
-			LoginController controller = loader.getController();
-			controller.setVentanaActual(ventana);
+//			LoginController controller = loader.getController();
+//			controller.setVentanaActual(ventana);
 
-//			controller.setEnviarAction(e -> {
-//				if (LoginController.correoUsuario != null) {
+//			controller.BttnIniciar.setOnAction(e -> {
+//				if (LoginController.cargarCalendario) {
 //					visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
 //				}
 //			});
 
+			// visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
 			// Puedes llamar a métodos o pasar datos al controlador si es necesario
 
 		} catch (Exception e) {

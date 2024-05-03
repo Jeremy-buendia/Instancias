@@ -27,7 +27,7 @@
                   <Label layoutX="14.0" layoutY="70.0" text="Contraseña" />
                   <Label layoutX="14.0" layoutY="14.0" text="Correo" />
                   <TextField fx:id="ICorreo" layoutX="14.0" layoutY="37.0" prefHeight="25.0" prefWidth="183.0" />
-                  <Button id="BttnIniciar" layoutX="41.0" layoutY="128.0" mnemonicParsing="false" style="-fx-background-color: turquoise;" text="Iniciar sesión" textFill="#a14203" onAction="#enviarFormulario">
+                  <Button fx:id="BttnIniciar" layoutX="41.0" layoutY="128.0" mnemonicParsing="false" style="-fx-background-color: turquoise;" text="Iniciar sesión" textFill="#a14203" onAction="#enviarFormulario">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
