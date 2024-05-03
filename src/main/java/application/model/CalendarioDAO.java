@@ -9,7 +9,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import application.PanelFormularioProv;
+
+import application.LoginController;
 import application.utils.UtilsBD;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
@@ -85,7 +86,7 @@ public class CalendarioDAO {
 				// Asignamos los valores a los ?
 				pstmt.setDate(1, Date.valueOf("2024-04-01"));
 				pstmt.setString(2, "img\\2024-04.jpg");
-				pstmt.setInt(3, UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId());
+				pstmt.setInt(3, UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
 
 				pstmt.executeUpdate();
 				calendarioInsertado = true;
@@ -100,7 +101,7 @@ public class CalendarioDAO {
 				// Asignamos los valores a los ?
 				pstmt.setDate(1, Date.valueOf("2024-05-01"));
 				pstmt.setString(2, "img\\2024-05.jpg");
-				pstmt.setInt(3, UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId());
+				pstmt.setInt(3, UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
 
 				pstmt.executeUpdate();
 				calendarioInsertado = true;
@@ -115,7 +116,7 @@ public class CalendarioDAO {
 				// Asignamos los valores a los ?
 				pstmt.setDate(1, Date.valueOf("2024-06-01"));
 				pstmt.setString(2, "img\\2024-06.jpg");
-				pstmt.setInt(3, UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId());
+				pstmt.setInt(3, UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
 
 				pstmt.executeUpdate();
 				calendarioInsertado = true;
@@ -130,7 +131,7 @@ public class CalendarioDAO {
 		String query = "SELECT * FROM calendario WHERE Usuario_IdUsuario = ?";
 		try {
 			PreparedStatement pstmt = con.prepareStatement(query);
-			pstmt.setInt(1, UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId());
+			pstmt.setInt(1, UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
 
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {

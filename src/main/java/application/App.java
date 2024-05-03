@@ -14,9 +14,10 @@ import application.model.ImagenDAO;
 import application.model.ImagenDO;
 import application.model.OpcionesDAO;
 import application.model.UsuarioDAO;
-import application.model.UsuarioDO;
 import application.utils.UtilsBD;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
@@ -102,7 +103,7 @@ public class App extends Application {
 			// Actualiza el objeto 'activo' con el nuevo estado
 
 			int numAff = OpcionesDAO.activarNotificaciones(
-					UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), estado, con);
+					UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
 
 			// Llama a la función para actualizar la base de datos
 			// Asegúrate de que 'funcion' es el nombre de tu método de actualización
@@ -229,15 +230,13 @@ public class App extends Application {
 				scene.setFill(Color.BLACK);
 
 				// Actualiza la base de datos
-				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), estado,
-						con);
+				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
 			} else {
 				// Actualiza la base de datos
 				scene.setFill(Color.WHITE);
 
 				// Actualiza la base de datos
-				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), estado,
-						con);
+				OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
 			}
 		});
 
@@ -295,7 +294,7 @@ public class App extends Application {
 
 				ImagenDO objImagen;
 				objImagen = new ImagenDO(-1, pnlSubirImg.txtDescripcionImg.getText(), "", "",
-						UsuarioDAO.cargarId(con, PanelFormularioProv.correoUsuario).getId(), marcado);
+						UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), marcado);
 				ImagenDAO.subirImagen(con, objImagen, imagen);
 				ImagenDAO.copiarImagen(imagen, objImagen);
 
@@ -313,47 +312,54 @@ public class App extends Application {
 	 */
 	public void abrirVentanaFormulario(Stage stage, Connection con, Button mesAnterior, Button mesPosterior,
 			BorderPane pnlDistribucion) {
-		Stage ventanaEmergente = new Stage();
-		PanelFormularioProv pnlForm = new PanelFormularioProv();
-
-		Scene scene = new Scene(pnlForm, 300, 300);
-
-		// Bloqueamos la ventana padre definiendo cual es el padre y poner la modalidad
-		ventanaEmergente.initOwner(stage);
-		ventanaEmergente.initModality(Modality.WINDOW_MODAL);
-
-		ventanaEmergente.setScene(scene);
-		ventanaEmergente.setTitle("Entrar");
-		ventanaEmergente.show();
 		try {
-			Image icon = new Image(new FileInputStream("img\\favicon.png"));
-			ventanaEmergente.getIcons().add(icon);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+			// Cargar el archivo FXML de la ventana emergente
+			FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("IniciarSesion.fxml"));
+			FXMLLoader registerLoader = new FXMLLoader(getClass().getResource("Registrarse.fxml"));
 
-		ventanaEmergente.setOnCloseRequest(e -> {
-			if (!cerrarVentana) {
+			Parent loginRoot = loginLoader.load();
+			Scene loginScene = new Scene(loginRoot);
+
+			Parent registerRoot = registerLoader.load();
+			Scene registerScene = new Scene(registerRoot);
+
+			RegistroController registerController = registerLoader.getController();
+			registerController.setLoginScene(loginScene);
+		
+
+			LoginController loginController = loginLoader.getController();
+			loginController.setRegisterScene(registerScene);
+			
+
+			// Pane ventanaEmergente = loader.load();
+			Stage loginStage = new Stage();
+			loginController.setVentanaActual(loginStage);
+			loginStage.initOwner(stage);
+			loginStage.initModality(Modality.WINDOW_MODAL);
+			loginStage.setScene(loginScene);
+
+			loginStage.show();
+
+			loginStage.setOnCloseRequest(e -> {
 				stage.close();
-			}
-		});
+			});
 
-		pnlForm.enviar.setOnAction(e -> {
+			// Obtener el controlador de la ventana emergente...
+//			LoginController controller = loader.getController();
+//			controller.setVentanaActual(ventana);
 
-			UsuarioDO usuario = new UsuarioDO(-1, pnlForm.nombre.getText(), pnlForm.apellido.getText(),
-					pnlForm.correo.getText(), pnlForm.contraseña.getText());
+//			controller.BttnIniciar.setOnAction(e -> {
+//				if (LoginController.cargarCalendario) {
+//					visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
+//				}
+//			});
 
-			if (UsuarioDAO.cargarId(con, pnlForm.correo.getText()) != null) {
+			// visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
+			// Puedes llamar a métodos o pasar datos al controlador si es necesario
 
-			} else {
-				UsuarioDAO.crearUsuario(con, usuario);
-				PanelFormularioProv.correoUsuario = pnlForm.correo.getText();
-				visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
-				ventanaEmergente.close();
-			}
-		});
-		;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
