@@ -317,8 +317,6 @@ public class OpcionesDAO {
 		}
 	}
 	 public void crearOpcionesPredeterminadas(int idUsuario, Connection con) {
-	        // Aquí es donde insertarías las opciones predeterminadas en la base de datos
-	        // Asegúrate de usar el idUsuario proporcionado para asociar las opciones con el usuario correcto
 
 	        String sql = "INSERT INTO opciones (Idioma, Modo, Notificaciones, Fuente, Diseño, Usuario_idUsuario) VALUES (?, ?, ?, ?, ?, ?)";
 
