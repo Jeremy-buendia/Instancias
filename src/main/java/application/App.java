@@ -429,14 +429,13 @@ public class App extends Application {
 
 		});
 
-		pnlVisualizarImg.descargar.setOnAction(e -> {
-			System.out.println("illo queloque");
-			DirectoryChooser directorio = new DirectoryChooser();
-			directorio.setTitle("Selecciona una carpeta");
-			File directorioSeleccionado = directorio.showDialog(null);
-			File imagen = new File(rutasCarpeta.get(pnlVisualizarImg.idFoto));
+		pnlVisualizarImg.categoria.setOnAction(e -> {
+			try {
+				System.out.println("No c");
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
 
-			ImagenDAO.descargarImagen(directorioSeleccionado, imagen);
 		});
 
 		ventanaEmergente.setScene(scene);
@@ -512,6 +511,16 @@ public class App extends Application {
 				// TODO: handle exception
 			}
 
+		});
+
+		pnlVisualizarImg.descargar.setOnAction(e -> {
+			DirectoryChooser directorio = new DirectoryChooser();
+			directorio.setTitle("Selecciona una carpeta");
+			File directorioSeleccionado = directorio.showDialog(null);
+			File imagen = new File(rutasCarpeta.get(pnlVisualizarImg.idFoto));
+			System.out.println(directorioSeleccionado);
+
+			ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
 		});
 
 		ventanaEmergente.setScene(scene);
