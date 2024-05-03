@@ -341,22 +341,12 @@ public class App extends Application {
 			loginController.setVentanaActual(loginStage);
 
 			loginStage.setOnCloseRequest(e -> {
-				if (LoginController.cargarCalendario) {
-					visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
-				} else {
-					stage.close();
+			stage.close();
 				}
-			});
-
-//			loginController.BttnIniciar.setOnAction(e -> {
-//				if (LoginController.cargarCalendario) {
-//					loginStage.close();
-//					visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
-//				}
-//			});
-
-			// visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
-			// Puedes llamar a métodos o pasar datos al controlador si es necesario
+			);
+			
+			if (LoginController.cargarCalendario) {
+				visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);}
 
 		} catch (Exception e) {
 			e.printStackTrace();
