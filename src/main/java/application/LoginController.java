@@ -76,7 +76,7 @@ public class LoginController {
 	@FXML
 	void abrirPaginaRegistrarse(ActionEvent event) throws IOException {
 		// Cargar la nueva página (por ejemplo, Registrarse.fxml)
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("javafx_fxml/IniciarSesion.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("Registrarse.fxml"));
 		Parent paginaRegistrarseParent = loader.load();
 		Scene paginaRegistrarseScene = new Scene(paginaRegistrarseParent);
 

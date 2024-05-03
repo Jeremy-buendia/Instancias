@@ -341,12 +341,11 @@ public class App extends Application {
 				stage.close();
 			});
 
-			// Obtener el controlador de la ventana emergente...
-//			LoginController controller = loader.getController();
-//			controller.setVentanaActual(ventana);
+			loginController.setVentanaActual(loginStage);
 
-//			controller.BttnIniciar.setOnAction(e -> {
+//			loginController.BttnIniciar.setOnAction(e -> {
 //				if (LoginController.cargarCalendario) {
+//					loginStage.close();
 //					visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
 //				}
 //			});

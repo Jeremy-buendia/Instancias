@@ -78,7 +78,7 @@ public class RegistroController {
 			stage.close();
 
 			// Abrir la ventana de inicio de sesión
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("javafx_fxml/Registrarse.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("Registrarse.fxml"));
 			Parent root = null;
 			try {
 				root = loader.load();
