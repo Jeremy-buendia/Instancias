@@ -476,15 +476,27 @@ public class App extends Application {
 		PanelVisualizarImagen pnlVisualizarImg = new PanelVisualizarImagen();
 		int idFoto[] = { 1 };
 
-		Scene scene = new Scene(pnlVisualizarImg, 300, 300);
+		pnlVisualizarImg.marcar.setText("Desmarcar");
 
 		ArrayList<String> rutasCarpeta = ImagenDAO.getMarcados(con);
 
 		try {
 			pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(0)));
 			pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		}
+
+		double aspecto = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
+		Scene scene = new Scene(pnlVisualizarImg, 300, 300 / aspecto + 100);
+
+		if (aspecto < 0.5) {
+			ventanaEmergente.setHeight(420);
+			ventanaEmergente.setWidth(300);
+			pnlVisualizarImg.vistaImg.setFitHeight(300);
+		} else {
+			pnlVisualizarImg.vistaImg.setFitWidth(300);
 		}
 
 		pnlVisualizarImg.anterior.setOnAction(e -> {
@@ -494,11 +506,22 @@ public class App extends Application {
 					Image imagenAnterior = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
 					pnlVisualizarImg.vistaImg.setImage(imagenAnterior);
 
-					pnlVisualizarImg.vistaImg.setPreserveRatio(true);
-					// Cambiamos ancho de la imagen
-					pnlVisualizarImg.vistaImg.setFitWidth(200);
+					double aspectoImgAnt = imagenAnterior.getWidth() / imagenAnterior.getHeight();
 
-					pnlVisualizarImg.getChildren().add(pnlVisualizarImg.vistaImg);
+					// Cambiamos ancho de la imagen
+
+					pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
+
+					if (aspectoImgAnt < 0.5) {
+						ventanaEmergente.setHeight(420);
+						ventanaEmergente.setWidth(300);
+						pnlVisualizarImg.vistaImg.setFitHeight(300);
+					} else {
+						// ventanaEmergente.setHeight(300 / aspectoImgAnt + 100);
+//						ventanaEmergente.setHeight(300 / aspectoImgAnt + 100);
+						pnlVisualizarImg.vistaImg.setFitWidth(300);
+					}
+
 				} catch (Exception e2) {
 					// TODO: handle exception
 				}
@@ -514,10 +537,21 @@ public class App extends Application {
 				Image imagenSiguiente = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
 				pnlVisualizarImg.vistaImg.setImage(imagenSiguiente);
 
-				pnlVisualizarImg.vistaImg.setPreserveRatio(true);
+				double aspectoImgSig = imagenSiguiente.getWidth() / imagenSiguiente.getHeight();
 				// Cambiamos ancho de la imagen
-				pnlVisualizarImg.vistaImg.setFitWidth(200);
-				pnlVisualizarImg.getChildren().add(pnlVisualizarImg.vistaImg);
+
+				pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
+
+				if (aspectoImgSig < 0.5) {
+					ventanaEmergente.setHeight(420);
+					ventanaEmergente.setWidth(300);
+					pnlVisualizarImg.vistaImg.setFitHeight(300);
+				} else {
+//					ventanaEmergente.setHeight(300 / aspectoImgSig + 100);
+//					ventanaEmergente.setWidth(300);
+					pnlVisualizarImg.vistaImg.setFitWidth(300);
+				}
+
 			} catch (Exception e2) {
 				// TODO: handle exception
 			}
@@ -525,7 +559,6 @@ public class App extends Application {
 		});
 
 		pnlVisualizarImg.descargar.setOnAction(e -> {
-			System.out.println(idFoto[0]);
 			DirectoryChooser directorio = new DirectoryChooser();
 			directorio.setTitle("Selecciona una carpeta");
 			File directorioSeleccionado = directorio.showDialog(null);
@@ -534,6 +567,22 @@ public class App extends Application {
 
 			ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
 		});
+
+		pnlVisualizarImg.marcar.setOnAction(e -> {
+			if (pnlVisualizarImg.marcar.getText().equals("Marcar")) {
+				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 1);
+				pnlVisualizarImg.marcar.setText("Desmarcar");
+			} else {
+				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 0);
+				pnlVisualizarImg.marcar.setText("Marcar");
+			}
+		});
+
+		pnlVisualizarImg.categoria.setOnAction(e -> {
+			// CREAR PANEL CATEGORIA
+		});
+
+		ventanaEmergente.setResizable(false);
 
 		ventanaEmergente.setScene(scene);
 		ventanaEmergente.setTitle("Imagen");

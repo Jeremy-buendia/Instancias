@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -255,6 +256,27 @@ public class ImagenDAO {
 			return rutasCarpeta;
 		} catch (Exception e) {
 			return null;
+		}
+	}
+
+	public static int cambiarMarcado(Connection con, String rutaImagen, int marcar) {
+		String query = "UPDATE imagen SET marcado = ? WHERE Ubicacion = ?";
+
+		PreparedStatement pstmt;
+		try {
+			pstmt = con.prepareStatement(query);
+
+			pstmt.setInt(1, marcar);
+			pstmt.setString(2, rutaImagen);
+
+			pstmt.executeUpdate();
+
+			return 0;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
 		}
 	}
 

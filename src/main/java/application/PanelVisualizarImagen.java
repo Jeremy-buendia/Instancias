@@ -6,11 +6,12 @@ import java.sql.Connection;
 
 import application.utils.UtilsBD;
 import javafx.scene.control.Button;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 
-public class PanelVisualizarImagen extends VBox {
+public class PanelVisualizarImagen extends BorderPane {
 	ImageView anteriorImgView;
 	ImageView siguienteImgView;
 	ImageView vistaImg;
@@ -18,6 +19,7 @@ public class PanelVisualizarImagen extends VBox {
 	Button anterior;
 	Button siguiente;
 	Button descargar;
+	Button marcar;
 	Button categoria;
 
 	Image imagen;
@@ -34,8 +36,8 @@ public class PanelVisualizarImagen extends VBox {
 		vistaImg = new ImageView();
 
 		vistaImg.setPreserveRatio(true);
-		// Cambiamos ancho de la imagen
-		vistaImg.setFitWidth(200);
+//		// Cambiamos ancho de la imagen
+//		vistaImg.setFitWidth(300);
 
 		try {
 			anteriorImg = new Image(new FileInputStream("img/izq.png"));
@@ -60,7 +62,27 @@ public class PanelVisualizarImagen extends VBox {
 
 		descargar = new Button("Descargar");
 		categoria = new Button("Asignar Categoria");
+		marcar = new Button("Marcar");
 
-		this.getChildren().addAll(descargar, categoria, vistaImg, anterior, siguiente);
+		ToolBar menuSuperior = new ToolBar();
+
+		menuSuperior.getItems().addAll(descargar, marcar, categoria);
+
+		ToolBar menuInferior = new ToolBar();
+
+		menuInferior.getItems().addAll(anterior, siguiente);
+
+		// this.getChildren().addAll(descargar, categoria, vistaImg, anterior,
+		// siguiente);
+
+		this.setTop(menuSuperior);
+		this.setBottom(menuInferior);
+
+		this.setCenter(vistaImg);
+
+		// this.maxWidth(300);
+
+//		this.setMargin(siguiente, new Insets(0, 0, 0, 90));
+//		this.setMargin(categoria, new Insets(0, 0, 0, 30));
 	}
 }
