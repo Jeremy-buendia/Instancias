@@ -318,7 +318,6 @@ public class App extends Application {
 	public void abrirVentanaFormulario(Stage stage, Connection con, Button mesAnterior, Button mesPosterior,
 			BorderPane pnlDistribucion) {
 		try {
-			System.out.println(getClass().getResource("/javafx_fxml/IniciarSesion.fxml"));
 			// Cargar el archivo FXML de la ventana emergente
 			FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/javafx_fxml/IniciarSesion.fxml"));
 			FXMLLoader registerLoader = new FXMLLoader(getClass().getResource("/javafx_fxml/Registrarse.fxml"));
@@ -431,7 +430,13 @@ public class App extends Application {
 		});
 
 		pnlVisualizarImg.descargar.setOnAction(e -> {
-			// Aquí va el código de cuando te quieres descargar una imagen concreta
+			System.out.println("illo queloque");
+			DirectoryChooser directorio = new DirectoryChooser();
+			directorio.setTitle("Selecciona una carpeta");
+			File directorioSeleccionado = directorio.showDialog(null);
+			File imagen = new File(rutasCarpeta.get(pnlVisualizarImg.idFoto));
+
+			ImagenDAO.descargarImagen(directorioSeleccionado, imagen);
 		});
 
 		ventanaEmergente.setScene(scene);
