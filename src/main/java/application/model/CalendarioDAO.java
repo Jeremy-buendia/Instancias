@@ -71,7 +71,6 @@ public class CalendarioDAO {
 		// Devolver los resultados de la consulta
 		return rs;
 	}
-	String query = "INSERT INTO calendario (Fecha, Imagen_Calendario, Usuario_idUsuario) VALUES(?, ?, ?)";
 
 	// FUNCION QUE DEVUELVE UN ARRAY CON LAS RUTAS DE LAS IMAGENES DE LOS
 	// CALENDARIOS
