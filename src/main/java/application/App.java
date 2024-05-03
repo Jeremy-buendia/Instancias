@@ -338,7 +338,7 @@ public class App extends Application {
 
 			loginStage.showAndWait();
 
-			// loginController.setVentanaActual(loginStage);
+			loginController.setVentanaActual(loginStage);
 
 			loginStage.setOnCloseRequest(e -> {
 				if (LoginController.cargarCalendario) {
