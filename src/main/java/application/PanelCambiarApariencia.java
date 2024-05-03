@@ -15,17 +15,16 @@ public class PanelCambiarApariencia extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		root = new StackPane();
 		Scene scene = new Scene(root, 650, 650);
-		root.setStyle("-fx-background-color: #FFFFFF;"); // Establece el color de fondo inicial a blanco
+		root.setStyle("-fx-background-color: #FFFFFF;"); 
 
 		// Resto de tu código...
 		MenuItem iModo = new MenuItem("Modo");
 		iModo.setOnAction(event -> {
 			int estado = ((CheckMenuItem) iModo).isSelected() ? 1 : 0;
 			if (estado == 1) {
-				root.setStyle("-fx-background-color: #000000;"); // Cambia el color de fondo a negro
+				root.setStyle("-fx-background-color: #000000;"); 
 			} else {
-				root.setStyle("-fx-background-color: #ffffff;"); // Cambia el color de fondo a blanco
-			}
+				root.setStyle("-fx-background-color: #ffffff;");			}
 		});
 
 		primaryStage.setScene(scene);
