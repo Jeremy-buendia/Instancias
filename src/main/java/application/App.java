@@ -329,7 +329,7 @@ public class App extends Application {
 
 			LoginController loginController = loginLoader.getController();
 			loginController.setRegisterScene(registerScene);
-			
+		
 
 			// Pane ventanaEmergente = loader.load();
 			Stage loginStage = new Stage();
@@ -338,26 +338,19 @@ public class App extends Application {
 			loginStage.initModality(Modality.WINDOW_MODAL);
 			loginStage.setScene(loginScene);
 
-			loginStage.show();
+			loginStage.showAndWait();
 
 			loginStage.setOnCloseRequest(e -> {
-				stage.close();
+			
+			
+						stage.close();
+
 			});
-
-			// Obtener el controlador de la ventana emergente...
-//			LoginController controller = loader.getController();
-//			controller.setVentanaActual(ventana);
-
-//			controller.BttnIniciar.setOnAction(e -> {
-//				if (LoginController.cargarCalendario) {
-//					visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
-//				}
-//			});
-
-			// visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
-			// Puedes llamar a métodos o pasar datos al controlador si es necesario
-
-		} catch (Exception e) {
+			if (LoginController.cargarCalendario) {
+			visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
+		
+} 
+			}     catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
