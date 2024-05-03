@@ -60,6 +60,11 @@ public class App extends Application {
 		Menu mOpcSesion = new Menu("Opciones de Sesión");
 
 		MenuItem iCerrarSesion = new MenuItem("Cerrar Sesión");
+
+		iCerrarSesion.setOnAction(e -> {
+			cerrarSesion();
+		});
+
 		MenuItem iCambiarSesion = new MenuItem("Cambiar Sesión");
 
 		// Menú mBuscar
@@ -313,9 +318,10 @@ public class App extends Application {
 	public void abrirVentanaFormulario(Stage stage, Connection con, Button mesAnterior, Button mesPosterior,
 			BorderPane pnlDistribucion) {
 		try {
+			System.out.println(getClass().getResource("/javafx_fxml/IniciarSesion.fxml"));
 			// Cargar el archivo FXML de la ventana emergente
-			FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("IniciarSesion.fxml"));
-			FXMLLoader registerLoader = new FXMLLoader(getClass().getResource("Registrarse.fxml"));
+			FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/javafx_fxml/IniciarSesion.fxml"));
+			FXMLLoader registerLoader = new FXMLLoader(getClass().getResource("/javafx_fxml/Registrarse.fxml"));
 
 			Parent loginRoot = loginLoader.load();
 			Scene loginScene = new Scene(loginRoot);
@@ -567,6 +573,20 @@ public class App extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void cerrarSesion() {
+		// Platform.startup(null);
+
+		// Platform.exit();
+
+//		try {
+//			String aplicacion = System.getProperty("java.home") + "/bin/java";
+//			ProcessBuilder builder = new ProcessBuilder(java, "-jar", "")
+//		}catch(Exception e) {
+//			
+//		}
+
 	}
 
 	public static void main(String[] args) {
