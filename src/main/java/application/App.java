@@ -336,9 +336,9 @@ public class App extends Application {
 			loginStage.initModality(Modality.WINDOW_MODAL);
 			loginStage.setScene(loginScene);
 
-			loginStage.show();
+			loginStage.showAndWait();
 
-			loginController.setVentanaActual(loginStage);
+			// loginController.setVentanaActual(loginStage);
 
 			loginStage.setOnCloseRequest(e -> {
 				if (LoginController.cargarCalendario) {
