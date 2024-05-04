@@ -98,7 +98,7 @@ public class CategoriaDAO {
 
 			System.out.println("Categoría añadida a la imagen correctamente.");
 		} catch (SQLException e) {
-			System.out.println("Error al añadir la categoría a la imagen: " + e.getMessage());
+			e.printStackTrace();
 		} // finally {
 //			// Cerrar la conexión y liberar recursos
 //			try {

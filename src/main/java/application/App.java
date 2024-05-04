@@ -622,7 +622,8 @@ public class App extends Application {
 				pnlCrearCat.crear.setOnAction(e3 -> {
 					CategoriaDAO.crearCategoria(con, pnlCrearCat.nombreCategoria.getText());
 					CategoriaDAO.agregarCategoriaAImagen(con,
-							CategoriaDAO.getCategoria(con, pnlCrearCat.nombreCategoria.getText()).getIdCategoria(), 16,
+							CategoriaDAO.getCategoria(con, pnlCrearCat.nombreCategoria.getText()).getIdCategoria(),
+							ImagenDAO.getImagenPorRuta(con, rutasCarpeta.get(idFoto[0] - 1)).getIdImagen(),
 							UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
 					ventanaEmergente.setScene(scene);
 				});
