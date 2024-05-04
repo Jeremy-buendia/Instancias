@@ -73,4 +73,46 @@ public class NotificacionesDAO {
 
 	        stage.show();
 	    }
+	 
+	  public static void insertarNotificaciones(Connection con) {
+	        // Verificar si hay alguna notificación existente
+	        if (!hayNotificaciones(con)) {
+	            try {
+	                // Consulta SQL para insertar las notificaciones
+	                String sql = "INSERT INTO notificaciones (idNotificaciones, Evento, Mensaje) VALUES "
+	                           + "(1, 1, 'Bienvenido'), "
+	                           + "(2, 2, 'Has subido una foto'), "
+	                           + "(3, 3, 'Se ha descargado una foto')";
+	                PreparedStatement pstmt = con.prepareStatement(sql);
+
+	                // Ejecutar la consulta
+	                pstmt.executeUpdate();
+	                
+	                System.out.println("Notificaciones insertadas correctamente.");
+
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        } else {
+	            System.out.println("Ya existen notificaciones en la base de datos.");
+	        }
+	    }
+
+	    private static boolean hayNotificaciones(Connection con) {
+	        boolean hayNotificaciones = false;
+	        String query = "SELECT COUNT(*) AS total FROM notificaciones";
+	        try {
+	            PreparedStatement pstmt = con.prepareStatement(query);
+	            ResultSet rs = pstmt.executeQuery();
+	            if (rs.next()) {
+	                int total = rs.getInt("total");
+	                hayNotificaciones = total > 0;
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return hayNotificaciones;
+	    }
+	
 }
+	 
