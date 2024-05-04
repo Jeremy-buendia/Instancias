@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import application.model.CalendarioDAO;
+import application.model.CategoriaDAO;
 import application.model.ImagenDAO;
 import application.model.ImagenDO;
 import application.model.OpcionesDAO;
@@ -518,8 +519,6 @@ public class App extends Application {
 
 					double aspectoImgAnt = imagenAnterior.getWidth() / imagenAnterior.getHeight();
 
-					// Cambiamos ancho de la imagen
-
 					pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
 
 					if (aspectoImgAnt < 0.5) {
@@ -527,8 +526,6 @@ public class App extends Application {
 						ventanaEmergente.setWidth(300);
 						pnlVisualizarImg.vistaImg.setFitHeight(300);
 					} else {
-						// ventanaEmergente.setHeight(300 / aspectoImgAnt + 100);
-//						ventanaEmergente.setHeight(300 / aspectoImgAnt + 100);
 						pnlVisualizarImg.vistaImg.setFitWidth(300);
 					}
 
@@ -555,7 +552,6 @@ public class App extends Application {
 				pnlVisualizarImg.vistaImg.setImage(imagenSiguiente);
 
 				double aspectoImgSig = imagenSiguiente.getWidth() / imagenSiguiente.getHeight();
-				// Cambiamos ancho de la imagen
 
 				pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
 
@@ -564,8 +560,6 @@ public class App extends Application {
 					ventanaEmergente.setWidth(300);
 					pnlVisualizarImg.vistaImg.setFitHeight(300);
 				} else {
-//					ventanaEmergente.setHeight(300 / aspectoImgSig + 100);
-//					ventanaEmergente.setWidth(300);
 					pnlVisualizarImg.vistaImg.setFitWidth(300);
 				}
 
@@ -593,17 +587,31 @@ public class App extends Application {
 				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 1);
 				pnlVisualizarImg.marcar.setText("Desmarcar");
 			}
-//			if (pnlVisualizarImg.marcar.getText().equals("Marcar")) {
-//				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 1);
-//				pnlVisualizarImg.marcar.setText("Desmarcar");
-//			} else {
-//				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 0);
-//				pnlVisualizarImg.marcar.setText("Marcar");
-//			}
 		});
 
 		pnlVisualizarImg.categoria.setOnAction(e -> {
-			// CREAR PANEL CATEGORIA
+			PanelCategoria pnlCategoria = new PanelCategoria();
+			Scene escenaCat = new Scene(pnlCategoria, 300, 300);
+			ventanaEmergente.setScene(escenaCat);
+
+			pnlCategoria.categorias = CategoriaDAO.getCategorias(con,
+					UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
+
+			for (int i = 0; i < pnlCategoria.categorias.size(); i++) {
+				pnlCategoria.chbCategorias.getItems().add(pnlCategoria.categorias.get(i).getNombreCategoria());
+				System.out.println(pnlCategoria.categorias.get(i));
+			}
+
+			pnlCategoria.btnCrearCat.setOnAction(e2 -> {
+				PanelCrearCategoria pnlCrearCat = new PanelCrearCategoria();
+				Scene escenaCrearCat = new Scene(pnlCrearCat, 300, 300);
+				ventanaEmergente.setScene(escenaCrearCat);
+
+				pnlCrearCat.crear.setOnAction(e3 -> {
+					CategoriaDAO.crearCategoria(con, pnlCrearCat.nombreCategoria.getText());
+					ventanaEmergente.setScene(escenaCat);
+				});
+			});
 		});
 
 		ventanaEmergente.setResizable(false);
