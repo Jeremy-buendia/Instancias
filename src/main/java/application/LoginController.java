@@ -3,6 +3,8 @@ package application;
 import java.io.IOException;
 import java.sql.Connection;
 
+import application.model.CategoriaDAO;
+import application.model.NotificacionesDAO;
 import application.model.UsuarioDAO;
 import application.utils.UtilsBD;
 import javafx.event.ActionEvent;
@@ -49,7 +51,7 @@ public class LoginController {
 		// Conectar a la base de datos
 
 		correoUsuario = ICorreo.getText();
-
+		NotificacionesDAO.mostrarNotificacion("Esto es de prueba");
 		// Verificar la contraseña
 		boolean contraseñaCorrecta = UsuarioDAO.verificarContraseña(con, correoText, contraseñaText);
 
