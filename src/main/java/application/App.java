@@ -591,6 +591,7 @@ public class App extends Application {
 		});
 
 		pnlVisualizarImg.categoria.setOnAction(e -> {
+			System.out.println(rutasCarpeta.get(idFoto[0] - 1));
 			ArrayList<CategoriaDO> categorias = new ArrayList<>();
 			PanelCategoria pnlCategoria = new PanelCategoria();
 			Scene escenaCat = new Scene(pnlCategoria, 300, 300);
@@ -599,13 +600,14 @@ public class App extends Application {
 			pnlCategoria.btnAsignar.setOnAction(e2 -> {
 				CategoriaDAO.agregarCategoriaAImagen(con,
 						CategoriaDAO.getCategoria(con, (String) pnlCategoria.chbCategorias.getValue()).getIdCategoria(),
-						ImagenDAO.getImagenPorRuta(con, pnlVisualizarImg.imagen.getUrl()).getIdImagen(),
+						ImagenDAO.getImagenPorRuta(con, rutasCarpeta.get(idFoto[0] - 1)).getIdImagen(),
 						UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
-
 			});
 
 			categorias = CategoriaDAO.getCategorias(con,
 					UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
+
+			pnlCategoria.chbCategorias.getItems().clear();
 
 			for (int i = 0; i < categorias.size(); i++) {
 				pnlCategoria.chbCategorias.getItems().add(categorias.get(i).getNombreCategoria());

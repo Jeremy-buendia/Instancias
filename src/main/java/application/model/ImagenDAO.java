@@ -228,7 +228,7 @@ public class ImagenDAO {
 				ImagenDO imagen = new ImagenDO();
 				imagen.setIdImagen(rs.getInt("idImagen"));
 				imagen.setNombre_imagen(rs.getString("Descripcion_Imagen"));
-				imagen.setUbicacion(rs.getString("ubicacion"));
+				imagen.setUbicacion(rs.getString("Ubicacion"));
 				imagen.setFecha_Imagen(rs.getString("Fecha_Imagen"));
 				imagen.setUsuario_idUsuario(rs.getInt("Usuario_idUsuario"));
 				imagen.setMarcado(rs.getInt("Marcado"));

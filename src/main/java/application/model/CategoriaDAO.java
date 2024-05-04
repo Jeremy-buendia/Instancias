@@ -110,25 +110,24 @@ public class CategoriaDAO {
 //		}
 	}
 
-	 public static ArrayList<String> MostrarCategoria(Connection con) {
-	        ArrayList<String> nombresCategorias = new ArrayList<>();
-	        String query = "SELECT Nombre_Categoria FROM categoria";
+	public static ArrayList<String> MostrarCategoria(Connection con) {
+		ArrayList<String> nombresCategorias = new ArrayList<>();
+		String query = "SELECT Nombre_Categoria FROM categoria";
 
-	        try {
-	            PreparedStatement pstmt = con.prepareStatement(query);
-	            ResultSet rs = pstmt.executeQuery();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(query);
+			ResultSet rs = pstmt.executeQuery();
 
-	            while (rs.next()) {
-	                String nombreCategoria = rs.getString("Nombre_Categoria");
-	                nombresCategorias.add(nombreCategoria);
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return nombresCategorias;
-	    }
-	
-	
+			while (rs.next()) {
+				String nombreCategoria = rs.getString("Nombre_Categoria");
+				nombresCategorias.add(nombreCategoria);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return nombresCategorias;
+	}
+
 	public static CategoriaDO getCategoria(Connection con, String nombre) {
 		String query = "SELECT * FROM categoria WHERE Nombre_Categoria = ?";
 
@@ -169,7 +168,7 @@ public class CategoriaDAO {
 				categoria.setIdCategoria(rs.getInt("IdCategoria"));
 				categoria.setNombreCategoria(rs.getString("Nombre_Categoria"));
 				categorias.add(categoria);
-				System.out.println(categoria.getNombreCategoria());
+				// System.out.println(categoria.getNombreCategoria());
 			}
 
 			return categorias;
@@ -181,13 +180,13 @@ public class CategoriaDAO {
 		}
 	}
 
-	 public static void cargarCategoriasEnChoiceBox(Connection con, ChoiceBox<String> choiceBox) {
-	        ArrayList<String> nombresCategorias = MostrarCategoria(con);
-	        if (nombresCategorias != null) {
-	            choiceBox.getItems().addAll(nombresCategorias);
-	        } else {
-	            System.out.println("Error al cargar las categorías desde la base de datos.");
-	        }
-	    }        
+	public static void cargarCategoriasEnChoiceBox(Connection con, ChoiceBox<String> choiceBox) {
+		ArrayList<String> nombresCategorias = MostrarCategoria(con);
+		if (nombresCategorias != null) {
+			choiceBox.getItems().addAll(nombresCategorias);
+		} else {
+			System.out.println("Error al cargar las categorías desde la base de datos.");
+		}
+	}
 
 }
