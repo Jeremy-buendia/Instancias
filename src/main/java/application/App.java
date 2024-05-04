@@ -476,16 +476,19 @@ public class App extends Application {
 		PanelVisualizarImagen pnlVisualizarImg = new PanelVisualizarImagen();
 		int idFoto[] = { 1 };
 
-		pnlVisualizarImg.marcar.setText("Desmarcar");
-
 		ArrayList<String> rutasCarpeta = ImagenDAO.getMarcados(con);
 
 		try {
 			pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(0)));
 			pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
-
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		}
+
+		if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
+			pnlVisualizarImg.marcar.setText("Desmarcar");
+		} else {
+			pnlVisualizarImg.marcar.setText("marcar");
 		}
 
 		double aspecto = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
@@ -502,6 +505,13 @@ public class App extends Application {
 		pnlVisualizarImg.anterior.setOnAction(e -> {
 			if (idFoto[0] > 1) {
 				idFoto[0] -= 1;
+
+				if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
+					pnlVisualizarImg.marcar.setText("Desmarcar");
+				} else {
+					pnlVisualizarImg.marcar.setText("Marcar");
+				}
+
 				try {
 					Image imagenAnterior = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
 					pnlVisualizarImg.vistaImg.setImage(imagenAnterior);
@@ -533,6 +543,13 @@ public class App extends Application {
 			if (idFoto[0] < rutasCarpeta.size()) {
 				idFoto[0] += 1;
 			}
+
+			if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
+				pnlVisualizarImg.marcar.setText("Desmarcar");
+			} else {
+				pnlVisualizarImg.marcar.setText("Marcar");
+			}
+
 			try {
 				Image imagenSiguiente = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
 				pnlVisualizarImg.vistaImg.setImage(imagenSiguiente);
@@ -569,13 +586,20 @@ public class App extends Application {
 		});
 
 		pnlVisualizarImg.marcar.setOnAction(e -> {
-			if (pnlVisualizarImg.marcar.getText().equals("Marcar")) {
-				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 1);
-				pnlVisualizarImg.marcar.setText("Desmarcar");
-			} else {
+			if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
 				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 0);
 				pnlVisualizarImg.marcar.setText("Marcar");
+			} else {
+				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 1);
+				pnlVisualizarImg.marcar.setText("Desmarcar");
 			}
+//			if (pnlVisualizarImg.marcar.getText().equals("Marcar")) {
+//				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 1);
+//				pnlVisualizarImg.marcar.setText("Desmarcar");
+//			} else {
+//				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 0);
+//				pnlVisualizarImg.marcar.setText("Marcar");
+//			}
 		});
 
 		pnlVisualizarImg.categoria.setOnAction(e -> {

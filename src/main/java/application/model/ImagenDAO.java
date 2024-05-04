@@ -259,6 +259,29 @@ public class ImagenDAO {
 		}
 	}
 
+	public static int estaMarcado(Connection con, String rutaImagen) {
+		String query = "SELECT Marcado FROM imagen WHERE Ubicacion = ?";
+
+		try {
+			PreparedStatement pstmt = con.prepareStatement(query);
+
+			pstmt.setString(1, rutaImagen);
+
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				return rs.getInt("Marcado");
+			}
+
+			return -1;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
+		}
+
+	}
+
 	public static int cambiarMarcado(Connection con, String rutaImagen, int marcar) {
 		String query = "UPDATE imagen SET marcado = ? WHERE Ubicacion = ?";
 
