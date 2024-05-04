@@ -77,7 +77,7 @@ public class CategoriaDAO {
 	}
 
 	// Método para añadir una categoría a una imagen
-	public void agregarCategoriaAImagen(Connection con, int idCategoria, int idImagen, int idUsuario) {
+	public static void agregarCategoriaAImagen(Connection con, int idCategoria, int idImagen, int idUsuario) {
 		PreparedStatement pstmt;
 		try {
 			// Consulta SQL para insertar la categoría en la tabla Categoria_has_Imagen
@@ -135,7 +135,7 @@ public class CategoriaDAO {
 	public static ArrayList<CategoriaDO> getCategorias(Connection con, int idUsuario) {
 		ArrayList<CategoriaDO> categorias = new ArrayList<>();
 
-		String query = "SELECT * FROM categoria JOIN categoria_has_imagen ON categoria.idCategoria = categoria_has_imagen.Categoria_idCategoria WHERE Imagen_Usuario_idUsuario = ?";
+		String query = "SELECT * FROM categoria JOIN categoria_has_imagen ON categoria.idCategoria = categoria_has_imagen.Categoria_idCategoria WHERE categoria_has_imagen.Imagen_Usuario_idUsuario = ?";
 
 		try {
 			PreparedStatement pstmt = con.prepareStatement(query);

@@ -1,9 +1,7 @@
 package application;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 
-import application.model.CategoriaDO;
 import application.utils.UtilsBD;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -13,15 +11,15 @@ public class PanelCategoria extends VBox {
 
 	ChoiceBox chbCategorias;
 	Button btnCrearCat;
-	ArrayList<CategoriaDO> categorias;
+	Button btnAsignar;
 
 	PanelCategoria() {
-		categorias = new ArrayList<>();
 		Connection con = UtilsBD.conectarBD();
 
 		chbCategorias = new ChoiceBox();
 		btnCrearCat = new Button("Crear Categoria");
+		btnAsignar = new Button("Asignar");
 
-		this.getChildren().addAll(chbCategorias, btnCrearCat);
+		this.getChildren().addAll(chbCategorias, btnCrearCat, btnAsignar);
 	}
 }

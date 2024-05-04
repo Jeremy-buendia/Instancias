@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import application.model.CalendarioDAO;
 import application.model.CategoriaDAO;
+import application.model.CategoriaDO;
 import application.model.ImagenDAO;
 import application.model.ImagenDO;
 import application.model.OpcionesDAO;
@@ -514,10 +515,10 @@ public class App extends Application {
 				}
 
 				try {
-					Image imagenAnterior = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
-					pnlVisualizarImg.vistaImg.setImage(imagenAnterior);
+					pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
+					pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
 
-					double aspectoImgAnt = imagenAnterior.getWidth() / imagenAnterior.getHeight();
+					double aspectoImgAnt = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
 
 					pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
 
@@ -548,10 +549,10 @@ public class App extends Application {
 			}
 
 			try {
-				Image imagenSiguiente = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
-				pnlVisualizarImg.vistaImg.setImage(imagenSiguiente);
+				pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
+				pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
 
-				double aspectoImgSig = imagenSiguiente.getWidth() / imagenSiguiente.getHeight();
+				double aspectoImgSig = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
 
 				pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
 
@@ -590,16 +591,25 @@ public class App extends Application {
 		});
 
 		pnlVisualizarImg.categoria.setOnAction(e -> {
+			ArrayList<CategoriaDO> categorias = new ArrayList<>();
 			PanelCategoria pnlCategoria = new PanelCategoria();
 			Scene escenaCat = new Scene(pnlCategoria, 300, 300);
 			ventanaEmergente.setScene(escenaCat);
 
-			pnlCategoria.categorias = CategoriaDAO.getCategorias(con,
+			pnlCategoria.btnAsignar.setOnAction(e2 -> {
+				CategoriaDAO.agregarCategoriaAImagen(con,
+						CategoriaDAO.getCategoria(con, (String) pnlCategoria.chbCategorias.getValue()).getIdCategoria(),
+						ImagenDAO.getImagenPorRuta(con, pnlVisualizarImg.imagen.getUrl()).getIdImagen(),
+						UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
+
+			});
+
+			categorias = CategoriaDAO.getCategorias(con,
 					UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
 
-			for (int i = 0; i < pnlCategoria.categorias.size(); i++) {
-				pnlCategoria.chbCategorias.getItems().add(pnlCategoria.categorias.get(i).getNombreCategoria());
-				System.out.println(pnlCategoria.categorias.get(i));
+			for (int i = 0; i < categorias.size(); i++) {
+				pnlCategoria.chbCategorias.getItems().add(categorias.get(i).getNombreCategoria());
+				System.out.println(categorias.get(i));
 			}
 
 			pnlCategoria.btnCrearCat.setOnAction(e2 -> {
@@ -609,7 +619,10 @@ public class App extends Application {
 
 				pnlCrearCat.crear.setOnAction(e3 -> {
 					CategoriaDAO.crearCategoria(con, pnlCrearCat.nombreCategoria.getText());
-					ventanaEmergente.setScene(escenaCat);
+					CategoriaDAO.agregarCategoriaAImagen(con,
+							CategoriaDAO.getCategoria(con, pnlCrearCat.nombreCategoria.getText()).getIdCategoria(), 16,
+							UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
+					ventanaEmergente.setScene(scene);
 				});
 			});
 		});

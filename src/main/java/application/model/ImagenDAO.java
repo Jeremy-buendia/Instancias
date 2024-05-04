@@ -214,6 +214,35 @@ public class ImagenDAO {
 		}
 	}
 
+	public static ImagenDO getImagenPorRuta(Connection con, String ruta) {
+		try {
+			String query = "SELECT * FROM imagen WHERE ubicacion=?";
+
+			PreparedStatement pstmt = con.prepareStatement(query);
+
+			pstmt.setString(1, ruta);
+
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				ImagenDO imagen = new ImagenDO();
+				imagen.setIdImagen(rs.getInt("idImagen"));
+				imagen.setNombre_imagen(rs.getString("Descripcion_Imagen"));
+				imagen.setUbicacion(rs.getString("ubicacion"));
+				imagen.setFecha_Imagen(rs.getString("Fecha_Imagen"));
+				imagen.setUsuario_idUsuario(rs.getInt("Usuario_idUsuario"));
+				imagen.setMarcado(rs.getInt("Marcado"));
+				return imagen;
+			}
+
+			return null;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	/**
 	 * Función que recibe una fecha y devuelve todas las fotos de esa fecha
 	 * 
