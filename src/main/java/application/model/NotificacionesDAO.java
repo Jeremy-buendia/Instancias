@@ -74,6 +74,32 @@ public class NotificacionesDAO {
 	        stage.show();
 	    }
 	 
+	 public static NotificacionesDO getNotificaciones(Connection con, int idNotificaciones) {
+			String query = "SELECT * FROM notificaciones WHERE idNotificaciones = ?";
+
+			try {
+				PreparedStatement pstmt = con.prepareStatement(query);
+
+				pstmt.setInt(1, idNotificaciones);
+
+				ResultSet rs = pstmt.executeQuery();
+				if (rs.next()) {
+					NotificacionesDO notificacion = new NotificacionesDO();
+					notificacion.setIdNotificaciones(rs.getInt("idNotificaciones"));
+					notificacion.setEvento(rs.getInt("Evento"));
+					notificacion.setMensaje(rs.getString("Mensaje"));
+					
+					return notificacion;
+				}
+				return null;
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;}
+			
+			}
+	 
 	  public static void insertarNotificaciones(Connection con) {
 	        // Verificar si hay alguna notificación existente
 	        if (!hayNotificaciones(con)) {

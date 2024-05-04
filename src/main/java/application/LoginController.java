@@ -53,6 +53,7 @@ public class LoginController {
 		correoUsuario = ICorreo.getText();
 		NotificacionesDAO.mostrarNotificacion("Esto es de prueba");
 		NotificacionesDAO.insertarNotificaciones(con);
+		System.out.println(NotificacionesDAO.getNotificaciones(con, 1));
 		// Verificar la contraseña
 		boolean contraseñaCorrecta = UsuarioDAO.verificarContraseña(con, correoText, contraseñaText);
 
