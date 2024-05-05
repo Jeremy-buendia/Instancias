@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import application.model.CalendarioDAO;
 import application.model.CategoriaDAO;
@@ -1044,12 +1045,16 @@ public class App extends Application {
 			// Crear un servicio de ejecución para ejecutar el monitoreo en un hilo separado
 			ExecutorService executorService = Executors.newSingleThreadExecutor();
 			executorService.submit(() -> {
-				try {
-					WatchService watchService = FileSystems.getDefault().newWatchService();
+				try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
 					rutaOrigen.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
 
 					while (true) {
-						WatchKey key = watchService.take();
+						WatchKey key;
+						try {
+							key = watchService.take();
+						} catch (InterruptedException e) {
+							break;
+						}
 						for (WatchEvent<?> event : key.pollEvents()) {
 							// Obtener el tipo de evento
 							WatchEvent.Kind<?> kind = event.kind();
@@ -1072,14 +1077,11 @@ public class App extends Application {
 
 										File imagen = new File(rutaArchivo);
 
-										// Copiar el archivo a la carpeta destino
-
-//											Files.copy(rutaOrigen.resolve(fileName), rutaDestino.resolve(fileName),
-//													StandardCopyOption.REPLACE_EXISTING);
 										ImagenDO objImagen = new ImagenDO(-1, "", "", "", objUsuario.getId(), 0);
 
 										ImagenDAO.subirImagen(con, objImagen, imagen);
 										ImagenDAO.copiarImagen(imagen, objImagen);
+										executorService.shutdownNow();
 									}
 								}
 							} catch (Exception e) {
@@ -1088,15 +1090,28 @@ public class App extends Application {
 						}
 						key.reset();
 						cerrarCamara();
-
 					}
 				} catch (Exception exp) {
 					exp.printStackTrace();
 				}
 			});
+
 			stage.setOnCloseRequest(event -> {
-				executorService.shutdown();
+				try {
+					// Espera a que el ExecutorService termine
+					executorService.shutdown();
+					executorService.awaitTermination(5, TimeUnit.SECONDS); // Espera un máximo de 5 segundos
+				} catch (InterruptedException e) {
+					// Maneja la interrupción si es necesario
+					e.printStackTrace();
+				} finally {
+					// Si el ExecutorService aún está en ejecución, forzar su cierre
+					if (!executorService.isShutdown()) {
+						executorService.shutdownNow();
+					}
+				}
 			});
+
 		} catch (Exception exp) {
 			exp.printStackTrace();
 		}

@@ -84,33 +84,36 @@ public class UsuarioDAO {
 		}
 
 	}
-	
+
 	/**
 	 * Funcion que comprueba la contraseña del correo introducido
+	 * 
 	 * @param con
 	 * @param correo
 	 * @param contraseña
 	 * @return
 	 */
 	public static boolean verificarContraseña(Connection con, String correo, String contraseña) {
-	    try {
-	        // Obtener el usuario correspondiente al correo proporcionado
-	        UsuarioDO usuario = cargarCorreo(con, correo);
-	        
-	        // Si no se encuentra ningún usuario con el correo proporcionado, la contraseña es incorrecta
-	        if (usuario == null) {
-	            return false;
-	        }
-	        
-	        // Verificar si la contraseña proporcionada coincide con la contraseña almacenada en la base de datos
-	        if(usuario.getContraseña().equals(contraseña)) {
-	        return true;
-	        }
-	        return false;
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+		try {
+			// Obtener el usuario correspondiente al correo proporcionado
+			UsuarioDO usuario = cargarCorreo(con, correo);
+
+			// Si no se encuentra ningún usuario con el correo proporcionado, la contraseña
+			// es incorrecta
+			if (usuario == null) {
+				return false;
+			}
+
+			// Verificar si la contraseña proporcionada coincide con la contraseña
+			// almacenada en la base de datos
+			if (usuario.getContraseña().equals(contraseña)) {
+				return true;
+			}
+			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	/**
@@ -164,18 +167,19 @@ public class UsuarioDAO {
 			pstmt.setString(2, usuario.getApellido());
 			pstmt.setString(3, usuario.getCorreo());
 			pstmt.setString(4, usuario.getContraseña());
-	        
-			pstmt.executeUpdate();
-			
-			 // Recuperamos el ID generado para el usuario
-	        ResultSet rs = pstmt.getGeneratedKeys();
-	        if (rs.next()) {
-	            int idUsuario = rs.getInt(1);
 
-	            // Ahora que el usuario está insertado, podemos insertar las opciones predeterminadas
-	            OpcionesDAO opcionesDAO = new OpcionesDAO();
-	            opcionesDAO.crearOpcionesPredeterminadas(idUsuario, con);
-	        }
+			pstmt.executeUpdate();
+
+			// Recuperamos el ID generado para el usuario
+			ResultSet rs = pstmt.getGeneratedKeys();
+			if (rs.next()) {
+				int idUsuario = rs.getInt(1);
+
+				// Ahora que el usuario está insertado, podemos insertar las opciones
+				// predeterminadas
+				OpcionesDAO opcionesDAO = new OpcionesDAO();
+				opcionesDAO.crearOpcionesPredeterminadas(idUsuario, con);
+			}
 			return 0;
 
 		} catch (SQLException e) {
@@ -183,6 +187,36 @@ public class UsuarioDAO {
 			return -1; // Devolvemos -1 si hay un error SQL
 		}
 
+	}
+
+	public static int actualizarContraseña(Connection con, String correo, String nuevaContraseña) {
+		try {
+			String queryUpdate = "UPDATE usuario SET contraseña = ? WHERE correo = ?";
+			PreparedStatement pstmt = con.prepareStatement(queryUpdate);
+			pstmt.setString(1, nuevaContraseña);
+			pstmt.setString(2, correo);
+
+			int filasActualizadas = pstmt.executeUpdate();
+			return filasActualizadas; // Devolvemos el número de filas actualizadas
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1; // Devolvemos -1 si hay un error SQL
+		}
+	}
+
+	public static int actualizarCorreo(Connection con, String correo, String nuevoCorreo) {
+		try {
+			String queryUpdate = "UPDATE usuario SET correo = ? WHERE correo = ?";
+			PreparedStatement pstmt = con.prepareStatement(queryUpdate);
+			pstmt.setString(1, nuevoCorreo);
+			pstmt.setString(2, correo);
+
+			int filasActualizadas = pstmt.executeUpdate();
+			return filasActualizadas; // Devolvemos el número de filas actualizadas
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1; // Devolvemos -1 si hay un error SQL
+		}
 	}
 
 }
