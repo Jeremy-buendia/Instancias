@@ -183,7 +183,8 @@ public class UsuarioDAO {
 			return 0;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			NotificacionesDAO.mostrarNotificacion(NotificacionesDAO.getNotificaciones(con, 6).getMensaje());
+			// e.printStackTrace();
 			return -1; // Devolvemos -1 si hay un error SQL
 		}
 
@@ -218,7 +219,7 @@ public class UsuarioDAO {
 			return -1; // Devolvemos -1 si hay un error SQL
 		}
 	}
-	
+
 	public static int actualizarNombre(Connection con, String correo, String nuevoNombre) {
 		try {
 			String queryUpdate = "UPDATE usuario SET nombre = ? WHERE correo = ?";

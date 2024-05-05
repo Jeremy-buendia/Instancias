@@ -2,9 +2,8 @@ package application.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import application.utils.UtilsBD;
 
 public class OpcionesDAO {
 
@@ -167,8 +166,7 @@ public class OpcionesDAO {
 	// Función cambiarIdioma: la función cambiará el idioma (español o inglés) de la
 	// aplicación.
 
-
-	public static int cambiarIdioma(OpcionesDO idioma, Connection con) {
+	public static int cambiarIdioma(int idioma, Connection con) {
 		try {
 
 			boolean campoPrevio = false;
@@ -176,10 +174,10 @@ public class OpcionesDAO {
 			String query = "UPDATE OPCIONES SET ";
 
 			// Si los campos no son nulos, los vamos añadiendo a la sentencia
-			if (idioma.getIdioma() != -1) {
-				if (idioma.getIdioma() == 1) {
+			if (idioma != -1) {
+				if (idioma == 1) {
 					query = query + "Idioma = 1";
-				} else if (idioma.getIdioma() == 0) {
+				} else if (idioma == 0) {
 					query = query + "Idioma = 0";
 				}
 				campoPrevio = true;
@@ -199,8 +197,8 @@ public class OpcionesDAO {
 			// Si los campos no son nulos, los vamos
 			// añadiendo a la sentencia
 
-			if (idioma.getIdioma() != -1) {
-				pstmt.setInt(posInterrogacion, idioma.getIdioma());
+			if (idioma != -1) {
+				pstmt.setInt(posInterrogacion, idioma);
 				// Incrementamos la posicion de la
 				// interrogacion para
 				// El siguiente posible campo
@@ -292,7 +290,7 @@ public class OpcionesDAO {
 		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 			pstmt.setInt(1, 0); // Idioma predeterminado
 			pstmt.setInt(2, 0); // Modo predeterminado
-			pstmt.setInt(3, 0); // Notificaciones predeterminadas
+			pstmt.setInt(3, 1); // Notificaciones predeterminadas
 			pstmt.setInt(4, 0); // Fuente predeterminada
 			pstmt.setInt(5, 0); // Diseño predeterminado
 			pstmt.setInt(6, id); // ID del usuario
@@ -302,4 +300,33 @@ public class OpcionesDAO {
 			System.out.println(e.getMessage());
 		}
 	}
+
+	public static OpcionesDO getOpciones(int id, Connection con) {
+		String query = "SELECT * FROM OPCIONES WHERE USUARIO_IDUSUARIO = ?";
+
+		try {
+			PreparedStatement pstmt = con.prepareStatement(query);
+			pstmt.setInt(1, id);
+
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				OpcionesDO opciones = new OpcionesDO();
+				opciones.setIdOpciones(rs.getInt("idOpciones"));
+				opciones.setIdioma(rs.getInt("Idioma"));
+				opciones.setModo(rs.getInt("Modo"));
+				opciones.setNotificaciones(rs.getInt("Notificaciones"));
+				opciones.setFuente(rs.getInt("Fuente"));
+				opciones.setDiseño(rs.getInt("Diseño"));
+				opciones.setUsusario_idUsuario(rs.getInt("Usuario_idUsuario"));
+				return opciones;
+			}
+
+			return null;
+		} catch (Exception e) {
+			return null;
+		}
+
+	}
+
 }

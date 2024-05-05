@@ -3,7 +3,6 @@ package application;
 import java.io.IOException;
 import java.sql.Connection;
 
-import application.model.CategoriaDAO;
 import application.model.NotificacionesDAO;
 import application.model.UsuarioDAO;
 import application.utils.UtilsBD;
@@ -51,7 +50,6 @@ public class LoginController {
 		// Conectar a la base de datos
 
 		correoUsuario = ICorreo.getText();
-		NotificacionesDAO.mostrarNotificacion("Esto es de prueba");
 		NotificacionesDAO.insertarNotificaciones(con);
 		System.out.println(NotificacionesDAO.getNotificaciones(con, 1));
 		// Verificar la contraseña
@@ -61,6 +59,7 @@ public class LoginController {
 		// según tu lógica)
 		if (contraseñaCorrecta) {
 			System.out.println("Contraseña correcta. Abriendo siguiente ventana...");
+			NotificacionesDAO.mostrarNotificacion(NotificacionesDAO.getNotificaciones(con, 1).getMensaje());
 			cargarCalendario = true;
 			if (ventanaActual != null) {
 				ventanaActual.close();
@@ -68,6 +67,7 @@ public class LoginController {
 			// Aquí puedes abrir la siguiente ventana
 		} else {
 			// Si la contraseña es incorrecta, mostrar un mensaje de error
+			NotificacionesDAO.mostrarNotificacion(NotificacionesDAO.getNotificaciones(con, 5).getMensaje());
 			System.out.println("Contraseña incorrecta. Por favor, inténtelo de nuevo.");
 		}
 

@@ -26,6 +26,7 @@ import application.model.CategoriaDAO;
 import application.model.CategoriaDO;
 import application.model.ImagenDAO;
 import application.model.ImagenDO;
+import application.model.NotificacionesDAO;
 import application.model.OpcionesDAO;
 import application.model.UsuarioDAO;
 import application.model.UsuarioDO;
@@ -88,17 +89,9 @@ public class App extends Application {
 
 		MenuItem iCambiarCorreo = new MenuItem("Cambiar Correo");
 
-		iCambiarCorreo.setOnAction(e -> {
-
-		});
-
 		Menu mOpcSesion = new Menu("Opciones de Sesión");
 
 		MenuItem iCerrarSesion = new MenuItem("Cerrar Sesión");
-
-		iCerrarSesion.setOnAction(e -> {
-			cerrarSesion();
-		});
 
 		MenuItem iCambiarSesion = new MenuItem("Cambiar Sesión");
 
@@ -136,6 +129,7 @@ public class App extends Application {
 
 		// CheckMenuItem para Notificaciones
 		CheckMenuItem iNotificaciones = new CheckMenuItem("Notificaciones");
+		iNotificaciones.setSelected(true);
 
 		iNotificaciones.setOnAction(event -> {
 			// Obtén el estado actual del CheckMenuItem
@@ -167,9 +161,9 @@ public class App extends Application {
 
 		// Añadir los oyentes de acción a los elementos del menú
 		// 0 para español
-		iEspanol.setOnAction(e -> OpcionesDAO.cambiarIdioma(0));
+		iEspanol.setOnAction(e -> OpcionesDAO.cambiarIdioma(0, con));
 		// 1 para inglés
-		iIngles.setOnAction(e -> OpcionesDAO.cambiarIdioma(1));
+		iIngles.setOnAction(e -> OpcionesDAO.cambiarIdioma(1, con));
 
 		Menu mApariencia = new Menu("Apariencia");
 
@@ -301,6 +295,18 @@ public class App extends Application {
 		menuInferior.getItems().addAll(marcados, subirFoto, bajarFoto, abrirCamara, mesAnterior, mesPosterior);
 
 		pnlDistribucion.setBottom(menuInferior);
+
+		iCambiarSesion.setOnAction(e -> {
+			abrirVentanaFormulario(stage, con, mesAnterior, mesPosterior, pnlDistribucion);
+		});
+
+		iCambiarCorreo.setOnAction(e -> {
+			cambiarCorreo(stage);
+		});
+
+		iCerrarSesion.setOnAction(e -> {
+			stage1.close();
+		});
 
 		/************** CALENDARIO ****************/
 
@@ -490,34 +496,71 @@ public class App extends Application {
 		System.out.println(fechaDia);
 
 		ArrayList<String> rutasCarpeta = ImagenDAO.getDia(con, fechaDia);
+		if (ImagenDAO.getDia(con, fechaDia).size() > 0) {
 
-		try {
-			pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(0)));
-			pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+			try {
+				pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(0)));
+				pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 
-		if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
-			pnlVisualizarImg.marcar.setText("Desmarcar");
-		} else {
-			pnlVisualizarImg.marcar.setText("marcar");
-		}
+			if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
+				pnlVisualizarImg.marcar.setText("Desmarcar");
+			} else {
+				pnlVisualizarImg.marcar.setText("marcar");
+			}
 
-		double aspecto = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
-		Scene scene = new Scene(pnlVisualizarImg, 300, 300 / aspecto + 100);
+			double aspecto = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
+			Scene scene = new Scene(pnlVisualizarImg, 300, 300 / aspecto + 100);
 
-		if (aspecto <= 1) {
-			ventanaEmergente.setHeight(420);
-			ventanaEmergente.setWidth(300);
-			pnlVisualizarImg.vistaImg.setFitHeight(300);
-		} else {
-			pnlVisualizarImg.vistaImg.setFitWidth(300);
-		}
+			if (aspecto <= 1) {
+				ventanaEmergente.setHeight(420);
+				ventanaEmergente.setWidth(300);
+				pnlVisualizarImg.vistaImg.setFitHeight(300);
+			} else {
+				pnlVisualizarImg.vistaImg.setFitWidth(300);
+			}
 
-		pnlVisualizarImg.anterior.setOnAction(e -> {
-			if (idFoto[0] > 1) {
-				idFoto[0] -= 1;
+			pnlVisualizarImg.anterior.setOnAction(e -> {
+				if (idFoto[0] > 1) {
+					idFoto[0] -= 1;
+
+					if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
+						pnlVisualizarImg.marcar.setText("Desmarcar");
+					} else {
+						pnlVisualizarImg.marcar.setText("Marcar");
+					}
+
+					try {
+						pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
+						pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
+
+						double aspectoImgAnt = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
+
+						pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
+
+						if (aspectoImgAnt < 1) {
+							ventanaEmergente.setHeight(420);
+							ventanaEmergente.setWidth(300);
+							pnlVisualizarImg.vistaImg.setFitHeight(300);
+						} else {
+							ventanaEmergente.setHeight(300 / aspectoImgAnt + 120);
+							pnlVisualizarImg.vistaImg.setFitWidth(300);
+						}
+
+						pnlVisualizarImg.getChildren().add(pnlVisualizarImg.vistaImg);
+					} catch (Exception e2) {
+						// TODO: handle exception
+					}
+
+				}
+			});
+
+			pnlVisualizarImg.siguiente.setOnAction(e -> {
+				if (idFoto[0] < rutasCarpeta.size()) {
+					idFoto[0] += 1;
+				}
 
 				if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
 					pnlVisualizarImg.marcar.setText("Desmarcar");
@@ -529,136 +572,79 @@ public class App extends Application {
 					pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
 					pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
 
-					double aspectoImgAnt = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
+					double aspectoImgSig = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
 
 					pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
 
-					if (aspectoImgAnt < 1) {
+					if (aspectoImgSig < 1) {
 						ventanaEmergente.setHeight(420);
 						ventanaEmergente.setWidth(300);
 						pnlVisualizarImg.vistaImg.setFitHeight(300);
 					} else {
-						ventanaEmergente.setHeight(300 / aspectoImgAnt + 120);
+						ventanaEmergente.setHeight(300 / aspectoImgSig + 120);
 						pnlVisualizarImg.vistaImg.setFitWidth(300);
 					}
-
-					pnlVisualizarImg.getChildren().add(pnlVisualizarImg.vistaImg);
 				} catch (Exception e2) {
 					// TODO: handle exception
 				}
 
-			}
-		});
+			});
 
-		pnlVisualizarImg.siguiente.setOnAction(e -> {
-			if (idFoto[0] < rutasCarpeta.size()) {
-				idFoto[0] += 1;
-			}
+			pnlVisualizarImg.descargar.setOnAction(e -> {
+				DirectoryChooser directorio = new DirectoryChooser();
+				directorio.setTitle("Selecciona una carpeta");
+				File directorioSeleccionado = directorio.showDialog(null);
+				File imagen = new File(rutasCarpeta.get(idFoto[0] - 1));
+				System.out.println(directorioSeleccionado);
 
-			if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
-				pnlVisualizarImg.marcar.setText("Desmarcar");
-			} else {
-				pnlVisualizarImg.marcar.setText("Marcar");
-			}
+				ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
+				NotificacionesDAO.mostrarNotificacion(NotificacionesDAO.getNotificaciones(con, 3).getMensaje());
+			});
 
-			try {
-				pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
-				pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
+			pnlVisualizarImg.marcar.setOnAction(e -> {
+				if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
+					ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 0);
+					pnlVisualizarImg.marcar.setText("Marcar");
+				} else {
+					ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 1);
+					pnlVisualizarImg.marcar.setText("Desmarcar");
+				}
+			});
 
-				double aspectoImgSig = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
+			pnlVisualizarImg.categoria.setOnAction(e -> {
 
-				pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
-
-				if (aspectoImgSig < 1) {
+				if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() <= 1) {
 					ventanaEmergente.setHeight(420);
 					ventanaEmergente.setWidth(300);
 					pnlVisualizarImg.vistaImg.setFitHeight(300);
 				} else {
-					ventanaEmergente.setHeight(300 / aspectoImgSig + 120);
+					ventanaEmergente.setHeight(
+							300 / pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() + 125);
 					pnlVisualizarImg.vistaImg.setFitWidth(300);
 				}
-			} catch (Exception e2) {
-				// TODO: handle exception
-			}
 
-		});
+				System.out.println(rutasCarpeta.get(idFoto[0] - 1));
+				ArrayList<CategoriaDO> categorias = new ArrayList<>();
+				PanelCategoria pnlCategoria = new PanelCategoria();
+				Scene escenaCat = new Scene(pnlCategoria, 300, 300);
+				ventanaEmergente.setScene(escenaCat);
 
-		pnlVisualizarImg.descargar.setOnAction(e -> {
-			DirectoryChooser directorio = new DirectoryChooser();
-			directorio.setTitle("Selecciona una carpeta");
-			File directorioSeleccionado = directorio.showDialog(null);
-			File imagen = new File(rutasCarpeta.get(idFoto[0] - 1));
-			System.out.println(directorioSeleccionado);
-
-			ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
-		});
-
-		pnlVisualizarImg.marcar.setOnAction(e -> {
-			if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
-				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 0);
-				pnlVisualizarImg.marcar.setText("Marcar");
-			} else {
-				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 1);
-				pnlVisualizarImg.marcar.setText("Desmarcar");
-			}
-		});
-
-		pnlVisualizarImg.categoria.setOnAction(e -> {
-
-			if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() <= 1) {
-				ventanaEmergente.setHeight(420);
-				ventanaEmergente.setWidth(300);
-				pnlVisualizarImg.vistaImg.setFitHeight(300);
-			} else {
-				ventanaEmergente.setHeight(
-						300 / pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() + 125);
-				pnlVisualizarImg.vistaImg.setFitWidth(300);
-			}
-
-			System.out.println(rutasCarpeta.get(idFoto[0] - 1));
-			ArrayList<CategoriaDO> categorias = new ArrayList<>();
-			PanelCategoria pnlCategoria = new PanelCategoria();
-			Scene escenaCat = new Scene(pnlCategoria, 300, 300);
-			ventanaEmergente.setScene(escenaCat);
-
-			categorias = CategoriaDAO.getCategorias(con,
-					UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
-
-			pnlCategoria.chbCategorias.getItems().clear();
-
-			for (int i = 0; i < categorias.size(); i++) {
-				pnlCategoria.chbCategorias.getItems().add(categorias.get(i).getNombreCategoria());
-			}
-
-			pnlCategoria.btnAsignar.setOnAction(e2 -> {
-				CategoriaDAO.agregarCategoriaAImagen(con,
-						CategoriaDAO.getCategoria(con, (String) pnlCategoria.chbCategorias.getValue()).getIdCategoria(),
-						ImagenDAO.getImagenPorRuta(con, rutasCarpeta.get(idFoto[0] - 1)).getIdImagen(),
+				categorias = CategoriaDAO.getCategorias(con,
 						UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
-				ventanaEmergente.setScene(scene);
-				if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() <= 1) {
-					ventanaEmergente.setHeight(425);
-					ventanaEmergente.setWidth(300);
-					pnlVisualizarImg.vistaImg.setFitHeight(300);
-				} else {
-					ventanaEmergente.setHeight(405);
-					pnlVisualizarImg.vistaImg.setFitWidth(300);
+
+				pnlCategoria.chbCategorias.getItems().clear();
+
+				for (int i = 0; i < categorias.size(); i++) {
+					pnlCategoria.chbCategorias.getItems().add(categorias.get(i).getNombreCategoria());
 				}
-			});
 
-			pnlCategoria.btnCrearCat.setOnAction(e2 -> {
-				PanelCrearCategoria pnlCrearCat = new PanelCrearCategoria();
-				Scene escenaCrearCat = new Scene(pnlCrearCat, 300, 300);
-				ventanaEmergente.setScene(escenaCrearCat);
-
-				pnlCrearCat.crear.setOnAction(e3 -> {
-					CategoriaDAO.crearCategoria(con, pnlCrearCat.nombreCategoria.getText());
+				pnlCategoria.btnAsignar.setOnAction(e2 -> {
 					CategoriaDAO.agregarCategoriaAImagen(con,
-							CategoriaDAO.getCategoria(con, pnlCrearCat.nombreCategoria.getText()).getIdCategoria(),
+							CategoriaDAO.getCategoria(con, (String) pnlCategoria.chbCategorias.getValue())
+									.getIdCategoria(),
 							ImagenDAO.getImagenPorRuta(con, rutasCarpeta.get(idFoto[0] - 1)).getIdImagen(),
 							UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
 					ventanaEmergente.setScene(scene);
-					System.out.println(pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight());
 					if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() <= 1) {
 						ventanaEmergente.setHeight(425);
 						ventanaEmergente.setWidth(300);
@@ -668,25 +654,52 @@ public class App extends Application {
 						pnlVisualizarImg.vistaImg.setFitWidth(300);
 					}
 				});
+
+				pnlCategoria.btnCrearCat.setOnAction(e2 -> {
+					PanelCrearCategoria pnlCrearCat = new PanelCrearCategoria();
+					Scene escenaCrearCat = new Scene(pnlCrearCat, 300, 300);
+					ventanaEmergente.setScene(escenaCrearCat);
+
+					pnlCrearCat.crear.setOnAction(e3 -> {
+						CategoriaDAO.crearCategoria(con, pnlCrearCat.nombreCategoria.getText());
+						CategoriaDAO.agregarCategoriaAImagen(con,
+								CategoriaDAO.getCategoria(con, pnlCrearCat.nombreCategoria.getText()).getIdCategoria(),
+								ImagenDAO.getImagenPorRuta(con, rutasCarpeta.get(idFoto[0] - 1)).getIdImagen(),
+								UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
+						ventanaEmergente.setScene(scene);
+						System.out.println(pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight());
+						if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() <= 1) {
+							ventanaEmergente.setHeight(425);
+							ventanaEmergente.setWidth(300);
+							pnlVisualizarImg.vistaImg.setFitHeight(300);
+						} else {
+							ventanaEmergente.setHeight(405);
+							pnlVisualizarImg.vistaImg.setFitWidth(300);
+						}
+					});
+				});
 			});
-		});
 
-		ventanaEmergente.setResizable(false);
+			ventanaEmergente.setResizable(false);
 
-		ventanaEmergente.setScene(scene);
-		ventanaEmergente.setTitle("Imagen");
-		ventanaEmergente.show();
-		try {
-			Image icon = new Image(new FileInputStream("img\\favicon.png"));
-			ventanaEmergente.getIcons().add(icon);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			ventanaEmergente.setScene(scene);
+			ventanaEmergente.setTitle("Imagen");
+			ventanaEmergente.show();
+			try {
+				Image icon = new Image(new FileInputStream("img\\favicon.png"));
+				ventanaEmergente.getIcons().add(icon);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			stage.setOnCloseRequest(e -> {
+				ventanaEmergente.close();
+			});
+		} else {
+			NotificacionesDAO.mostrarNotificacion(NotificacionesDAO.getNotificaciones(con, 4).getMensaje());
 		}
 
-		stage.setOnCloseRequest(e -> {
-			ventanaEmergente.close();
-		});
 	}
 
 	/**
@@ -702,33 +715,69 @@ public class App extends Application {
 
 		ArrayList<String> rutasCarpeta = ImagenDAO.getMarcados(con);
 
-		try {
-			pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(0)));
-			pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		if (ImagenDAO.getMarcados(con).size() > 0) {
+			try {
+				pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(0)));
+				pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 
-		if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
-			pnlVisualizarImg.marcar.setText("Desmarcar");
-		} else {
-			pnlVisualizarImg.marcar.setText("marcar");
-		}
+			if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
+				pnlVisualizarImg.marcar.setText("Desmarcar");
+			} else {
+				pnlVisualizarImg.marcar.setText("marcar");
+			}
 
-		double aspecto = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
-		Scene scene = new Scene(pnlVisualizarImg, 300, 300 / aspecto + 100);
+			double aspecto = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
+			Scene scene = new Scene(pnlVisualizarImg, 300, 300 / aspecto + 100);
 
-		if (aspecto <= 1) {
-			ventanaEmergente.setHeight(420);
-			ventanaEmergente.setWidth(300);
-			pnlVisualizarImg.vistaImg.setFitHeight(300);
-		} else {
-			pnlVisualizarImg.vistaImg.setFitWidth(300);
-		}
+			if (aspecto <= 1) {
+				ventanaEmergente.setHeight(420);
+				ventanaEmergente.setWidth(300);
+				pnlVisualizarImg.vistaImg.setFitHeight(300);
+			} else {
+				pnlVisualizarImg.vistaImg.setFitWidth(300);
+			}
 
-		pnlVisualizarImg.anterior.setOnAction(e -> {
-			if (idFoto[0] > 1) {
-				idFoto[0] -= 1;
+			pnlVisualizarImg.anterior.setOnAction(e -> {
+				if (idFoto[0] > 1) {
+					idFoto[0] -= 1;
+
+					if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
+						pnlVisualizarImg.marcar.setText("Desmarcar");
+					} else {
+						pnlVisualizarImg.marcar.setText("Marcar");
+					}
+
+					try {
+						pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
+						pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
+
+						double aspectoImgAnt = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
+
+						pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
+
+						if (aspectoImgAnt < 1) {
+							ventanaEmergente.setHeight(420);
+							ventanaEmergente.setWidth(300);
+							pnlVisualizarImg.vistaImg.setFitHeight(300);
+						} else {
+							ventanaEmergente.setHeight(300 / aspectoImgAnt + 120);
+							pnlVisualizarImg.vistaImg.setFitWidth(300);
+						}
+
+					} catch (Exception e2) {
+						// TODO: handle exception
+					}
+
+				}
+			});
+
+			pnlVisualizarImg.siguiente.setOnAction(e -> {
+				if (idFoto[0] < rutasCarpeta.size()) {
+					idFoto[0] += 1;
+				}
 
 				if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
 					pnlVisualizarImg.marcar.setText("Desmarcar");
@@ -740,16 +789,16 @@ public class App extends Application {
 					pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
 					pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
 
-					double aspectoImgAnt = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
+					double aspectoImgSig = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
 
 					pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
 
-					if (aspectoImgAnt < 1) {
+					if (aspectoImgSig < 1) {
 						ventanaEmergente.setHeight(420);
 						ventanaEmergente.setWidth(300);
 						pnlVisualizarImg.vistaImg.setFitHeight(300);
 					} else {
-						ventanaEmergente.setHeight(300 / aspectoImgAnt + 120);
+						ventanaEmergente.setHeight(300 / aspectoImgSig + 120);
 						pnlVisualizarImg.vistaImg.setFitWidth(300);
 					}
 
@@ -757,115 +806,59 @@ public class App extends Application {
 					// TODO: handle exception
 				}
 
-			}
-		});
+			});
 
-		pnlVisualizarImg.siguiente.setOnAction(e -> {
-			if (idFoto[0] < rutasCarpeta.size()) {
-				idFoto[0] += 1;
-			}
+			pnlVisualizarImg.descargar.setOnAction(e -> {
+				DirectoryChooser directorio = new DirectoryChooser();
+				directorio.setTitle("Selecciona una carpeta");
+				File directorioSeleccionado = directorio.showDialog(null);
+				File imagen = new File(rutasCarpeta.get(idFoto[0] - 1));
+				System.out.println(directorioSeleccionado);
 
-			if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
-				pnlVisualizarImg.marcar.setText("Desmarcar");
-			} else {
-				pnlVisualizarImg.marcar.setText("Marcar");
-			}
+				ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
+			});
 
-			try {
-				pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
-				pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
+			pnlVisualizarImg.marcar.setOnAction(e -> {
+				if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
+					ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 0);
+					pnlVisualizarImg.marcar.setText("Marcar");
+				} else {
+					ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 1);
+					pnlVisualizarImg.marcar.setText("Desmarcar");
+				}
+			});
 
-				double aspectoImgSig = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
+			pnlVisualizarImg.categoria.setOnAction(e -> {
 
-				pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
-
-				if (aspectoImgSig < 1) {
+				if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() <= 1) {
 					ventanaEmergente.setHeight(420);
 					ventanaEmergente.setWidth(300);
 					pnlVisualizarImg.vistaImg.setFitHeight(300);
 				} else {
-					ventanaEmergente.setHeight(300 / aspectoImgSig + 120);
+					ventanaEmergente.setHeight(
+							300 / pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() + 125);
 					pnlVisualizarImg.vistaImg.setFitWidth(300);
 				}
 
-			} catch (Exception e2) {
-				// TODO: handle exception
-			}
+				System.out.println(rutasCarpeta.get(idFoto[0] - 1));
+				ArrayList<CategoriaDO> categorias = new ArrayList<>();
+				PanelCategoria pnlCategoria = new PanelCategoria();
+				Scene escenaCat = new Scene(pnlCategoria, 300, 300);
+				ventanaEmergente.setScene(escenaCat);
 
-		});
-
-		pnlVisualizarImg.descargar.setOnAction(e -> {
-			DirectoryChooser directorio = new DirectoryChooser();
-			directorio.setTitle("Selecciona una carpeta");
-			File directorioSeleccionado = directorio.showDialog(null);
-			File imagen = new File(rutasCarpeta.get(idFoto[0] - 1));
-			System.out.println(directorioSeleccionado);
-
-			ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
-		});
-
-		pnlVisualizarImg.marcar.setOnAction(e -> {
-			if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
-				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 0);
-				pnlVisualizarImg.marcar.setText("Marcar");
-			} else {
-				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 1);
-				pnlVisualizarImg.marcar.setText("Desmarcar");
-			}
-		});
-
-		pnlVisualizarImg.categoria.setOnAction(e -> {
-
-			if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() <= 1) {
-				ventanaEmergente.setHeight(420);
-				ventanaEmergente.setWidth(300);
-				pnlVisualizarImg.vistaImg.setFitHeight(300);
-			} else {
-				ventanaEmergente.setHeight(
-						300 / pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() + 125);
-				pnlVisualizarImg.vistaImg.setFitWidth(300);
-			}
-
-			System.out.println(rutasCarpeta.get(idFoto[0] - 1));
-			ArrayList<CategoriaDO> categorias = new ArrayList<>();
-			PanelCategoria pnlCategoria = new PanelCategoria();
-			Scene escenaCat = new Scene(pnlCategoria, 300, 300);
-			ventanaEmergente.setScene(escenaCat);
-
-			categorias = CategoriaDAO.getCategorias(con,
-					UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
-
-			pnlCategoria.chbCategorias.getItems().clear();
-
-			for (int i = 0; i < categorias.size(); i++) {
-				pnlCategoria.chbCategorias.getItems().add(categorias.get(i).getNombreCategoria());
-			}
-
-			pnlCategoria.btnAsignar.setOnAction(e2 -> {
-				CategoriaDAO.agregarCategoriaAImagen(con,
-						CategoriaDAO.getCategoria(con, (String) pnlCategoria.chbCategorias.getValue()).getIdCategoria(),
-						ImagenDAO.getImagenPorRuta(con, rutasCarpeta.get(idFoto[0] - 1)).getIdImagen(),
+				categorias = CategoriaDAO.getCategorias(con,
 						UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
-				ventanaEmergente.setScene(scene);
-				if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() <= 1) {
-					ventanaEmergente.setHeight(425);
-					ventanaEmergente.setWidth(300);
-					pnlVisualizarImg.vistaImg.setFitHeight(300);
-				} else {
-					ventanaEmergente.setHeight(405);
-					pnlVisualizarImg.vistaImg.setFitWidth(300);
+
+				pnlCategoria.chbCategorias.getItems().clear();
+
+				for (int i = 0; i < categorias.size(); i++) {
+					pnlCategoria.chbCategorias.getItems().add(categorias.get(i).getNombreCategoria());
 				}
-			});
 
-			pnlCategoria.btnCrearCat.setOnAction(e2 -> {
-				PanelCrearCategoria pnlCrearCat = new PanelCrearCategoria();
-				Scene escenaCrearCat = new Scene(pnlCrearCat, 300, 300);
-				ventanaEmergente.setScene(escenaCrearCat);
-
-				pnlCrearCat.crear.setOnAction(e3 -> {
-					CategoriaDAO.crearCategoria(con, pnlCrearCat.nombreCategoria.getText());
+				pnlCategoria.btnAsignar.setOnAction(e2 -> {
 					CategoriaDAO.agregarCategoriaAImagen(con,
-							CategoriaDAO.getCategoria(con, pnlCrearCat.nombreCategoria.getText()).getIdCategoria(),
+							CategoriaDAO.getCategoria(con, (String) pnlCategoria.chbCategorias.getValue())
+									.getIdCategoria(),
 							ImagenDAO.getImagenPorRuta(con, rutasCarpeta.get(idFoto[0] - 1)).getIdImagen(),
 							UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
 					ventanaEmergente.setScene(scene);
@@ -878,25 +871,51 @@ public class App extends Application {
 						pnlVisualizarImg.vistaImg.setFitWidth(300);
 					}
 				});
+
+				pnlCategoria.btnCrearCat.setOnAction(e2 -> {
+					PanelCrearCategoria pnlCrearCat = new PanelCrearCategoria();
+					Scene escenaCrearCat = new Scene(pnlCrearCat, 300, 300);
+					ventanaEmergente.setScene(escenaCrearCat);
+
+					pnlCrearCat.crear.setOnAction(e3 -> {
+						CategoriaDAO.crearCategoria(con, pnlCrearCat.nombreCategoria.getText());
+						CategoriaDAO.agregarCategoriaAImagen(con,
+								CategoriaDAO.getCategoria(con, pnlCrearCat.nombreCategoria.getText()).getIdCategoria(),
+								ImagenDAO.getImagenPorRuta(con, rutasCarpeta.get(idFoto[0] - 1)).getIdImagen(),
+								UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
+						ventanaEmergente.setScene(scene);
+						if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() <= 1) {
+							ventanaEmergente.setHeight(425);
+							ventanaEmergente.setWidth(300);
+							pnlVisualizarImg.vistaImg.setFitHeight(300);
+						} else {
+							ventanaEmergente.setHeight(405);
+							pnlVisualizarImg.vistaImg.setFitWidth(300);
+						}
+					});
+				});
 			});
-		});
 
-		ventanaEmergente.setResizable(false);
+			ventanaEmergente.setResizable(false);
 
-		ventanaEmergente.setScene(scene);
-		ventanaEmergente.setTitle("Imagen");
-		ventanaEmergente.show();
-		try {
-			Image icon = new Image(new FileInputStream("img\\favicon.png"));
-			ventanaEmergente.getIcons().add(icon);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			ventanaEmergente.setScene(scene);
+			ventanaEmergente.setTitle("Imagen");
+			ventanaEmergente.show();
+			try {
+				Image icon = new Image(new FileInputStream("img\\favicon.png"));
+				ventanaEmergente.getIcons().add(icon);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			stage.setOnCloseRequest(e -> {
+				ventanaEmergente.close();
+			});
+		} else {
+			NotificacionesDAO.mostrarNotificacion(NotificacionesDAO.getNotificaciones(con, 7).getMensaje());
 		}
 
-		stage.setOnCloseRequest(e -> {
-			ventanaEmergente.close();
-		});
 	}
 
 	public static void visualizarCalendario(Connection con, Button mesAnterior, Button mesPosterior,
@@ -948,17 +967,8 @@ public class App extends Application {
 		}
 	}
 
-	public void cerrarSesion() {
-		// Platform.startup(null);
-
-		// Platform.exit();
-
-//		try {
-//			String aplicacion = System.getProperty("java.home") + "/bin/java";
-//			ProcessBuilder builder = new ProcessBuilder(java, "-jar", "")
-//		}catch(Exception e) {
-//			
-//		}
+	public void cerrarSesion(Stage stage) {
+		stage.close();
 
 	}
 
