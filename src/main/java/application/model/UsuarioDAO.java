@@ -218,5 +218,20 @@ public class UsuarioDAO {
 			return -1; // Devolvemos -1 si hay un error SQL
 		}
 	}
+	
+	public static int actualizarNombre(Connection con, String correo, String nuevoNombre) {
+		try {
+			String queryUpdate = "UPDATE usuario SET nombre = ? WHERE correo = ?";
+			PreparedStatement pstmt = con.prepareStatement(queryUpdate);
+			pstmt.setString(1, nuevoNombre);
+			pstmt.setString(2, correo);
+
+			int filasActualizadas = pstmt.executeUpdate();
+			return filasActualizadas; // Devolvemos el número de filas actualizadas
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1; // Devolvemos -1 si hay un error SQL
+		}
+	}
 
 }

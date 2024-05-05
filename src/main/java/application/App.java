@@ -462,7 +462,7 @@ public class App extends Application {
 
 			if (LoginController.cargarCalendario) {
 				visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
-			
+
 			}
 
 		} catch (Exception e) {
@@ -897,7 +897,7 @@ public class App extends Application {
 
 	public static void visualizarCalendario(Connection con, Button mesAnterior, Button mesPosterior,
 			BorderPane pnlDistribucion) {
-		PanelVisualizarCalendario pnlCalendario = new PanelVisualizarCalendario();
+		PanelVisualizarCalendario pnlCalendario = new PanelVisualizarCalendario(stage, con, fechaFormateada);
 		pnlDistribucion.setCenter(pnlCalendario);
 		try {
 			ArrayList<String> rutasCarpeta = CalendarioDAO.getCalendario(0, con);
@@ -1065,6 +1065,59 @@ public class App extends Application {
             } else {
                 // Mostrar un mensaje de error o realizar otras acciones si los correos no coinciden
                 System.out.println("Los correos no coinciden");
+            }
+        });
+
+        // Configurar acción para el botón Cerrar
+        btnCerrar.setOnAction(e -> stage.close());
+
+        // Mostrar la ventana modal
+        stage.showAndWait();
+    }
+	
+	public static void cambiarNombre(Stage primaryStage) {
+		Connection con = UtilsBD.conectarBD();
+		 // Crear los elementos de la ventana modal
+        Label lblNuevoNombre = new Label("Nuevo Nombre:");
+        TextField txtNuevoNombre = new TextField();
+        Button btnConfirmar = new Button("Confirmar");
+        Button btnCerrar = new Button("Cerrar");
+
+        // Configurar el diseño de la ventana modal
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(10));
+
+        grid.add(lblNuevoNombre, 0, 0);
+        grid.add(txtNuevoNombre, 1, 0);
+
+        HBox buttons = new HBox(10);
+        buttons.getChildren().addAll(btnConfirmar, btnCerrar);
+
+        VBox root = new VBox(10);
+        root.getChildren().addAll(grid, buttons);
+
+        // Crear la escena y configurar la ventana modal
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Cambiar Nombre");
+        stage.initModality(Modality.APPLICATION_MODAL); // Establecer modalidad
+        stage.setResizable(false); // No permitir cambiar el tamaño de la ventana
+
+        // Configurar acción para el botón Confirmar
+        btnConfirmar.setOnAction(e -> {
+            String nuevoNombre = txtNuevoNombre.getText();
+            // Aquí puedes realizar la validación del nombre y realizar acciones correspondientes
+            // Por ejemplo, cerrar la ventana si el nombre es válido
+            if (!nuevoNombre.isEmpty()) {
+                // Realizar acciones necesarias
+            	UsuarioDAO.actualizarNombre(con, LoginController.correoUsuario, nuevoNombre);
+                stage.close(); // Cerrar la ventana modal
+            } else {
+                // Mostrar un mensaje de error o realizar otras acciones si el nombre es inválido
+                System.out.println("Por favor, ingresa un nuevo nombre");
             }
         });
 
