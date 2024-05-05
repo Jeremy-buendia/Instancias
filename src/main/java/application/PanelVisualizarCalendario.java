@@ -35,10 +35,17 @@ public class PanelVisualizarCalendario extends StackPane {
 
 		PanelLayoutBotones pnlBotones = new PanelLayoutBotones(stage, con, mes);
 
-		pnlBotones.dia.setOnAction(e -> {
-			abrirVentanaVisualizarImg(stage, con, pnlBotones.diaMes);
-			System.out.println(pnlBotones.diaMes);
-		});
+//		String mesCald = pnlBotones.dia.getText().substring(5, 6);
+//		int mesCaldInt = Integer.parseInt(mesCald);
+//
+////		if(Integer.parseInt(pnlBotones.dia.getText().substring(6)) < 10) {
+////			String diaCald = pnlBotones.dia.getText().substring();
+////		}
+//
+//		String diaCald = pnlBotones.dia.getText().substring(7);
+//		int diaCaldInt = Integer.parseInt(diaCald);
+//
+//		LocalDate diaMes = LocalDate.of(2024, mesCaldInt, diaCaldInt);
 
 		this.setAlignment(vistaCalendario, Pos.TOP_LEFT);
 		this.setAlignment(pnlBotones, Pos.TOP_LEFT);
