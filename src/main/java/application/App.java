@@ -88,6 +88,10 @@ public class App extends Application {
 
 		MenuItem iCambiarCorreo = new MenuItem("Cambiar Correo");
 
+		iCambiarCorreo.setOnAction(e -> {
+
+		});
+
 		Menu mOpcSesion = new Menu("Opciones de Sesión");
 
 		MenuItem iCerrarSesion = new MenuItem("Cerrar Sesión");

@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 public class PanelLayoutBotones extends GridPane {
 
 	LocalDate diaMes;
-	Button dia;
+	// Button dia;
 
 	// Meter parametro de fecha, alomejor el array no sé
 	PanelLayoutBotones(Stage stage, Connection con, String mes) {
@@ -33,7 +33,7 @@ public class PanelLayoutBotones extends GridPane {
 
 		if (mes.equals("2024-04")) {
 			for (int i = 1; i <= 35; i++) {
-				dia = new Button(Integer.toString(d));
+				Button dia = new Button("2024-" + m + "-" + d);
 				dia.setPrefSize(106, 68);
 
 				dia.setStyle("-fx-background-color: transparent;");
@@ -89,10 +89,16 @@ public class PanelLayoutBotones extends GridPane {
 					y++;
 					x = 0;
 				}
+
+				dia.setOnAction(e -> {
+					abrirVentanaVisualizarImg(stage, con, diaMes);
+				});
 			}
 		} else if (mes.equals("2024-05")) {
+			m = 4;
+			d = 29;
 			for (int i = 1; i <= 35; i++) {
-				dia = new Button(Integer.toString(d));
+				Button dia = new Button("2024-" + m + "-" + d);
 				dia.setPrefSize(106, 68);
 
 				dia.setStyle("-fx-background-color: transparent;");
@@ -104,9 +110,6 @@ public class PanelLayoutBotones extends GridPane {
 				dia.setOnMouseExited(e -> {
 					dia.setStyle("-fx-background-color: transparent;");
 				});
-
-				m = 4;
-				d = 29;
 
 				diaMes = LocalDate.of(2024, m, d);
 
@@ -165,10 +168,16 @@ public class PanelLayoutBotones extends GridPane {
 					y++;
 					x = 0;
 				}
+
+				dia.setOnAction(e -> {
+					abrirVentanaVisualizarImg(stage, con, diaMes);
+				});
 			}
 		} else if (mes.equals("2024-06")) {
+			m = 5;
+			d = 27;
 			for (int i = 1; i <= 35; i++) {
-				dia = new Button(Integer.toString(d));
+				Button dia = new Button("2024-" + m + "-" + d);
 				dia.setPrefSize(106, 68);
 
 				dia.setStyle("-fx-background-color: transparent;");
@@ -180,9 +189,6 @@ public class PanelLayoutBotones extends GridPane {
 				dia.setOnMouseExited(e -> {
 					dia.setStyle("-fx-background-color: transparent;");
 				});
-
-				m = 5;
-				d = 27;
 
 				diaMes = LocalDate.of(2024, m, d);
 
@@ -236,7 +242,11 @@ public class PanelLayoutBotones extends GridPane {
 					y++;
 					x = 0;
 				}
+				dia.setOnAction(e -> {
+					abrirVentanaVisualizarImg(stage, con, diaMes);
+				});
 			}
+
 		}
 
 	}
