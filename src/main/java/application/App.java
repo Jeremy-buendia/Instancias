@@ -333,7 +333,7 @@ public class App extends Application {
 		            labelCamCorreo.setFont(new Font("System", 20));
 		            labelOpSesion.setFont(new Font("System", 20));
 		            labelCerrarSesion.setFont(new Font("System", 20));
-		            labelCambiarSesion.setFont(new Font("System", 20));
+		            labelCambiarSesion.setFont(new Font("System", 20),labelCambiarSesion.setText("ChangeSessions"));
 
 		            // Cambia el color a negro de la fuente original que desees
 		            labelModo.setTextFill(Color.BLACK);
@@ -409,22 +409,6 @@ public class App extends Application {
 		        mOpcSesion.setGraphic(labelOpSesion);
 		        iCerrarSesion.setGraphic(labelCerrarSesion);
 		        iCambiarSesion.setGraphic(labelCambiarSesion);
-
-		        OpcionesDO opciones = new OpcionesDO();
-		        opciones.setIdioma(isEnlarged[0] ? 1 : 0);
-
-		        // Obtener la conexión a la base de datos
-		        Connection con = UtilsBD.conectarBD();
-
-		        // Llamar a la función para cambiar el idioma en la base de datos
-		        int numAff = OpcionesDAO.cambiarFuente(opciones, con);
-
-		        // Comprobar si la actualización fue exitosa
-		        if (numAff > 0) {
-		            System.out.println("Idioma actualizado con éxito.");
-		        } else {
-		            System.out.println("Error al actualizar el idioma.");
-		        }
 		    }
 		});
 		

@@ -185,7 +185,7 @@ public class OpcionesDAO {
 				campoPrevio = true;
 			}
 
-			query = query + " WHERE idOpciones = ?";
+			query = query + " WHERE Usuario_idUsuario = ?";
 
 			// Generamos el preparedstatement con la
 			// query
@@ -243,7 +243,7 @@ public class OpcionesDAO {
 				campoPrevio = true;
 			}
 
-			query = query + " WHERE idOpciones = ?";
+			query = query + " WHERE Usuario_idUsuario = ?";
 
 			// Generamos el preparedstatement con la
 			// query
