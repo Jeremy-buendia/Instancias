@@ -39,13 +39,9 @@ public class ImagenDAO {
 
 			if (imagen.getName().substring(imagen.getName().length() - 4).equals(".jpg")) {
 				rutaCarpeta += contador + 1 + ".jpg";
-			}
-
-			if (imagen.getName().substring(imagen.getName().length() - 4).equals(".png")) {
+			} else if (imagen.getName().substring(imagen.getName().length() - 4).equals(".png")) {
 				rutaCarpeta += contador + 1 + ".png";
-			}
-
-			if (imagen.getName().substring(imagen.getName().length() - 4).equals(".jpeg")) {
+			} else if (imagen.getName().substring(imagen.getName().length() - 4).equals(".jpeg")) {
 				rutaCarpeta += contador + 1 + ".jpeg";
 			}
 

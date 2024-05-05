@@ -434,6 +434,7 @@ public class App extends Application {
 						ventanaEmergente.setWidth(300);
 						pnlVisualizarImg.vistaImg.setFitHeight(300);
 					} else {
+						ventanaEmergente.setHeight(300 / aspecto + 100);
 						pnlVisualizarImg.vistaImg.setFitWidth(300);
 					}
 
@@ -469,6 +470,7 @@ public class App extends Application {
 					ventanaEmergente.setWidth(300);
 					pnlVisualizarImg.vistaImg.setFitHeight(300);
 				} else {
+					ventanaEmergente.setHeight(300 / aspecto + 100);
 					pnlVisualizarImg.vistaImg.setFitWidth(300);
 				}
 			} catch (Exception e2) {
@@ -498,18 +500,22 @@ public class App extends Application {
 		});
 
 		pnlVisualizarImg.categoria.setOnAction(e -> {
+
+			if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() <= 1) {
+				ventanaEmergente.setHeight(420);
+				ventanaEmergente.setWidth(300);
+				pnlVisualizarImg.vistaImg.setFitHeight(300);
+			} else {
+				ventanaEmergente.setHeight(
+						300 / pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() + 125);
+				pnlVisualizarImg.vistaImg.setFitWidth(300);
+			}
+
 			System.out.println(rutasCarpeta.get(idFoto[0] - 1));
 			ArrayList<CategoriaDO> categorias = new ArrayList<>();
 			PanelCategoria pnlCategoria = new PanelCategoria();
 			Scene escenaCat = new Scene(pnlCategoria, 300, 300);
 			ventanaEmergente.setScene(escenaCat);
-
-			pnlCategoria.btnAsignar.setOnAction(e2 -> {
-				CategoriaDAO.agregarCategoriaAImagen(con,
-						CategoriaDAO.getCategoria(con, (String) pnlCategoria.chbCategorias.getValue()).getIdCategoria(),
-						ImagenDAO.getImagenPorRuta(con, rutasCarpeta.get(idFoto[0] - 1)).getIdImagen(),
-						UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
-			});
 
 			categorias = CategoriaDAO.getCategorias(con,
 					UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
@@ -519,6 +525,22 @@ public class App extends Application {
 			for (int i = 0; i < categorias.size(); i++) {
 				pnlCategoria.chbCategorias.getItems().add(categorias.get(i).getNombreCategoria());
 			}
+
+			pnlCategoria.btnAsignar.setOnAction(e2 -> {
+				CategoriaDAO.agregarCategoriaAImagen(con,
+						CategoriaDAO.getCategoria(con, (String) pnlCategoria.chbCategorias.getValue()).getIdCategoria(),
+						ImagenDAO.getImagenPorRuta(con, rutasCarpeta.get(idFoto[0] - 1)).getIdImagen(),
+						UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
+				ventanaEmergente.setScene(scene);
+				if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() <= 1) {
+					ventanaEmergente.setHeight(425);
+					ventanaEmergente.setWidth(300);
+					pnlVisualizarImg.vistaImg.setFitHeight(300);
+				} else {
+					ventanaEmergente.setHeight(300 / aspecto + 105);
+					pnlVisualizarImg.vistaImg.setFitWidth(300);
+				}
+			});
 
 			pnlCategoria.btnCrearCat.setOnAction(e2 -> {
 				PanelCrearCategoria pnlCrearCat = new PanelCrearCategoria();
@@ -532,6 +554,15 @@ public class App extends Application {
 							ImagenDAO.getImagenPorRuta(con, rutasCarpeta.get(idFoto[0] - 1)).getIdImagen(),
 							UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
 					ventanaEmergente.setScene(scene);
+					System.out.println(pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight());
+					if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() <= 1) {
+						ventanaEmergente.setHeight(425);
+						ventanaEmergente.setWidth(300);
+						pnlVisualizarImg.vistaImg.setFitHeight(300);
+					} else {
+						ventanaEmergente.setHeight(300 / aspecto + 105);
+						pnlVisualizarImg.vistaImg.setFitWidth(300);
+					}
 				});
 			});
 		});
@@ -614,6 +645,7 @@ public class App extends Application {
 						ventanaEmergente.setWidth(300);
 						pnlVisualizarImg.vistaImg.setFitHeight(300);
 					} else {
+						ventanaEmergente.setHeight(300 / aspecto + 100);
 						pnlVisualizarImg.vistaImg.setFitWidth(300);
 					}
 
@@ -648,6 +680,7 @@ public class App extends Application {
 					ventanaEmergente.setWidth(300);
 					pnlVisualizarImg.vistaImg.setFitHeight(300);
 				} else {
+					ventanaEmergente.setHeight(300 / aspecto + 100);
 					pnlVisualizarImg.vistaImg.setFitWidth(300);
 				}
 
@@ -700,10 +733,11 @@ public class App extends Application {
 						UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
 				ventanaEmergente.setScene(scene);
 				if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() < 1) {
-					ventanaEmergente.setHeight(420);
+					ventanaEmergente.setHeight(425);
 					ventanaEmergente.setWidth(300);
 					pnlVisualizarImg.vistaImg.setFitHeight(300);
 				} else {
+					ventanaEmergente.setHeight(300 / aspecto + 105);
 					pnlVisualizarImg.vistaImg.setFitWidth(300);
 				}
 			});
@@ -721,10 +755,11 @@ public class App extends Application {
 							UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
 					ventanaEmergente.setScene(scene);
 					if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() < 1) {
-						ventanaEmergente.setHeight(420);
+						ventanaEmergente.setHeight(425);
 						ventanaEmergente.setWidth(300);
 						pnlVisualizarImg.vistaImg.setFitHeight(300);
 					} else {
+						ventanaEmergente.setHeight(300 / aspecto + 105);
 						pnlVisualizarImg.vistaImg.setFitWidth(300);
 					}
 				});
