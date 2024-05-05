@@ -90,6 +90,7 @@ public class App extends Application {
 				} catch (Exception ex) {
 					System.out.println(ex);
 				}
+				abrirVentanaVisualizarImg(stage, con, fecha);
 			} else {
 				System.out.println("No se seleccionó ninguna fecha.");
 			}
@@ -127,7 +128,7 @@ public class App extends Application {
 			}
 		});
 
-		Menu mIdioma = new Menu("Perfil");
+		Menu mIdioma = new Menu("Idioma");
 		MenuItem iEspanol = new MenuItem("Español");
 		MenuItem iIngles = new MenuItem("Inglés");
 
@@ -382,103 +383,9 @@ public class App extends Application {
 
 		int idFoto[] = { 1 };
 
-		Scene scene = new Scene(pnlVisualizarImg, 300, 300);
 		System.out.println(fechaDia);
 
 		ArrayList<String> rutasCarpeta = ImagenDAO.getDia(con, fechaDia);
-
-		try {
-			pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(0)));
-			pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		pnlVisualizarImg.anterior.setOnAction(e -> {
-			if (idFoto[0] > 1) {
-				idFoto[0] -= 1;
-				try {
-					Image imagenAnterior = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
-					pnlVisualizarImg.vistaImg.setImage(imagenAnterior);
-
-					pnlVisualizarImg.vistaImg.setPreserveRatio(true);
-					// Cambiamos ancho de la imagen
-					pnlVisualizarImg.vistaImg.setFitWidth(200);
-
-					pnlVisualizarImg.getChildren().add(pnlVisualizarImg.vistaImg);
-				} catch (Exception e2) {
-					// TODO: handle exception
-				}
-
-			}
-		});
-
-		pnlVisualizarImg.siguiente.setOnAction(e -> {
-			if (idFoto[0] < rutasCarpeta.size()) {
-				idFoto[0] += 1;
-			}
-			try {
-				Image imagenSiguiente = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
-				pnlVisualizarImg.vistaImg.setImage(imagenSiguiente);
-
-				pnlVisualizarImg.vistaImg.setPreserveRatio(true);
-				// Cambiamos ancho de la imagen
-				pnlVisualizarImg.vistaImg.setFitWidth(200);
-				pnlVisualizarImg.getChildren().add(pnlVisualizarImg.vistaImg);
-			} catch (Exception e2) {
-				// TODO: handle exception
-			}
-
-		});
-
-		pnlVisualizarImg.descargar.setOnAction(e -> {
-			System.out.println(idFoto[0]);
-			DirectoryChooser directorio = new DirectoryChooser();
-			directorio.setTitle("Selecciona una carpeta");
-			File directorioSeleccionado = directorio.showDialog(null);
-			File imagen = new File(rutasCarpeta.get(idFoto[0] - 1));
-			System.out.println(directorioSeleccionado);
-
-			ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
-		});
-
-		pnlVisualizarImg.categoria.setOnAction(e -> {
-			try {
-				System.out.println("No c");
-			} catch (Exception e2) {
-				// TODO: handle exception
-			}
-
-		});
-
-		ventanaEmergente.setScene(scene);
-		ventanaEmergente.setTitle("Imagen");
-		ventanaEmergente.show();
-		try {
-			Image icon = new Image(new FileInputStream("img\\favicon.png"));
-			ventanaEmergente.getIcons().add(icon);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		stage.setOnCloseRequest(e -> {
-			ventanaEmergente.close();
-		});
-	}
-
-	/**
-	 * Función que abre una ventanaEmergente con las imagenes que han sido marcadas
-	 * 
-	 * @param stage
-	 * @param con
-	 */
-	public static void abrirVentanaVisualizarMarcados(Stage stage, Connection con) {
-		Stage ventanaEmergente = new Stage();
-		PanelVisualizarImagen pnlVisualizarImg = new PanelVisualizarImagen();
-		int idFoto[] = { 1 };
-
-		ArrayList<String> rutasCarpeta = ImagenDAO.getMarcados(con);
 
 		try {
 			pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(0)));
@@ -496,7 +403,7 @@ public class App extends Application {
 		double aspecto = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
 		Scene scene = new Scene(pnlVisualizarImg, 300, 300 / aspecto + 100);
 
-		if (aspecto < 0.5) {
+		if (aspecto < 1) {
 			ventanaEmergente.setHeight(420);
 			ventanaEmergente.setWidth(300);
 			pnlVisualizarImg.vistaImg.setFitHeight(300);
@@ -522,7 +429,7 @@ public class App extends Application {
 
 					pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
 
-					if (aspectoImgAnt < 0.5) {
+					if (aspectoImgAnt < 1) {
 						ventanaEmergente.setHeight(420);
 						ventanaEmergente.setWidth(300);
 						pnlVisualizarImg.vistaImg.setFitHeight(300);
@@ -530,6 +437,7 @@ public class App extends Application {
 						pnlVisualizarImg.vistaImg.setFitWidth(300);
 					}
 
+					pnlVisualizarImg.getChildren().add(pnlVisualizarImg.vistaImg);
 				} catch (Exception e2) {
 					// TODO: handle exception
 				}
@@ -556,14 +464,13 @@ public class App extends Application {
 
 				pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
 
-				if (aspectoImgSig < 0.5) {
+				if (aspectoImgSig < 1) {
 					ventanaEmergente.setHeight(420);
 					ventanaEmergente.setWidth(300);
 					pnlVisualizarImg.vistaImg.setFitHeight(300);
 				} else {
 					pnlVisualizarImg.vistaImg.setFitWidth(300);
 				}
-
 			} catch (Exception e2) {
 				// TODO: handle exception
 			}
@@ -611,7 +518,6 @@ public class App extends Application {
 
 			for (int i = 0; i < categorias.size(); i++) {
 				pnlCategoria.chbCategorias.getItems().add(categorias.get(i).getNombreCategoria());
-				System.out.println(categorias.get(i));
 			}
 
 			pnlCategoria.btnCrearCat.setOnAction(e2 -> {
@@ -626,6 +532,201 @@ public class App extends Application {
 							ImagenDAO.getImagenPorRuta(con, rutasCarpeta.get(idFoto[0] - 1)).getIdImagen(),
 							UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
 					ventanaEmergente.setScene(scene);
+				});
+			});
+		});
+
+		ventanaEmergente.setResizable(false);
+
+		ventanaEmergente.setScene(scene);
+		ventanaEmergente.setTitle("Imagen");
+		ventanaEmergente.show();
+		try {
+			Image icon = new Image(new FileInputStream("img\\favicon.png"));
+			ventanaEmergente.getIcons().add(icon);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		stage.setOnCloseRequest(e -> {
+			ventanaEmergente.close();
+		});
+	}
+
+	/**
+	 * Función que abre una ventanaEmergente con las imagenes que han sido marcadas
+	 * 
+	 * @param stage
+	 * @param con
+	 */
+	public static void abrirVentanaVisualizarMarcados(Stage stage, Connection con) {
+		Stage ventanaEmergente = new Stage();
+		PanelVisualizarImagen pnlVisualizarImg = new PanelVisualizarImagen();
+		int idFoto[] = { 1 };
+
+		ArrayList<String> rutasCarpeta = ImagenDAO.getMarcados(con);
+
+		try {
+			pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(0)));
+			pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
+			pnlVisualizarImg.marcar.setText("Desmarcar");
+		} else {
+			pnlVisualizarImg.marcar.setText("marcar");
+		}
+
+		double aspecto = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
+		Scene scene = new Scene(pnlVisualizarImg, 300, 300 / aspecto + 100);
+
+		if (aspecto < 1) {
+			ventanaEmergente.setHeight(420);
+			ventanaEmergente.setWidth(300);
+			pnlVisualizarImg.vistaImg.setFitHeight(300);
+		} else {
+			pnlVisualizarImg.vistaImg.setFitWidth(300);
+		}
+
+		pnlVisualizarImg.anterior.setOnAction(e -> {
+			if (idFoto[0] > 1) {
+				idFoto[0] -= 1;
+
+				if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
+					pnlVisualizarImg.marcar.setText("Desmarcar");
+				} else {
+					pnlVisualizarImg.marcar.setText("Marcar");
+				}
+
+				try {
+					pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
+					pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
+
+					double aspectoImgAnt = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
+
+					pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
+
+					if (aspectoImgAnt < 1) {
+						ventanaEmergente.setHeight(420);
+						ventanaEmergente.setWidth(300);
+						pnlVisualizarImg.vistaImg.setFitHeight(300);
+					} else {
+						pnlVisualizarImg.vistaImg.setFitWidth(300);
+					}
+
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+
+			}
+		});
+
+		pnlVisualizarImg.siguiente.setOnAction(e -> {
+			if (idFoto[0] < rutasCarpeta.size()) {
+				idFoto[0] += 1;
+			}
+
+			if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
+				pnlVisualizarImg.marcar.setText("Desmarcar");
+			} else {
+				pnlVisualizarImg.marcar.setText("Marcar");
+			}
+
+			try {
+				pnlVisualizarImg.imagen = new Image(new FileInputStream(rutasCarpeta.get(idFoto[0] - 1)));
+				pnlVisualizarImg.vistaImg.setImage(pnlVisualizarImg.imagen);
+
+				double aspectoImgSig = pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight();
+
+				pnlVisualizarImg.setCenter(pnlVisualizarImg.vistaImg);
+
+				if (aspectoImgSig < 1) {
+					ventanaEmergente.setHeight(420);
+					ventanaEmergente.setWidth(300);
+					pnlVisualizarImg.vistaImg.setFitHeight(300);
+				} else {
+					pnlVisualizarImg.vistaImg.setFitWidth(300);
+				}
+
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+		});
+
+		pnlVisualizarImg.descargar.setOnAction(e -> {
+			DirectoryChooser directorio = new DirectoryChooser();
+			directorio.setTitle("Selecciona una carpeta");
+			File directorioSeleccionado = directorio.showDialog(null);
+			File imagen = new File(rutasCarpeta.get(idFoto[0] - 1));
+			System.out.println(directorioSeleccionado);
+
+			ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
+		});
+
+		pnlVisualizarImg.marcar.setOnAction(e -> {
+			if (ImagenDAO.estaMarcado(con, rutasCarpeta.get(idFoto[0] - 1)) == 1) {
+				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 0);
+				pnlVisualizarImg.marcar.setText("Marcar");
+			} else {
+				ImagenDAO.cambiarMarcado(con, rutasCarpeta.get(idFoto[0] - 1), 1);
+				pnlVisualizarImg.marcar.setText("Desmarcar");
+			}
+		});
+
+		pnlVisualizarImg.categoria.setOnAction(e -> {
+			System.out.println(rutasCarpeta.get(idFoto[0] - 1));
+			ArrayList<CategoriaDO> categorias = new ArrayList<>();
+			PanelCategoria pnlCategoria = new PanelCategoria();
+			Scene escenaCat = new Scene(pnlCategoria, 300, 300);
+			ventanaEmergente.setScene(escenaCat);
+
+			categorias = CategoriaDAO.getCategorias(con,
+					UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
+
+			pnlCategoria.chbCategorias.getItems().clear();
+
+			for (int i = 0; i < categorias.size(); i++) {
+				pnlCategoria.chbCategorias.getItems().add(categorias.get(i).getNombreCategoria());
+			}
+
+			pnlCategoria.btnAsignar.setOnAction(e2 -> {
+				CategoriaDAO.agregarCategoriaAImagen(con,
+						CategoriaDAO.getCategoria(con, (String) pnlCategoria.chbCategorias.getValue()).getIdCategoria(),
+						ImagenDAO.getImagenPorRuta(con, rutasCarpeta.get(idFoto[0] - 1)).getIdImagen(),
+						UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
+				ventanaEmergente.setScene(scene);
+				if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() < 1) {
+					ventanaEmergente.setHeight(420);
+					ventanaEmergente.setWidth(300);
+					pnlVisualizarImg.vistaImg.setFitHeight(300);
+				} else {
+					pnlVisualizarImg.vistaImg.setFitWidth(300);
+				}
+			});
+
+			pnlCategoria.btnCrearCat.setOnAction(e2 -> {
+				PanelCrearCategoria pnlCrearCat = new PanelCrearCategoria();
+				Scene escenaCrearCat = new Scene(pnlCrearCat, 300, 300);
+				ventanaEmergente.setScene(escenaCrearCat);
+
+				pnlCrearCat.crear.setOnAction(e3 -> {
+					CategoriaDAO.crearCategoria(con, pnlCrearCat.nombreCategoria.getText());
+					CategoriaDAO.agregarCategoriaAImagen(con,
+							CategoriaDAO.getCategoria(con, pnlCrearCat.nombreCategoria.getText()).getIdCategoria(),
+							ImagenDAO.getImagenPorRuta(con, rutasCarpeta.get(idFoto[0] - 1)).getIdImagen(),
+							UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
+					ventanaEmergente.setScene(scene);
+					if (pnlVisualizarImg.imagen.getWidth() / pnlVisualizarImg.imagen.getHeight() < 1) {
+						ventanaEmergente.setHeight(420);
+						ventanaEmergente.setWidth(300);
+						pnlVisualizarImg.vistaImg.setFitHeight(300);
+					} else {
+						pnlVisualizarImg.vistaImg.setFitWidth(300);
+					}
 				});
 			});
 		});

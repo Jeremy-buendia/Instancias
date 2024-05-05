@@ -155,7 +155,7 @@ public class CategoriaDAO {
 	public static ArrayList<CategoriaDO> getCategorias(Connection con, int idUsuario) {
 		ArrayList<CategoriaDO> categorias = new ArrayList<>();
 
-		String query = "SELECT * FROM categoria JOIN categoria_has_imagen ON categoria.idCategoria = categoria_has_imagen.Categoria_idCategoria WHERE categoria_has_imagen.Imagen_Usuario_idUsuario = ?";
+		String query = "SELECT DISTINCT idCategoria, nombre_Categoria FROM categoria JOIN categoria_has_imagen ON categoria.idCategoria = categoria_has_imagen.Categoria_idCategoria WHERE categoria_has_imagen.Imagen_Usuario_idUsuario = ?";
 
 		try {
 			PreparedStatement pstmt = con.prepareStatement(query);

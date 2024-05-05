@@ -1,9 +1,7 @@
 package application.model;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import application.utils.UtilsBD;
@@ -209,9 +207,9 @@ public class OpcionesDAO {
 			// Si los campos no son nulos, los vamos añadiendo a la sentencia
 			if (idioma.getIdioma() != -1) {
 				if (idioma.getIdioma() == 1) {
-					query = query + "Idioma = 'Ingles'";
+					query = query + "Idioma = 1";
 				} else if (idioma.getIdioma() == 0) {
-					query = query + "Idioma = 'Español'";
+					query = query + "Idioma = 0";
 				}
 				campoPrevio = true;
 			}
@@ -238,8 +236,6 @@ public class OpcionesDAO {
 				posInterrogacion++;
 
 			}
-
-			pstmt.setInt(posInterrogacion, idioma.getIdOpciones());
 
 			if (campoPrevio) {
 
@@ -316,22 +312,23 @@ public class OpcionesDAO {
 			return 0;
 		}
 	}
-	 public void crearOpcionesPredeterminadas(int id, Connection con) {
 
-		 //Inserta las opciones predeterminadas
-	        String sql = "INSERT INTO opciones (Idioma, Modo, Notificaciones, Fuente, Diseño, Usuario_idUsuario) VALUES (?, ?, ?, ?, ?, ?)";
+	public void crearOpcionesPredeterminadas(int id, Connection con) {
 
-	        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-	            pstmt.setInt(1, 0); // Idioma predeterminado
-	            pstmt.setInt(2, 0); // Modo predeterminado
-	            pstmt.setInt(3, 0); // Notificaciones predeterminadas
-	            pstmt.setInt(4, 0); // Fuente predeterminada
-	            pstmt.setInt(5, 0); // Diseño predeterminado
-	            pstmt.setInt(6, id); // ID del usuario
+		// Inserta las opciones predeterminadas
+		String sql = "INSERT INTO opciones (Idioma, Modo, Notificaciones, Fuente, Diseño, Usuario_idUsuario) VALUES (?, ?, ?, ?, ?, ?)";
 
-	            pstmt.executeUpdate();
-	        } catch (SQLException e) {
-	            System.out.println(e.getMessage());
-	        }
-	    }
+		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+			pstmt.setInt(1, 0); // Idioma predeterminado
+			pstmt.setInt(2, 0); // Modo predeterminado
+			pstmt.setInt(3, 0); // Notificaciones predeterminadas
+			pstmt.setInt(4, 0); // Fuente predeterminada
+			pstmt.setInt(5, 0); // Diseño predeterminado
+			pstmt.setInt(6, id); // ID del usuario
+
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
 }
