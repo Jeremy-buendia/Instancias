@@ -56,7 +56,7 @@ public class LoginController {
 		System.out.println(NotificacionesDAO.getNotificaciones(con, 1));
 		// Verificar la contraseña
 		boolean contraseñaCorrecta = UsuarioDAO.verificarContraseña(con, correoText, contraseñaText);
-
+       
 		// Si la contraseña es correcta, abrir la siguiente ventana (puedes cambiar esto
 		// según tu lógica)
 		if (contraseñaCorrecta) {

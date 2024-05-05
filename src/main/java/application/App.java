@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import application.model.CalendarioDAO;
 import application.model.CategoriaDAO;
@@ -18,18 +20,30 @@ import application.model.OpcionesDAO;
 import application.model.UsuarioDAO;
 import application.utils.UtilsBD;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -142,21 +156,71 @@ public class App extends Application {
 
 		CheckMenuItem iModo = new CheckMenuItem("Modo");
 
-		MenuItem iFuente = new MenuItem("Fuente");
+		MenuItem iFuente = new MenuItem(" Mas Fuente");
+		Stage stage1 = new Stage();
+		
+		iFuente.setOnAction(e -> {
+		    // Aumenta el tamaño de la escena
+		    double nuevoAncho = stage1.getWidth() + 150; // Aumenta el ancho en 10
+		    double nuevoAlto = stage1.getHeight() + 150; // Aumenta el alto en 10
+		    stage1.setWidth(nuevoAncho);
+		    stage1.setHeight(nuevoAlto);
+		});
+
 		MenuItem iDiseño = new MenuItem("Diseño");
 
 		// Menú mAyuda
 		Menu mAyuda = new Menu("Ayuda");
-
+		 
 		// MenuItems y Submenús de mAyuda
 		MenuItem iContactanos = new MenuItem("Contáctanos");
-
+		iContactanos.setOnAction(event -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Información de contacto");
+            alert.setHeaderText(null);
+            alert.setContentText("Nuestro correo: Instancias@gmail.com\r\n"
+            					+ "\r\n"
+            					+ "©Instancias");
+            alert.showAndWait();
+        });
 		Menu mAcercaDe = new Menu("Acerca de");
-
+		
 		MenuItem iVersion = new MenuItem("Versión de la Aplicación");
+		iVersion.setOnAction(event -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Version Instancias");
+            alert.setHeaderText(null);
+            alert.setContentText("Version: 0.1.0");
+            alert.showAndWait();
+        });
 		MenuItem iNosotros = new MenuItem("Nosotros");
+		iNosotros.setOnAction(event -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Acerda de Instancias");
+            alert.setHeaderText(null);
+            alert.setContentText("Acerca de:Instancias es una aplicación innovadora que combina la funcionalidad de un calendario con la capacidad de subir y almacenar fotos. Diseñada para ayudarte a capturar y recordar los momentos más importantes de tu vida, Instancias te permite asociar imágenes con fechas específicas en tu calendario.\r\n"
+            		+ "\r\n"
+            		+ "Características principales:\r\n"
+            		+ "\r\n"
+            		+ "Calendario personalizable: Navega fácilmente por el calendario y selecciona cualquier fecha para ver o añadir fotos.\r\n"
+            		+ "Subida de fotos: Sube tus fotos favoritas directamente desde tu dispositivo y asócialas con una fecha específica. Revive tus recuerdos con solo un clic.\r\n"
+            		+ "Almacenamiento seguro: Tus fotos se almacenan de forma segura y solo tú puedes acceder a ellas.\r\n"
+            		+ "Comparte tus momentos: Comparte tus fotos favoritas con amigos y familiares directamente desde la aplicación.\r\n");
+         // Permitir que la ventana se redimensione
+            alert.setResizable(true);
+            // Establecer el tamaño inicial de la ventana
+            alert.setHeight(600);
+            alert.setWidth(800);
+            alert.showAndWait();
+        });
 		MenuItem iActualizaciones = new MenuItem("Actualizaciones");
-
+		iActualizaciones.setOnAction(event -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Actualizaciones de Instancias");
+            alert.setHeaderText(null);
+            alert.setContentText("Actualizaciones: Se supone que no habra mas actualizaciones");
+            alert.showAndWait();
+		});
 		// Añadimos los MenuItems y los subemnús a los menús
 		mPerfil.getItems().addAll(iCambiarPass, iCambiarNombre, iCambiarCorreo, mOpcSesion);
 		mBuscar.getItems().addAll(iBuscarFecha);
@@ -165,7 +229,7 @@ public class App extends Application {
 
 		mOpcSesion.getItems().addAll(iCerrarSesion, iCambiarSesion);
 		mIdioma.getItems().addAll(iEspanol, iIngles);
-		mApariencia.getItems().addAll(iModo, iFuente, iDiseño);
+		mApariencia.getItems().addAll(iModo, iFuente,iDiseño);
 		mAcercaDe.getItems().addAll(iVersion, iNosotros, iActualizaciones);
 
 		// Agregamos los menús al MenuBar
@@ -180,13 +244,13 @@ public class App extends Application {
 		Button marcados = new Button("Marcados");
 
 		marcados.setOnAction(e -> {
-			abrirVentanaVisualizarMarcados(stage, con);
+			abrirVentanaVisualizarMarcados(stage1, con);
 		});
 
 		Button subirFoto = new Button("Subir foto");
 
 		subirFoto.setOnAction(e -> {
-			abrirVentanaSubirImagen(stage, con);
+			abrirVentanaSubirImagen(stage1, con);
 		});
 
 		Button bajarFoto = new Button("Descargar foto");
@@ -222,7 +286,7 @@ public class App extends Application {
 		/************** ESCENA ****************/
 		try {
 			Image icon = new Image(new FileInputStream("img\\favicon.png"));
-			stage.getIcons().add(icon);
+			stage1.getIcons().add(icon);
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -230,28 +294,46 @@ public class App extends Application {
 
 		var scene = new Scene(pnlDistribucion, 800, 600);
 
+		ImageView imageView = new ImageView();
 		iModo.setOnAction(event -> {
-			// Verifica si iModo está seleccionado
-			int estado = ((CheckMenuItem) iModo).isSelected() ? 1 : 0;
-			if (estado == 1) {
-				// Cambia el color de fondo a negro
-				scene.setFill(Color.BLACK);
-			} else {
-				// Cambia el color de fondo a blanco
-				scene.setFill(Color.WHITE);
-			}
-			// Actualiza la base de datos
-			OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
-
-			// Llama a la función getCalendario
-			CalendarioDAO.getCalendario(estado, con);
+		    // Verifica si iModo está seleccionado
+		    int estado = ((CheckMenuItem) iModo).isSelected() ? 1 : 0;
+		    // Actualiza la base de datos
+		    OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
+		    // Obtiene las rutas de las imágenes basadas en el estado
+		    ArrayList<String> rutasCarpeta = CalendarioDAO.getCalendario(estado, con);
+		    // Cambia el color de fondo y la imagen basándose en el estado
+		    if (estado == 1) {
+		        // Cambia el color de fondo a negro
+		        scene.setFill(Color.BLACK);
+		        // Cambia la imagen a la versión oscura (la primera imagen en rutasCarpeta)
+		        try {
+		            imageView.setImage(new Image(new FileInputStream(rutasCarpeta.get(0))));
+		        } catch (FileNotFoundException e) {
+		            e.printStackTrace();
+		        }
+		    } else {
+		        // Cambia el color de fondo a blanco
+		        scene.setFill(Color.WHITE);
+		        // Cambia la imagen a la versión clara (la primera imagen en rutasCarpeta)
+		        try {
+		            imageView.setImage(new Image(new FileInputStream(rutasCarpeta.get(0))));
+		        } catch (FileNotFoundException e) {
+		            e.printStackTrace();
+		        }
+		    }
+		    // Forzar a JavaFX a recalcular el diseño de la vista en el hilo de la interfaz de usuario
+		    Platform.runLater(() -> pnlDistribucion.layout());
 		});
 
-		stage.setScene(scene);
 
-		stage.show();
 
-		abrirVentanaFormulario(stage, con, mesAnterior, mesPosterior, pnlDistribucion);
+
+		stage1.setScene(scene);
+
+		stage1.show();
+
+		abrirVentanaFormulario(stage1, con, mesAnterior, mesPosterior, pnlDistribucion);
 	}
 
 	/**
@@ -353,7 +435,9 @@ public class App extends Application {
 
 			loginStage.setOnCloseRequest(e -> {
 				if (!LoginController.cargarCalendario) {
+				
 					stage.close();
+					
 				}
 			});
 
@@ -363,6 +447,7 @@ public class App extends Application {
 
 			if (LoginController.cargarCalendario) {
 				visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
+				cambiarContraseña(loginStage);
 			}
 
 		} catch (Exception e) {
@@ -858,6 +943,64 @@ public class App extends Application {
 //		}
 
 	}
+
+
+    public void cambiarContraseña(Stage primaryStage) {
+    	Connection con = UtilsBD.conectarBD();
+        // Crear los elementos de la ventana modal
+        Label lblNuevaContraseña = new Label("Nueva Contraseña:");
+        Label lblConfirmarContraseña = new Label("Confirmar Contraseña:");
+        PasswordField txtNuevaContraseña = new PasswordField();
+        PasswordField txtConfirmarContraseña = new PasswordField();
+        Button btnConfirmar = new Button("Confirmar");
+        Button btnCerrar = new Button("Cerrar");
+
+        // Configurar el diseño de la ventana modal
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(10));
+
+        grid.add(lblNuevaContraseña, 0, 0);
+        grid.add(txtNuevaContraseña, 1, 0);
+        grid.add(lblConfirmarContraseña, 0, 1);
+        grid.add(txtConfirmarContraseña, 1, 1);
+
+        HBox buttons = new HBox(10);
+        buttons.getChildren().addAll(btnConfirmar, btnCerrar);
+
+        VBox root = new VBox(10);
+        root.getChildren().addAll(grid, buttons);
+
+        // Crear la escena y configurar la ventana modal
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Cambiar Contraseña");
+        stage.initModality(Modality.APPLICATION_MODAL); // Establecer modalidad
+        stage.setResizable(false); // No permitir cambiar el tamaño de la ventana
+
+        // Configurar acción para el botón Confirmar
+        btnConfirmar.setOnAction(e -> {
+            String nuevaContraseña = txtNuevaContraseña.getText();
+            String confirmarContraseña = txtConfirmarContraseña.getText();
+            // Aquí puedes realizar la validación de las contraseñas y realizar acciones correspondientes
+            // Por ejemplo, cerrar la ventana si las contraseñas coinciden
+            if (nuevaContraseña.equals(confirmarContraseña)) {
+               UsuarioDAO.actualizarContraseña(con, LoginController.correoUsuario, confirmarContraseña);
+                stage.close(); // Cerrar la ventana modal
+            } else {
+                // Mostrar un mensaje de error o realizar otras acciones si las contraseñas no coinciden
+                System.out.println("Las contraseñas no coinciden");
+            }
+        });
+
+        // Configurar acción para el botón Cerrar
+        btnCerrar.setOnAction(e -> stage.close());
+
+        // Mostrar la ventana modal
+        stage.showAndWait();
+    }
 
 	public static void main(String[] args) {
 		launch();

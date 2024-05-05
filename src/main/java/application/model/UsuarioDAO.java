@@ -184,5 +184,35 @@ public class UsuarioDAO {
 		}
 
 	}
+	
+	public static int actualizarContraseña(Connection con, String correo, String nuevaContraseña) {
+        try {
+            String queryUpdate = "UPDATE usuario SET contraseña = ? WHERE correo = ?";
+            PreparedStatement pstmt = con.prepareStatement(queryUpdate);
+            pstmt.setString(1, nuevaContraseña);
+            pstmt.setString(2, correo);
+            
+            int filasActualizadas = pstmt.executeUpdate();
+            return filasActualizadas; // Devolvemos el número de filas actualizadas
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1; // Devolvemos -1 si hay un error SQL
+        }
+    }
+	
+	public static int actualizarCorreo(Connection con, String correo, String nuevoCorreo) {
+        try {
+            String queryUpdate = "UPDATE usuario SET correo = ? WHERE correo = ?";
+            PreparedStatement pstmt = con.prepareStatement(queryUpdate);
+            pstmt.setString(1, nuevoCorreo);
+            pstmt.setString(2, correo);
+            
+            int filasActualizadas = pstmt.executeUpdate();
+            return filasActualizadas; // Devolvemos el número de filas actualizadas
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1; // Devolvemos -1 si hay un error SQL
+        }
+    }
 
 }
