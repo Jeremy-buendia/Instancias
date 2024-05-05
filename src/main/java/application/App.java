@@ -21,6 +21,8 @@ import application.model.UsuarioDAO;
 import application.utils.UtilsBD;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -28,6 +30,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -48,6 +51,7 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
+	protected static final int[] indice = null;
 	public static boolean cerrarVentana = false;
 
 	@Override
@@ -138,7 +142,7 @@ public class App extends Application {
 
 		Menu mIdioma = new Menu("Idioma");
 		MenuItem iEspanol = new MenuItem("Español");
-		MenuItem iIngles = new MenuItem("Inglés");
+		MenuItem iIngles = new MenuItem("Inglés (Procimamente)");
 
 		// Añadir los oyentes de acción a los elementos del menú
 		// 0 para español
@@ -149,20 +153,78 @@ public class App extends Application {
 		Menu mApariencia = new Menu("Apariencia");
 
 		CheckMenuItem iModo = new CheckMenuItem("Modo");
-
-		MenuItem iFuente = new MenuItem(" Mas Fuente");
-		Stage stage1 = new Stage();
 		
-		iFuente.setOnAction(e -> {
+		MenuItem iDiseño = new MenuItem("Diseño");
+		Stage stage1 = new Stage();
+		iDiseño.setOnAction(e -> {
 		    // Aumenta el tamaño de la escena
-		    double nuevoAncho = stage1.getWidth() + 150; // Aumenta el ancho en 10
-		    double nuevoAlto = stage1.getHeight() + 150; // Aumenta el alto en 10
+		    double nuevoAncho = stage1.getWidth() + 50; // Aumenta el ancho en 10
+		    double nuevoAlto = stage1.getHeight() + 50; // Aumenta el alto en 10
 		    stage1.setWidth(nuevoAncho);
 		    stage1.setHeight(nuevoAlto);
 		});
+		
+		MenuItem iFuente = new MenuItem("Fuente");
+		final boolean[] isEnlarged = {false};
 
-		MenuItem iDiseño = new MenuItem("Diseño");
+		iFuente.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override
+		    public void handle(ActionEvent event) {
+		        // Crea un nuevo label con el texto "Modo"
+		        Label labelModo = new Label("Modo");
+		        Label labelEspañol = new Label("Español");
+		        Label labelIngles = new Label("Ingles");
+		        Label labelFuente = new Label("Fuente");
+		        Label labelDiseño = new Label("Diseño");
+		        Label labelIdioma = new Label("Idioma");
+		        Label labelNotificaciones = new Label("Notificaciones");
+		        Label labelApariencia = new Label("Apariencia");
+		        
+		        // Comprueba si el texto está actualmente ampliado
+		        if (isEnlarged[0]) {
+		            // Si el texto está ampliado, restablece el tamaño de la fuente al tamaño original
+		            labelModo.setFont(new Font("System", 12));  // Cambia "12" al tamaño de fuente original que desees
+		            labelEspañol.setFont(new Font("System", 12));
+		            labelIngles.setFont(new Font("System", 12));
+		            labelFuente.setFont(new Font("System", 12));
+		            labelDiseño.setFont(new Font("System", 12));
+		            labelIdioma.setFont(new Font("System", 12));
+		            labelNotificaciones.setFont(new Font("System", 12));
+		            labelApariencia.setFont(new Font("System", 12));
+		            labelIdioma.setTextFill(Color.BLACK);
+		            labelNotificaciones.setTextFill(Color.BLACK);
+		            labelApariencia.setTextFill(Color.BLACK);
+		            isEnlarged[0] = false;
+		        } else {
+		            // Si el texto no está ampliado, aumenta el tamaño de la fuente
+		            labelModo.setFont(new Font("System", 20));  // Cambia "20" al tamaño de fuente ampliado que desees
+		            labelEspañol.setFont(new Font("System", 20));
+		            labelIngles.setFont(new Font("System", 20));
+		            labelFuente.setFont(new Font("System", 20));
+		            labelDiseño.setFont(new Font("System", 20));
+		            labelIdioma.setFont(new Font("System", 20));
+		            labelNotificaciones.setFont(new Font("System", 20));
+		            labelApariencia.setFont(new Font("System", 20));
+		            labelIdioma.setTextFill(Color.BLACK);
+		            labelNotificaciones.setTextFill(Color.BLACK);
+		            labelApariencia.setTextFill(Color.BLACK);
+		            isEnlarged[0] = true;
+		        }
 
+		        // Establece el label como el gráfico del CheckMenuItem
+		        iModo.setGraphic(labelModo);
+		        iEspanol.setGraphic(labelEspañol);
+		        iIngles.setGraphic(labelIngles);
+		        iFuente.setGraphic(labelFuente);
+		        iDiseño.setGraphic(labelDiseño);
+		        mIdioma.setGraphic(labelIdioma);
+		        iNotificaciones.setGraphic(labelNotificaciones);
+		        mApariencia.setGraphic(labelApariencia);
+		        // Asegúrate de tener un MenuItem para 'labelDiseño' si quieres usarlo
+		    }
+		});
+		
+		
 		// Menú mAyuda
 		Menu mAyuda = new Menu("Ayuda");
 		 
@@ -289,6 +351,7 @@ public class App extends Application {
 		var scene = new Scene(pnlDistribucion, 800, 600);
 
 		ImageView imageView = new ImageView();
+		
 		iModo.setOnAction(event -> {
 		    // Verifica si iModo está seleccionado
 		    int estado = ((CheckMenuItem) iModo).isSelected() ? 1 : 0;
@@ -319,9 +382,6 @@ public class App extends Application {
 		    // Forzar a JavaFX a recalcular el diseño de la vista en el hilo de la interfaz de usuario
 		    Platform.runLater(() -> pnlDistribucion.layout());
 		});
-
-
-
 
 		stage1.setScene(scene);
 
@@ -919,6 +979,7 @@ public class App extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return;
 	}
 
 	public void cerrarSesion() {
