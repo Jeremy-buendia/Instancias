@@ -118,19 +118,7 @@ public class OpcionesDAO {
 				if (diseño.getDiseño() == 0) {
 					query = query + "Diseño = 'Predeterminado'";
 				} else if (diseño.getDiseño() == 1) {
-					query = query + "Diseño = 'San Valentin'";
-				} else if (diseño.getDiseño() == 2) {
-					query = query + "Diseño = 'Verano'";
-				} else if (diseño.getDiseño() == 3) {
-					query = query + "Diseño = 'Primavera'";
-				} else if (diseño.getDiseño() == 4) {
-					query = query + "Diseño = 'Otoño'";
-				} else if (diseño.getDiseño() == 5) {
-					query = query + "Diseño = 'Invierno'";
-				} else if (diseño.getDiseño() == 6) {
-					query = query + "Diseño = 'Halloween'";
-				} else if (diseño.getDiseño() == 7) {
-					query = query + "Diseño = 'Navidad'";
+					query = query + "Diseño = 'ampliar'";
 				}
 				campoPrevio = true;
 			}
@@ -178,24 +166,7 @@ public class OpcionesDAO {
 
 	// Función cambiarIdioma: la función cambiará el idioma (español o inglés) de la
 	// aplicación.
-	public static void cambiarIdioma(int idioma) {
-		// Crear una nueva instancia de OpcionesDO y establecer el idioma
-		OpcionesDO opciones = new OpcionesDO();
-		opciones.setIdioma(idioma);
 
-		// Obtener la conexión a la base de datos
-		Connection con = UtilsBD.conectarBD();
-
-		// Llamar a la función para cambiar el idioma en la base de datos
-		int numAff = cambiarIdioma(opciones, con);
-
-		// Comprobar si la actualización fue exitosa
-		if (numAff > 0) {
-			System.out.println("Idioma actualizado con éxito.");
-		} else {
-			System.out.println("Error al actualizar el idioma.");
-		}
-	}
 
 	public static int cambiarIdioma(OpcionesDO idioma, Connection con) {
 		try {
@@ -214,7 +185,7 @@ public class OpcionesDAO {
 				campoPrevio = true;
 			}
 
-			query = query + " WHERE idOpciones = ?";
+			query = query + " WHERE Usuario_idUsuario = ?";
 
 			// Generamos el preparedstatement con la
 			// query
@@ -272,7 +243,7 @@ public class OpcionesDAO {
 				campoPrevio = true;
 			}
 
-			query = query + " WHERE idOpciones = ?";
+			query = query + " WHERE Usuario_idUsuario = ?";
 
 			// Generamos el preparedstatement con la
 			// query
