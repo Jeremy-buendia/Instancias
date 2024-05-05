@@ -30,6 +30,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
@@ -272,22 +273,39 @@ public class App extends Application {
 
 		var scene = new Scene(pnlDistribucion, 800, 600);
 
+		ImageView imageView = new ImageView();
 		iModo.setOnAction(event -> {
-			// Verifica si iModo está seleccionado
-			int estado = ((CheckMenuItem) iModo).isSelected() ? 1 : 0;
-			if (estado == 1) {
-				// Cambia el color de fondo a negro
-				scene.setFill(Color.BLACK);
-			} else {
-				// Cambia el color de fondo a blanco
-				scene.setFill(Color.WHITE);
-			}
-			// Actualiza la base de datos
-			OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
-
-			// Llama a la función getCalendario
-			CalendarioDAO.getCalendario(estado, con);
+		    // Verifica si iModo está seleccionado
+		    int estado = ((CheckMenuItem) iModo).isSelected() ? 1 : 0;
+		    // Actualiza la base de datos
+		    OpcionesDAO.cambiarModo(UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId(), estado, con);
+		    // Obtiene las rutas de las imágenes basadas en el estado
+		    ArrayList<String> rutasCarpeta = CalendarioDAO.getCalendario(estado, con);
+		    // Cambia el color de fondo y la imagen basándose en el estado
+		    if (estado == 1) {
+		        // Cambia el color de fondo a negro
+		        scene.setFill(Color.BLACK);
+		        // Cambia la imagen a la versión oscura (la primera imagen en rutasCarpeta)
+		        try {
+		            imageView.setImage(new Image(new FileInputStream(rutasCarpeta.get(0))));
+		        } catch (FileNotFoundException e) {
+		            e.printStackTrace();
+		        }
+		    } else {
+		        // Cambia el color de fondo a blanco
+		        scene.setFill(Color.WHITE);
+		        // Cambia la imagen a la versión clara (la primera imagen en rutasCarpeta)
+		        try {
+		            imageView.setImage(new Image(new FileInputStream(rutasCarpeta.get(0))));
+		        } catch (FileNotFoundException e) {
+		            e.printStackTrace();
+		        }
+		    }
+		    // Forzar a JavaFX a recalcular el diseño de la vista
+		    pnlDistribucion.layout();
 		});
+
+
 
 		stage.setScene(scene);
 
