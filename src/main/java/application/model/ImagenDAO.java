@@ -387,4 +387,22 @@ public class ImagenDAO {
 			return -1; // Error SQL
 		}
 	}
+
+	public static int getMaxImg(Connection con, int idUsuario) {
+		String query = "SELECT MAX(idImagen) FROM imagen WHERE Usuario_IdUsuario = ?";
+
+		try {
+			PreparedStatement pstmt = con.prepareStatement(query);
+
+			pstmt.setInt(1, UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
+
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				return rs.getInt("idImagen");
+			}
+			return -1;
+		} catch (Exception e) {
+			return -1;
+		}
+	}
 }
