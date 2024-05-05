@@ -21,6 +21,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
@@ -147,16 +149,56 @@ public class App extends Application {
 
 		// Menú mAyuda
 		Menu mAyuda = new Menu("Ayuda");
-
+		 
 		// MenuItems y Submenús de mAyuda
 		MenuItem iContactanos = new MenuItem("Contáctanos");
-
+		iContactanos.setOnAction(event -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Información de contacto");
+            alert.setHeaderText(null);
+            alert.setContentText("Nuestro correo: Instancias@gmail.com\r\n"
+            					+ "\r\n"
+            					+ "©Instancias");
+            alert.showAndWait();
+        });
 		Menu mAcercaDe = new Menu("Acerca de");
-
+		
 		MenuItem iVersion = new MenuItem("Versión de la Aplicación");
+		iVersion.setOnAction(event -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Version Instancias");
+            alert.setHeaderText(null);
+            alert.setContentText("Version: 0.1.0");
+            alert.showAndWait();
+        });
 		MenuItem iNosotros = new MenuItem("Nosotros");
+		iNosotros.setOnAction(event -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Acerda de Instancias");
+            alert.setHeaderText(null);
+            alert.setContentText("Acerca de:Instancias es una aplicación innovadora que combina la funcionalidad de un calendario con la capacidad de subir y almacenar fotos. Diseñada para ayudarte a capturar y recordar los momentos más importantes de tu vida, Instancias te permite asociar imágenes con fechas específicas en tu calendario.\r\n"
+            		+ "\r\n"
+            		+ "Características principales:\r\n"
+            		+ "\r\n"
+            		+ "Calendario personalizable: Navega fácilmente por el calendario y selecciona cualquier fecha para ver o añadir fotos.\r\n"
+            		+ "Subida de fotos: Sube tus fotos favoritas directamente desde tu dispositivo y asócialas con una fecha específica. Revive tus recuerdos con solo un clic.\r\n"
+            		+ "Almacenamiento seguro: Tus fotos se almacenan de forma segura y solo tú puedes acceder a ellas.\r\n"
+            		+ "Comparte tus momentos: Comparte tus fotos favoritas con amigos y familiares directamente desde la aplicación.\r\n");
+         // Permitir que la ventana se redimensione
+            alert.setResizable(true);
+            // Establecer el tamaño inicial de la ventana
+            alert.setHeight(600);
+            alert.setWidth(800);
+            alert.showAndWait();
+        });
 		MenuItem iActualizaciones = new MenuItem("Actualizaciones");
-
+		iActualizaciones.setOnAction(event -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Actualizaciones de Instancias");
+            alert.setHeaderText(null);
+            alert.setContentText("Actualizaciones: Se supone que no habra mas actualizaciones");
+            alert.showAndWait();
+		});
 		// Añadimos los MenuItems y los subemnús a los menús
 		mPerfil.getItems().addAll(iCambiarPass, iCambiarNombre, iCambiarCorreo, mOpcSesion);
 		mBuscar.getItems().addAll(iBuscarFecha);
