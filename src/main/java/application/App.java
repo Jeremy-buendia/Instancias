@@ -238,7 +238,7 @@ public class App extends Application {
 		iFuente.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override
 		    public void handle(ActionEvent event) {
-		        // Crea un nuevo label con el texto "Modo"
+		        // Crea un nuevo label
 		        Label labelModo = new Label("Modo");
 		        Label labelEspañol = new Label("Español");
 		        Label labelIngles = new Label("Ingles");
