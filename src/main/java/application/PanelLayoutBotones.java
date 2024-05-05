@@ -21,7 +21,7 @@ import javafx.stage.Stage;
 
 public class PanelLayoutBotones extends GridPane {
 
-	LocalDate diaMes;
+	// LocalDate diaMes;
 	// Button dia;
 
 	// Meter parametro de fecha, alomejor el array no sé
@@ -46,7 +46,7 @@ public class PanelLayoutBotones extends GridPane {
 					dia.setStyle("-fx-background-color: transparent;");
 				});
 
-				diaMes = LocalDate.of(2024, m, d);
+				// diaMes = LocalDate.of(2024, m, d);
 
 				d++;
 
@@ -91,6 +91,13 @@ public class PanelLayoutBotones extends GridPane {
 				}
 
 				dia.setOnAction(e -> {
+					String mesCald = dia.getText().substring(5, 6);
+					int mesCaldInt = Integer.parseInt(mesCald);
+					String diaCald = dia.getText().substring(7);
+					int diaCaldInt = Integer.parseInt(diaCald);
+
+					LocalDate diaMes = LocalDate.of(2024, mesCaldInt, diaCaldInt);
+					System.out.println(diaMes);
 					abrirVentanaVisualizarImg(stage, con, diaMes);
 				});
 			}
@@ -111,7 +118,7 @@ public class PanelLayoutBotones extends GridPane {
 					dia.setStyle("-fx-background-color: transparent;");
 				});
 
-				diaMes = LocalDate.of(2024, m, d);
+				// diaMes = LocalDate.of(2024, m, d);
 
 				d++;
 
@@ -126,10 +133,6 @@ public class PanelLayoutBotones extends GridPane {
 				}
 
 				this.add(dia, x, y);
-
-				dia.setOnAction(e -> {
-					abrirVentanaVisualizarImg(stage, con, diaMes);
-				});
 
 				if (y == 0) {
 					this.setMargin(dia, new Insets(86, 3, 4, 0));
@@ -170,6 +173,13 @@ public class PanelLayoutBotones extends GridPane {
 				}
 
 				dia.setOnAction(e -> {
+					String mesCald = dia.getText().substring(5, 6);
+					int mesCaldInt = Integer.parseInt(mesCald);
+					String diaCald = dia.getText().substring(7);
+					int diaCaldInt = Integer.parseInt(diaCald);
+
+					LocalDate diaMes = LocalDate.of(2024, mesCaldInt, diaCaldInt);
+					System.out.println(diaMes);
 					abrirVentanaVisualizarImg(stage, con, diaMes);
 				});
 			}
@@ -190,7 +200,7 @@ public class PanelLayoutBotones extends GridPane {
 					dia.setStyle("-fx-background-color: transparent;");
 				});
 
-				diaMes = LocalDate.of(2024, m, d);
+				// diaMes = LocalDate.of(2024, m, d);
 
 				d++;
 
@@ -243,6 +253,13 @@ public class PanelLayoutBotones extends GridPane {
 					x = 0;
 				}
 				dia.setOnAction(e -> {
+					String mesCald = dia.getText().substring(5, 6);
+					int mesCaldInt = Integer.parseInt(mesCald);
+					String diaCald = dia.getText().substring(7);
+					int diaCaldInt = Integer.parseInt(diaCald);
+
+					LocalDate diaMes = LocalDate.of(2024, mesCaldInt, diaCaldInt);
+					System.out.println(diaMes);
 					abrirVentanaVisualizarImg(stage, con, diaMes);
 				});
 			}
