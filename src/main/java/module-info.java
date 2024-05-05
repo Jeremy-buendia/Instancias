@@ -6,6 +6,8 @@ module Instancias.javafx_controls {
 	requires javafx.graphics;
 	requires java.desktop;
 	requires javafx.base;
-	 opens application to javafx.fxml;
+
+	opens application to javafx.fxml;
+
 	exports application;
 }
