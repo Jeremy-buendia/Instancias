@@ -45,6 +45,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -461,6 +462,7 @@ public class App extends Application {
 
 			if (LoginController.cargarCalendario) {
 				visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
+			
 			}
 
 		} catch (Exception e) {
@@ -1015,6 +1017,63 @@ public class App extends Application {
 		// Mostrar la ventana modal
 		stage.showAndWait();
 	}
+	
+	public static void cambiarCorreo(Stage primaryStage) {
+		Connection con = UtilsBD.conectarBD();
+		 // Crear los elementos de la ventana modal
+        Label lblNuevoCorreo = new Label("Nuevo Correo:");
+        Label lblConfirmarCorreo = new Label("Confirmar Correo:");
+        TextField txtNuevoCorreo = new TextField();
+        TextField txtConfirmarCorreo = new TextField();
+        Button btnConfirmar = new Button("Confirmar");
+        Button btnCerrar = new Button("Cerrar");
+
+        // Configurar el diseño de la ventana modal
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(10));
+
+        grid.add(lblNuevoCorreo, 0, 0);
+        grid.add(txtNuevoCorreo, 1, 0);
+        grid.add(lblConfirmarCorreo, 0, 1);
+        grid.add(txtConfirmarCorreo, 1, 1);
+
+        HBox buttons = new HBox(10);
+        buttons.getChildren().addAll(btnConfirmar, btnCerrar);
+
+        VBox root = new VBox(10);
+        root.getChildren().addAll(grid, buttons);
+
+        // Crear la escena y configurar la ventana modal
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Cambiar Correo");
+        stage.initModality(Modality.APPLICATION_MODAL); // Establecer modalidad
+        stage.setResizable(false); // No permitir cambiar el tamaño de la ventana
+
+        // Configurar acción para el botón Confirmar
+        btnConfirmar.setOnAction(e -> {
+            String nuevoCorreo = txtNuevoCorreo.getText();
+            String confirmarCorreo = txtConfirmarCorreo.getText();
+            // Aquí puedes realizar la validación del correo y realizar acciones correspondientes
+            // Por ejemplo, cerrar la ventana si los correos coinciden
+            if (nuevoCorreo.equals(confirmarCorreo)) {
+                UsuarioDAO.actualizarCorreo(con, LoginController.correoUsuario, nuevoCorreo);
+                stage.close(); // Cerrar la ventana modal
+            } else {
+                // Mostrar un mensaje de error o realizar otras acciones si los correos no coinciden
+                System.out.println("Los correos no coinciden");
+            }
+        });
+
+        // Configurar acción para el botón Cerrar
+        btnCerrar.setOnAction(e -> stage.close());
+
+        // Mostrar la ventana modal
+        stage.showAndWait();
+    }
 
 	public static void abrirCamara() {
 		try {
