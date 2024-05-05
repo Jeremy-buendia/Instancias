@@ -460,7 +460,7 @@ public class App extends Application {
 			loginController.setVentanaActual(loginStage);
 
 			if (LoginController.cargarCalendario) {
-				visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
+				visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion, stage);
 			}
 
 		} catch (Exception e) {
@@ -894,16 +894,15 @@ public class App extends Application {
 	}
 
 	public static void visualizarCalendario(Connection con, Button mesAnterior, Button mesPosterior,
-			BorderPane pnlDistribucion) {
-		PanelVisualizarCalendario pnlCalendario = new PanelVisualizarCalendario();
+			BorderPane pnlDistribucion, Stage stage) {
+		LocalDate fechaActual = LocalDate.now();
+		DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy-MM");
+		String fechaFormateada = fechaActual.format(formatoFecha);
+		PanelVisualizarCalendario pnlCalendario = new PanelVisualizarCalendario(stage, con, fechaFormateada);
 		pnlDistribucion.setCenter(pnlCalendario);
 		try {
 			ArrayList<String> rutasCarpeta = CalendarioDAO.getCalendario(0, con);
 			int[] indice = { 0 };
-
-			LocalDate fechaActual = LocalDate.now();
-			DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy-MM");
-			String fechaFormateada = fechaActual.format(formatoFecha);
 
 			for (int i = 0; i < rutasCarpeta.size(); i++) {
 				if (fechaFormateada.equals(rutasCarpeta.get(i).substring(4, 11))) {
