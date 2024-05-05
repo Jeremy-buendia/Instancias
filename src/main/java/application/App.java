@@ -24,7 +24,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -36,14 +35,10 @@ import javafx.scene.control.Labeled;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
@@ -494,9 +489,7 @@ public class App extends Application {
 
 			loginStage.setOnCloseRequest(e -> {
 				if (!LoginController.cargarCalendario) {
-				
 					stage.close();
-					
 				}
 			});
 
@@ -506,7 +499,6 @@ public class App extends Application {
 
 			if (LoginController.cargarCalendario) {
 				visualizarCalendario(con, mesAnterior, mesPosterior, pnlDistribucion);
-				cambiarContraseña(loginStage);
 			}
 
 		} catch (Exception e) {
@@ -1003,64 +995,6 @@ public class App extends Application {
 //		}
 
 	}
-
-
-    public void cambiarContraseña(Stage primaryStage) {
-    	Connection con = UtilsBD.conectarBD();
-        // Crear los elementos de la ventana modal
-        Label lblNuevaContraseña = new Label("Nueva Contraseña:");
-        Label lblConfirmarContraseña = new Label("Confirmar Contraseña:");
-        PasswordField txtNuevaContraseña = new PasswordField();
-        PasswordField txtConfirmarContraseña = new PasswordField();
-        Button btnConfirmar = new Button("Confirmar");
-        Button btnCerrar = new Button("Cerrar");
-
-        // Configurar el diseño de la ventana modal
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(10));
-
-        grid.add(lblNuevaContraseña, 0, 0);
-        grid.add(txtNuevaContraseña, 1, 0);
-        grid.add(lblConfirmarContraseña, 0, 1);
-        grid.add(txtConfirmarContraseña, 1, 1);
-
-        HBox buttons = new HBox(10);
-        buttons.getChildren().addAll(btnConfirmar, btnCerrar);
-
-        VBox root = new VBox(10);
-        root.getChildren().addAll(grid, buttons);
-
-        // Crear la escena y configurar la ventana modal
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.setTitle("Cambiar Contraseña");
-        stage.initModality(Modality.APPLICATION_MODAL); // Establecer modalidad
-        stage.setResizable(false); // No permitir cambiar el tamaño de la ventana
-
-        // Configurar acción para el botón Confirmar
-        btnConfirmar.setOnAction(e -> {
-            String nuevaContraseña = txtNuevaContraseña.getText();
-            String confirmarContraseña = txtConfirmarContraseña.getText();
-            // Aquí puedes realizar la validación de las contraseñas y realizar acciones correspondientes
-            // Por ejemplo, cerrar la ventana si las contraseñas coinciden
-            if (nuevaContraseña.equals(confirmarContraseña)) {
-               UsuarioDAO.actualizarContraseña(con, LoginController.correoUsuario, confirmarContraseña);
-                stage.close(); // Cerrar la ventana modal
-            } else {
-                // Mostrar un mensaje de error o realizar otras acciones si las contraseñas no coinciden
-                System.out.println("Las contraseñas no coinciden");
-            }
-        });
-
-        // Configurar acción para el botón Cerrar
-        btnCerrar.setOnAction(e -> stage.close());
-
-        // Mostrar la ventana modal
-        stage.showAndWait();
-    }
 
 	public static void main(String[] args) {
 		launch();
