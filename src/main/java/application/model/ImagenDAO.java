@@ -174,6 +174,19 @@ public class ImagenDAO {
 		return -1;
 	}
 
+	public static int BuscarCarpetaSinImg(Connection con) {
+		String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias\\"
+				+ UsuarioDAO.cargarCorreo(con, LoginController.correoUsuario).getId();
+
+		File carpeta = new File(rutaCarpeta);
+
+		if (carpeta.exists() && carpeta.isDirectory()) {
+			return 0;
+		}
+
+		return -1;
+	}
+
 	/**
 	 * Función para cargar una Imagen de la BD
 	 * 

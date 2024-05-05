@@ -25,7 +25,13 @@ public class PanelLayoutBotones extends GridPane {
 	// LocalDate diaMes;
 	// Button dia;
 
-	// Meter parametro de fecha, alomejor el array no sé
+	/**
+	 * Constructor de los botones del calendario
+	 * 
+	 * @param stage
+	 * @param con
+	 * @param mes
+	 */
 	PanelLayoutBotones(Stage stage, Connection con, String mes) {
 		int x = 0;
 		int y = 0;
@@ -137,9 +143,10 @@ public class PanelLayoutBotones extends GridPane {
 				if (d == 31) {
 					if (contador == 1) {
 						d = 31;
+					} else {
+						d = 1;
+						m = 5;
 					}
-					d = 1;
-					m = 5;
 					contador++;
 				}
 
@@ -398,6 +405,7 @@ public class PanelLayoutBotones extends GridPane {
 				System.out.println(directorioSeleccionado);
 
 				ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
+				NotificacionesDAO.mostrarNotificacion(NotificacionesDAO.getNotificaciones(con, 3).getMensaje());
 			});
 
 			pnlVisualizarImg.marcar.setOnAction(e -> {

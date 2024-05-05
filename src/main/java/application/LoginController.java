@@ -1,8 +1,10 @@
 package application;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 
+import application.model.ImagenDAO;
 import application.model.NotificacionesDAO;
 import application.model.UsuarioDAO;
 import application.utils.UtilsBD;
@@ -61,6 +63,17 @@ public class LoginController {
 			System.out.println("Contraseña correcta. Abriendo siguiente ventana...");
 			NotificacionesDAO.mostrarNotificacion(NotificacionesDAO.getNotificaciones(con, 1).getMensaje());
 			cargarCalendario = true;
+
+			if (ImagenDAO.BuscarCarpetaSinImg(con) == 0) {
+
+			} else {
+				String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias\\"
+						+ UsuarioDAO.cargarCorreo(con, LoginController.correoUsuario).getId();
+				File carpeta = new File(rutaCarpeta);
+				carpeta.mkdirs();
+
+			}
+
 			if (ventanaActual != null) {
 				ventanaActual.close();
 			}

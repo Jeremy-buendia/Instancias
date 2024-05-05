@@ -8,7 +8,6 @@ import java.sql.Statement;
 
 public class UsuarioDAO {
 
-	// HAY QUE CREAR UNA FUNCION getUsuario()
 	/**
 	 * Funcion que nos muestra al informacion del usuario con la id introducida
 	 * 
@@ -190,6 +189,14 @@ public class UsuarioDAO {
 
 	}
 
+	/**
+	 * Funcion que cambia la contraseña en la base de datos
+	 * 
+	 * @param con
+	 * @param correo
+	 * @param nuevaContraseña
+	 * @return filas actualizadas o -1
+	 */
 	public static int actualizarContraseña(Connection con, String correo, String nuevaContraseña) {
 		try {
 			String queryUpdate = "UPDATE usuario SET contraseña = ? WHERE correo = ?";
@@ -205,6 +212,14 @@ public class UsuarioDAO {
 		}
 	}
 
+	/**
+	 * Función que cambia el correo en la base de datos
+	 * 
+	 * @param con
+	 * @param correo
+	 * @param nuevoCorreo
+	 * @return filas actualizadas o null
+	 */
 	public static int actualizarCorreo(Connection con, String correo, String nuevoCorreo) {
 		try {
 			String queryUpdate = "UPDATE usuario SET correo = ? WHERE correo = ?";
@@ -220,6 +235,14 @@ public class UsuarioDAO {
 		}
 	}
 
+	/**
+	 * Funcion que cambia el nombre en la Base de Datos
+	 * 
+	 * @param con
+	 * @param correo
+	 * @param nuevoNombre
+	 * @return filasActualizadas o -1
+	 */
 	public static int actualizarNombre(Connection con, String correo, String nuevoNombre) {
 		try {
 			String queryUpdate = "UPDATE usuario SET nombre = ? WHERE correo = ?";

@@ -26,6 +26,13 @@ public class PanelVisualizarCalendario extends StackPane {
 	Image imagen;
 	Button dia1;
 
+	/**
+	 * Constructor del panel del calendario
+	 * 
+	 * @param stage
+	 * @param con
+	 * @param mes
+	 */
 	PanelVisualizarCalendario(Stage stage, Connection con, String mes) {
 		vistaCalendario = new ImageView();
 

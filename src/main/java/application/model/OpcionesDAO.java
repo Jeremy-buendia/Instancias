@@ -166,54 +166,40 @@ public class OpcionesDAO {
 	// Función cambiarIdioma: la función cambiará el idioma (español o inglés) de la
 	// aplicación.
 
-	public static int cambiarIdioma(int idioma, Connection con) {
+	public static int cambiarIdioma(OpcionesDO idioma, Connection con) {
 		try {
-
 			boolean campoPrevio = false;
 			int numAff = -1;
 			String query = "UPDATE OPCIONES SET ";
-
 			// Si los campos no son nulos, los vamos añadiendo a la sentencia
-			if (idioma != -1) {
-				if (idioma == 1) {
+			if (idioma.getIdioma() != -1) {
+				if (idioma.getIdioma() == 1) {
 					query = query + "Idioma = 1";
-				} else if (idioma == 0) {
+				} else if (idioma.getIdioma() == 0) {
 					query = query + "Idioma = 0";
 				}
 				campoPrevio = true;
 			}
-
 			query = query + " WHERE Usuario_idUsuario = ?";
-
 			// Generamos el preparedstatement con la
 			// query
 			PreparedStatement pstmt = con.prepareStatement(query);
-
 			// Enlazamos los datos a las ? del prepared
 			// statement
-
 			int posInterrogacion = 1;
-
 			// Si los campos no son nulos, los vamos
 			// añadiendo a la sentencia
-
-			if (idioma != -1) {
-				pstmt.setInt(posInterrogacion, idioma);
+			if (idioma.getIdioma() != -1) {
+				pstmt.setInt(posInterrogacion, idioma.getIdioma());
 				// Incrementamos la posicion de la
 				// interrogacion para
 				// El siguiente posible campo
 				posInterrogacion++;
-
 			}
-
 			if (campoPrevio) {
-
 				System.out.println(query);
-
 				numAff = pstmt.executeUpdate();
-
 			}
-
 			return numAff;
 		} catch (SQLException e) {
 			// TODO: handle exception

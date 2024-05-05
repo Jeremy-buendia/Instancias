@@ -21,6 +21,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import com.github.lalyos.jfiglet.FigletFont;
+
 import application.model.CalendarioDAO;
 import application.model.CategoriaDAO;
 import application.model.CategoriaDO;
@@ -28,11 +30,14 @@ import application.model.ImagenDAO;
 import application.model.ImagenDO;
 import application.model.NotificacionesDAO;
 import application.model.OpcionesDAO;
+import application.model.OpcionesDO;
 import application.model.UsuarioDAO;
 import application.model.UsuarioDO;
 import application.utils.UtilsBD;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -55,6 +60,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -159,17 +165,18 @@ public class App extends Application {
 		MenuItem iEspanol = new MenuItem("Español");
 		MenuItem iIngles = new MenuItem("Inglés");
 
-		// Añadir los oyentes de acción a los elementos del menú
-		// 0 para español
-		iEspanol.setOnAction(e -> OpcionesDAO.cambiarIdioma(0, con));
-		// 1 para inglés
-		iIngles.setOnAction(e -> OpcionesDAO.cambiarIdioma(1, con));
+//		// Añadir los oyentes de acción a los elementos del menú
+//		// 0 para español
+//		iEspanol.setOnAction(e -> OpcionesDAO.cambiarIdioma(0, con));
+//		// 1 para inglés
+//		iIngles.setOnAction(e -> OpcionesDAO.cambiarIdioma(1, con));
 
 		Menu mApariencia = new Menu("Apariencia");
 
 		CheckMenuItem iModo = new CheckMenuItem("Modo");
 
-		MenuItem iFuente = new MenuItem(" Mas Fuente");
+		MenuItem iFuente = new MenuItem("Fuente");
+
 		Stage stage1 = new Stage();
 
 		iFuente.setOnAction(e -> {
@@ -231,6 +238,24 @@ public class App extends Application {
 			alert.setContentText("Actualizaciones: Se supone que no habrá mas actualizaciones");
 			alert.showAndWait();
 		});
+
+		MenuItem iInstancias = new MenuItem("Instancias");
+
+		iInstancias.setOnAction(e -> {
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Gracias");
+			alert.setHeaderText(null);
+
+			try {
+				String asciiArt = FigletFont.convertOneLine("Instancias");
+				alert.setContentText(asciiArt);
+			} catch (Exception e2) {
+
+			}
+
+			alert.showAndWait();
+		});
+
 		// Añadimos los MenuItems y los subemnús a los menús
 		mPerfil.getItems().addAll(iCambiarPass, iCambiarNombre, iCambiarCorreo, mOpcSesion);
 		mBuscar.getItems().addAll(iBuscarFecha);
@@ -240,7 +265,7 @@ public class App extends Application {
 		mOpcSesion.getItems().addAll(iCerrarSesion, iCambiarSesion);
 		mIdioma.getItems().addAll(iEspanol, iIngles);
 		mApariencia.getItems().addAll(iModo, iFuente, iDiseño);
-		mAcercaDe.getItems().addAll(iVersion, iNosotros, iActualizaciones);
+		mAcercaDe.getItems().addAll(iVersion, iNosotros, iActualizaciones, iInstancias);
 
 		// Agregamos los menús al MenuBar
 		menuSuperior.getMenus().addAll(mPerfil, mBuscar, mConfig, mAyuda);
@@ -278,6 +303,7 @@ public class App extends Application {
 			for (int i = 0; i < rutasCarpeta.size(); i++) {
 				File imagen = new File(rutasCarpeta.get(i));
 				ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
+				NotificacionesDAO.mostrarNotificacion(NotificacionesDAO.getNotificaciones(con, 3).getMensaje());
 			}
 
 		});
@@ -309,6 +335,378 @@ public class App extends Application {
 		});
 
 		/************** CALENDARIO ****************/
+
+		final boolean[] isidioma = { false };
+		mIdioma.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// Crea un nuevo label
+				Label labelModo = new Label("Modo");
+				Label labelFuente = new Label("Fuente");
+				Label labelDiseño = new Label("Diseño");
+				Label labelIdioma = new Label("Idioma");
+				Label labelNotificaciones = new Label("Notificaciones");
+				Label labelApariencia = new Label("Apariencia");
+				Label labelAyuda = new Label("Ayuda");
+				Label labelActualizaciones = new Label("Actualizaciones");
+				Label labelNosotros = new Label("Nosotros");
+				Label labelVersion = new Label("Version");
+				Label labelContactanos = new Label("Contactanos");
+				Label labelPerfil = new Label("Perfil");
+				Label labelConfiguracion = new Label("Configuracion");
+				Label labelBuscar = new Label("Buscar");
+				Label labelBuscarFecha = new Label("Buscar Fecha");
+				Label labelAcercaDe = new Label("Acerca de");
+				Label labelCamNombre = new Label("Cambiar Nombre de Perfil");
+				Label labelCamContr = new Label("Cambiar Contraseña");
+				Label labelCamCorreo = new Label("Cambiar Correo");
+				Label labelOpSesion = new Label("Opciones de Sesión");
+				Label labelCerrarSesion = new Label("Cerrar Sesión");
+				Label labelCambiarSesion = new Label("Cambiar Sesión");
+
+				// Comprueba si el texto está actualmente ampliado
+				if (isidioma[0]) {
+					// Si el texto está ampliado, restablece el tamaño de la fuente al tamaño
+					// original
+					// Cambia a 12 el tamaño de fuente original que desees
+					labelModo.setFont(new Font("System", 12));
+					labelFuente.setFont(new Font("System", 12));
+					labelDiseño.setFont(new Font("System", 12));
+					labelIdioma.setFont(new Font("System", 12));
+					labelNotificaciones.setFont(new Font("System", 12));
+					labelApariencia.setFont(new Font("System", 12));
+					labelAyuda.setFont(new Font("System", 12));
+					labelActualizaciones.setFont(new Font("System", 12));
+					labelNosotros.setFont(new Font("System", 12));
+					labelVersion.setFont(new Font("System", 12));
+					labelContactanos.setFont(new Font("System", 12));
+					labelPerfil.setFont(new Font("System", 12));
+					labelConfiguracion.setFont(new Font("System", 12));
+					labelBuscar.setFont(new Font("System", 12));
+					labelBuscarFecha.setFont(new Font("System", 12));
+					labelAcercaDe.setFont(new Font("System", 12));
+					labelCamNombre.setFont(new Font("System", 12));
+					labelCamContr.setFont(new Font("System", 12));
+					labelCamCorreo.setFont(new Font("System", 12));
+					labelOpSesion.setFont(new Font("System", 12));
+					labelCerrarSesion.setFont(new Font("System", 12));
+					labelCambiarSesion.setFont(new Font("System", 12));
+					// Cambia el color a negro de la fuente original que desees
+					labelModo.setTextFill(Color.BLACK);
+					labelFuente.setTextFill(Color.BLACK);
+					labelDiseño.setTextFill(Color.BLACK);
+					labelIdioma.setTextFill(Color.BLACK);
+					labelNotificaciones.setTextFill(Color.BLACK);
+					labelApariencia.setTextFill(Color.BLACK);
+					labelAyuda.setTextFill(Color.BLACK);
+					labelActualizaciones.setTextFill(Color.BLACK);
+					labelNosotros.setTextFill(Color.BLACK);
+					labelVersion.setTextFill(Color.BLACK);
+					labelContactanos.setTextFill(Color.BLACK);
+					labelPerfil.setTextFill(Color.BLACK);
+					labelConfiguracion.setTextFill(Color.BLACK);
+					labelBuscar.setTextFill(Color.BLACK);
+					labelBuscarFecha.setTextFill(Color.BLACK);
+					labelAcercaDe.setTextFill(Color.BLACK);
+					labelCamNombre.setTextFill(Color.BLACK);
+					labelCamContr.setTextFill(Color.BLACK);
+					labelCamCorreo.setTextFill(Color.BLACK);
+					labelOpSesion.setTextFill(Color.BLACK);
+					labelCerrarSesion.setTextFill(Color.BLACK);
+					labelCambiarSesion.setTextFill(Color.BLACK);
+
+					isidioma[0] = false;
+				} else {
+					// Si el texto no está ampliado, aumenta el tamaño de la fuente
+					// Cambia a 20 el tamaño de fuente ampliado que desees
+					labelModo.setText("Way");
+					labelFuente.setText("Fountain");
+					labelDiseño.setText("Design");
+					labelIdioma.setText("Language");
+					labelNotificaciones.setText("Notifications");
+					labelApariencia.setText("Appearance");
+					labelAyuda.setText("Help");
+					labelActualizaciones.setText("Updates");
+					labelNosotros.setText("Us");
+					labelVersion.setText("Version");
+					labelContactanos.setText("Contact us");
+					labelPerfil.setText("Profile");
+					labelConfiguracion.setText("Setting");
+					labelBuscar.setText("Search");
+					labelBuscarFecha.setText("Search date");
+					labelAcercaDe.setText("About");
+					labelCamNombre.setText("Rename");
+					labelCamContr.setText("Change Password");
+					labelCamCorreo.setText("Change email");
+					labelOpSesion.setText("Session options");
+					labelCerrarSesion.setText("Sign off");
+					labelCambiarSesion.setText("ChangeSessions");
+					// Cambia el color a negro de la fuente original que desees
+					labelModo.setTextFill(Color.BLACK);
+					labelFuente.setTextFill(Color.BLACK);
+					labelDiseño.setTextFill(Color.BLACK);
+					labelIdioma.setTextFill(Color.BLACK);
+					labelNotificaciones.setTextFill(Color.BLACK);
+					labelApariencia.setTextFill(Color.BLACK);
+					labelAyuda.setTextFill(Color.BLACK);
+					labelActualizaciones.setTextFill(Color.BLACK);
+					labelNosotros.setTextFill(Color.BLACK);
+					labelVersion.setTextFill(Color.BLACK);
+					labelContactanos.setTextFill(Color.BLACK);
+					labelPerfil.setTextFill(Color.BLACK);
+					labelConfiguracion.setTextFill(Color.BLACK);
+					labelBuscar.setTextFill(Color.BLACK);
+					labelBuscarFecha.setTextFill(Color.BLACK);
+					labelAcercaDe.setTextFill(Color.BLACK);
+					labelCamNombre.setTextFill(Color.BLACK);
+					labelCamContr.setTextFill(Color.BLACK);
+					labelCamCorreo.setTextFill(Color.BLACK);
+					labelOpSesion.setTextFill(Color.BLACK);
+					labelCerrarSesion.setTextFill(Color.BLACK);
+					labelCambiarSesion.setTextFill(Color.BLACK);
+					isidioma[0] = true;
+				}
+
+				// Elimina el texto del CheckMenuItem
+				iModo.setText("");
+				iFuente.setText("");
+				iDiseño.setText("");
+				mIdioma.setText("");
+				iNotificaciones.setText("");
+				mApariencia.setText("");
+				mAyuda.setText("");
+				iActualizaciones.setText("");
+				iNosotros.setText("");
+				iVersion.setText("");
+				iContactanos.setText("");
+				mPerfil.setText("");
+				mConfig.setText("");
+				mBuscar.setText("");
+				iBuscarFecha.setText("");
+				mAcercaDe.setText("");
+				iCambiarNombre.setText("");
+				iCambiarPass.setText("");
+				iCambiarCorreo.setText("");
+				mOpcSesion.setText("");
+				iCerrarSesion.setText("");
+				iCambiarSesion.setText("");
+				// Establece el label como el gráfico del CheckMenuItem
+				iModo.setGraphic(labelModo);
+				iFuente.setGraphic(labelFuente);
+				iDiseño.setGraphic(labelDiseño);
+				mIdioma.setGraphic(labelIdioma);
+				iNotificaciones.setGraphic(labelNotificaciones);
+				mApariencia.setGraphic(labelApariencia);
+				mAyuda.setGraphic(labelAyuda);
+				iActualizaciones.setGraphic(labelActualizaciones);
+				iNosotros.setGraphic(labelNosotros);
+				iVersion.setGraphic(labelVersion);
+				iContactanos.setGraphic(labelContactanos);
+				mPerfil.setGraphic(labelPerfil);
+				mConfig.setGraphic(labelConfiguracion);
+				mBuscar.setGraphic(labelBuscar);
+				iBuscarFecha.setGraphic(labelBuscarFecha);
+				mAcercaDe.setGraphic(labelBuscarFecha);
+				iCambiarNombre.setGraphic(labelCamNombre);
+				iCambiarPass.setGraphic(labelCamContr);
+				iCambiarCorreo.setGraphic(labelCamCorreo);
+				mOpcSesion.setGraphic(labelOpSesion);
+				iCerrarSesion.setGraphic(labelCerrarSesion);
+				iCambiarSesion.setGraphic(labelCambiarSesion);
+				OpcionesDO opciones = new OpcionesDO();
+				opciones.setIdioma(isidioma[0] ? 1 : 0);
+				// Obtener la conexión a la base de datos
+				Connection con = UtilsBD.conectarBD();
+				// Llamar a la función para cambiar el idioma en la base de datos
+				int numAff = OpcionesDAO.cambiarIdioma(opciones, con);
+				// Comprobar si la actualización fue exitosa
+				if (numAff > 0) {
+					System.out.println("Idioma actualizado con éxito.");
+				} else {
+					System.out.println("Error al actualizar el idioma.");
+				}
+			}
+		});
+
+		final boolean[] isEnlarged = { false };
+		iFuente.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// Crea un nuevo label
+				Label labelModo = new Label("Modo");
+				Label labelFuente = new Label("Fuente");
+				Label labelDiseño = new Label("Diseño");
+				Label labelIdioma = new Label("Idioma");
+				Label labelNotificaciones = new Label("Notificaciones");
+				Label labelApariencia = new Label("Apariencia");
+				Label labelAyuda = new Label("Ayuda");
+				Label labelActualizaciones = new Label("Actualizaciones");
+				Label labelNosotros = new Label("Nosotros");
+				Label labelVersion = new Label("Version");
+				Label labelContactanos = new Label("Contactanos");
+				Label labelPerfil = new Label("Perfil");
+				Label labelConfiguracion = new Label("Configuracion");
+				Label labelBuscar = new Label("Buscar");
+				Label labelBuscarFecha = new Label("Buscar Fecha");
+				Label labelAcercaDe = new Label("Acerca de");
+				Label labelCamNombre = new Label("Cambiar Nombre de Perfil");
+				Label labelCamContr = new Label("Cambiar Contraseña");
+				Label labelCamCorreo = new Label("Cambiar Correo");
+				Label labelOpSesion = new Label("Opciones de Sesión");
+				Label labelCerrarSesion = new Label("Cerrar Sesión");
+				Label labelCambiarSesion = new Label("Cambiar Sesión");
+
+				// Comprueba si el texto está actualmente ampliado
+				if (isEnlarged[0]) {
+					// Si el texto está ampliado, restablece el tamaño de la fuente al tamaño
+					// original
+					// Cambia a 12 el tamaño de fuente original que desees
+					labelModo.setFont(new Font("System", 12));
+					labelFuente.setFont(new Font("System", 12));
+					labelDiseño.setFont(new Font("System", 12));
+					labelIdioma.setFont(new Font("System", 12));
+					labelNotificaciones.setFont(new Font("System", 12));
+					labelApariencia.setFont(new Font("System", 12));
+					labelAyuda.setFont(new Font("System", 12));
+					labelActualizaciones.setFont(new Font("System", 12));
+					labelNosotros.setFont(new Font("System", 12));
+					labelVersion.setFont(new Font("System", 12));
+					labelContactanos.setFont(new Font("System", 12));
+					labelPerfil.setFont(new Font("System", 12));
+					labelConfiguracion.setFont(new Font("System", 12));
+					labelBuscar.setFont(new Font("System", 12));
+					labelBuscarFecha.setFont(new Font("System", 12));
+					labelAcercaDe.setFont(new Font("System", 12));
+					labelCamNombre.setFont(new Font("System", 12));
+					labelCamContr.setFont(new Font("System", 12));
+					labelCamCorreo.setFont(new Font("System", 12));
+					labelOpSesion.setFont(new Font("System", 12));
+					labelCerrarSesion.setFont(new Font("System", 12));
+					labelCambiarSesion.setFont(new Font("System", 12));
+					// Cambia el color a negro de la fuente original que desees
+					labelModo.setTextFill(Color.BLACK);
+					labelFuente.setTextFill(Color.BLACK);
+					labelDiseño.setTextFill(Color.BLACK);
+					labelIdioma.setTextFill(Color.BLACK);
+					labelNotificaciones.setTextFill(Color.BLACK);
+					labelApariencia.setTextFill(Color.BLACK);
+					labelAyuda.setTextFill(Color.BLACK);
+					labelActualizaciones.setTextFill(Color.BLACK);
+					labelNosotros.setTextFill(Color.BLACK);
+					labelVersion.setTextFill(Color.BLACK);
+					labelContactanos.setTextFill(Color.BLACK);
+					labelPerfil.setTextFill(Color.BLACK);
+					labelConfiguracion.setTextFill(Color.BLACK);
+					labelBuscar.setTextFill(Color.BLACK);
+					labelBuscarFecha.setTextFill(Color.BLACK);
+					labelAcercaDe.setTextFill(Color.BLACK);
+					labelCamNombre.setTextFill(Color.BLACK);
+					labelCamContr.setTextFill(Color.BLACK);
+					labelCamCorreo.setTextFill(Color.BLACK);
+					labelOpSesion.setTextFill(Color.BLACK);
+					labelCerrarSesion.setTextFill(Color.BLACK);
+					labelCambiarSesion.setTextFill(Color.BLACK);
+
+					isEnlarged[0] = false;
+				} else {
+					// Si el texto no está ampliado, aumenta el tamaño de la fuente
+					// Cambia a 20 el tamaño de fuente ampliado que desees
+					labelModo.setFont(new Font("System", 20));
+					labelFuente.setFont(new Font("System", 20));
+					labelDiseño.setFont(new Font("System", 20));
+					labelIdioma.setFont(new Font("System", 20));
+					labelNotificaciones.setFont(new Font("System", 20));
+					labelApariencia.setFont(new Font("System", 20));
+					labelAyuda.setFont(new Font("System", 20));
+					labelActualizaciones.setFont(new Font("System", 20));
+					labelNosotros.setFont(new Font("System", 20));
+					labelVersion.setFont(new Font("System", 20));
+					labelContactanos.setFont(new Font("System", 20));
+					labelPerfil.setFont(new Font("System", 20));
+					labelConfiguracion.setFont(new Font("System", 20));
+					labelBuscar.setFont(new Font("System", 20));
+					labelBuscarFecha.setFont(new Font("System", 20));
+					labelAcercaDe.setFont(new Font("System", 20));
+					labelCamNombre.setFont(new Font("System", 20));
+					labelCamContr.setFont(new Font("System", 20));
+					labelCamCorreo.setFont(new Font("System", 20));
+					labelOpSesion.setFont(new Font("System", 20));
+					labelCerrarSesion.setFont(new Font("System", 20));
+					labelCambiarSesion.setFont(new Font("System", 20));
+					// Cambia el color a negro de la fuente original que desees
+					labelModo.setTextFill(Color.BLACK);
+					labelFuente.setTextFill(Color.BLACK);
+					labelDiseño.setTextFill(Color.BLACK);
+					labelIdioma.setTextFill(Color.BLACK);
+					labelNotificaciones.setTextFill(Color.BLACK);
+					labelApariencia.setTextFill(Color.BLACK);
+					labelAyuda.setTextFill(Color.BLACK);
+					labelActualizaciones.setTextFill(Color.BLACK);
+					labelNosotros.setTextFill(Color.BLACK);
+					labelVersion.setTextFill(Color.BLACK);
+					labelContactanos.setTextFill(Color.BLACK);
+					labelPerfil.setTextFill(Color.BLACK);
+					labelConfiguracion.setTextFill(Color.BLACK);
+					labelBuscar.setTextFill(Color.BLACK);
+					labelBuscarFecha.setTextFill(Color.BLACK);
+					labelAcercaDe.setTextFill(Color.BLACK);
+					labelCamNombre.setTextFill(Color.BLACK);
+					labelCamContr.setTextFill(Color.BLACK);
+					labelCamCorreo.setTextFill(Color.BLACK);
+					labelOpSesion.setTextFill(Color.BLACK);
+					labelCerrarSesion.setTextFill(Color.BLACK);
+					labelCambiarSesion.setTextFill(Color.BLACK);
+					isEnlarged[0] = true;
+				}
+
+				// Elimina el texto del CheckMenuItem
+				iModo.setText("");
+				iFuente.setText("");
+				iDiseño.setText("");
+				mIdioma.setText("");
+				iNotificaciones.setText("");
+				mApariencia.setText("");
+				mAyuda.setText("");
+				iActualizaciones.setText("");
+				iNosotros.setText("");
+				iVersion.setText("");
+				iContactanos.setText("");
+				mPerfil.setText("");
+				mConfig.setText("");
+				mBuscar.setText("");
+				iBuscarFecha.setText("");
+				mAcercaDe.setText("");
+				iCambiarNombre.setText("");
+				iCambiarPass.setText("");
+				iCambiarCorreo.setText("");
+				mOpcSesion.setText("");
+				iCerrarSesion.setText("");
+				iCambiarSesion.setText("");
+				// Establece el label como el gráfico del CheckMenuItem
+				iModo.setGraphic(labelModo);
+				iFuente.setGraphic(labelFuente);
+				iDiseño.setGraphic(labelDiseño);
+				mIdioma.setGraphic(labelIdioma);
+				iNotificaciones.setGraphic(labelNotificaciones);
+				mApariencia.setGraphic(labelApariencia);
+				mAyuda.setGraphic(labelAyuda);
+				iActualizaciones.setGraphic(labelActualizaciones);
+				iNosotros.setGraphic(labelNosotros);
+				iVersion.setGraphic(labelVersion);
+				iContactanos.setGraphic(labelContactanos);
+				mPerfil.setGraphic(labelPerfil);
+				mConfig.setGraphic(labelConfiguracion);
+				mBuscar.setGraphic(labelBuscar);
+				iBuscarFecha.setGraphic(labelBuscarFecha);
+				mAcercaDe.setGraphic(labelBuscarFecha);
+				iCambiarNombre.setGraphic(labelCamNombre);
+				iCambiarPass.setGraphic(labelCamContr);
+				iCambiarCorreo.setGraphic(labelCamCorreo);
+				mOpcSesion.setGraphic(labelOpSesion);
+				iCerrarSesion.setGraphic(labelCerrarSesion);
+				iCambiarSesion.setGraphic(labelCambiarSesion);
+			}
+		});
 
 		/************** ESCENA ****************/
 		try {
@@ -816,6 +1214,7 @@ public class App extends Application {
 				System.out.println(directorioSeleccionado);
 
 				ImagenDAO.descargarImagen(imagen, directorioSeleccionado);
+				NotificacionesDAO.mostrarNotificacion(NotificacionesDAO.getNotificaciones(con, 3).getMensaje());
 			});
 
 			pnlVisualizarImg.marcar.setOnAction(e -> {
