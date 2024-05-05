@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import application.model.CalendarioDAO;
 import application.model.CategoriaDAO;
@@ -18,6 +20,7 @@ import application.model.OpcionesDAO;
 import application.model.UsuarioDAO;
 import application.utils.UtilsBD;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -25,6 +28,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -33,6 +37,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -145,7 +150,17 @@ public class App extends Application {
 
 		CheckMenuItem iModo = new CheckMenuItem("Modo");
 
-		MenuItem iFuente = new MenuItem("Fuente");
+		MenuItem iFuente = new MenuItem(" Mas Fuente");
+		Stage stage1 = new Stage();
+		
+		iFuente.setOnAction(e -> {
+		    // Aumenta el tamaño de la escena
+		    double nuevoAncho = stage1.getWidth() + 150; // Aumenta el ancho en 10
+		    double nuevoAlto = stage1.getHeight() + 150; // Aumenta el alto en 10
+		    stage1.setWidth(nuevoAncho);
+		    stage1.setHeight(nuevoAlto);
+		});
+
 		MenuItem iDiseño = new MenuItem("Diseño");
 
 		// Menú mAyuda
@@ -208,7 +223,7 @@ public class App extends Application {
 
 		mOpcSesion.getItems().addAll(iCerrarSesion, iCambiarSesion);
 		mIdioma.getItems().addAll(iEspanol, iIngles);
-		mApariencia.getItems().addAll(iModo, iFuente, iDiseño);
+		mApariencia.getItems().addAll(iModo, iFuente,iDiseño);
 		mAcercaDe.getItems().addAll(iVersion, iNosotros, iActualizaciones);
 
 		// Agregamos los menús al MenuBar
@@ -223,13 +238,13 @@ public class App extends Application {
 		Button marcados = new Button("Marcados");
 
 		marcados.setOnAction(e -> {
-			abrirVentanaVisualizarMarcados(stage, con);
+			abrirVentanaVisualizarMarcados(stage1, con);
 		});
 
 		Button subirFoto = new Button("Subir foto");
 
 		subirFoto.setOnAction(e -> {
-			abrirVentanaSubirImagen(stage, con);
+			abrirVentanaSubirImagen(stage1, con);
 		});
 
 		Button bajarFoto = new Button("Descargar foto");
@@ -265,7 +280,7 @@ public class App extends Application {
 		/************** ESCENA ****************/
 		try {
 			Image icon = new Image(new FileInputStream("img\\favicon.png"));
-			stage.getIcons().add(icon);
+			stage1.getIcons().add(icon);
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -301,17 +316,18 @@ public class App extends Application {
 		            e.printStackTrace();
 		        }
 		    }
-		    // Forzar a JavaFX a recalcular el diseño de la vista
-		    pnlDistribucion.layout();
+		    // Forzar a JavaFX a recalcular el diseño de la vista en el hilo de la interfaz de usuario
+		    Platform.runLater(() -> pnlDistribucion.layout());
 		});
 
 
 
-		stage.setScene(scene);
 
-		stage.show();
+		stage1.setScene(scene);
 
-		abrirVentanaFormulario(stage, con, mesAnterior, mesPosterior, pnlDistribucion);
+		stage1.show();
+
+		abrirVentanaFormulario(stage1, con, mesAnterior, mesPosterior, pnlDistribucion);
 	}
 
 	/**
