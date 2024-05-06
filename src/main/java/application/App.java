@@ -756,6 +756,8 @@ public class App extends Application {
 
 		stage1.show();
 
+		stage1.setResizable(false);
+
 		abrirVentanaFormulario(stage1, con, mesAnterior, mesPosterior, pnlDistribucion);
 	}
 
@@ -1490,11 +1492,14 @@ public class App extends Application {
 	}
 
 	public static void abrirCamara() {
+		Connection con = UtilsBD.conectarBD();
+
 		try {
 			ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", "start microsoft.windows.camera:");
 			processBuilder.start();
 		} catch (IOException exp) {
 			System.out.println("No se ha encontrado una cámara");
+			NotificacionesDAO.mostrarNotificacion(NotificacionesDAO.getNotificaciones(con, 7).getMensaje());
 		}
 	}
 

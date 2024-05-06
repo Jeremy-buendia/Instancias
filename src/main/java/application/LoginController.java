@@ -96,7 +96,26 @@ public class LoginController {
 				// Aquí puedes abrir la siguiente ventana
 			} else {
 				// Si la contraseña es incorrecta, mostrar un mensaje de error
-				NotificacionesDAO.mostrarNotificacion(NotificacionesDAO.getNotificaciones(con, 5).getMensaje());
+				Stage stage = new Stage();
+				stage.initModality(Modality.APPLICATION_MODAL);
+				stage.setResizable(false);
+
+				Label label = new Label("Inicio de sesión incorrecto");
+				label.setStyle("-fx-font-size: 14;");
+				VBox root = new VBox(label);
+				root.setAlignment(Pos.CENTER);
+				root.setSpacing(10);
+
+				Scene scene = new Scene(root, 300, 100);
+				stage.setScene(scene);
+				stage.setTitle("Notificación");
+
+				// Configurar el temporizador para cerrar la ventana después de 5 segundos
+				PauseTransition delay = new PauseTransition(Duration.seconds(1));
+				delay.setOnFinished(e -> stage.close());
+				delay.play();
+
+				stage.show();
 				System.out.println("Contraseña incorrecta. Por favor, inténtelo de nuevo.");
 			}
 		} else {

@@ -117,7 +117,7 @@ public class NotificacionesDAO {
 						+ "(1, 1, 'Bienvenido'), " + "(2, 2, 'Has subido una foto'), "
 						+ "(3, 3, 'Se ha descargado correctamente')," + "(4, 4, 'No hay fotos de este día'),"
 						+ "(5, 5, 'Inicio incorrecto'),"
-						+ "(6, 6, 'Correo ya registrado'), (7, 7, 'No tienes imagenes marcadas')";
+						+ "(6, 6, 'Correo ya registrado'), (7, 7, 'No tienes imagenes marcadas'), (8, 8, 'Este dispositivo ni tiene cámara')";
 				PreparedStatement pstmt = con.prepareStatement(sql);
 
 				// Ejecutar la consulta
