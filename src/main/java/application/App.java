@@ -90,7 +90,7 @@ public class App extends Application {
 		MenuItem iCambiarPass = new MenuItem("Cambiar Contraseña");
 
 		iCambiarPass.setOnAction(e -> {
-			cambiarContraseña(stage);
+			cambiarContrasena(stage);
 		});
 
 		MenuItem iCambiarCorreo = new MenuItem("Cambiar Correo");
@@ -1373,7 +1373,7 @@ public class App extends Application {
 
 	}
 
-	public static void cambiarContraseña(Stage primaryStage) {
+	public static void cambiarContrasena(Stage primaryStage) {
 		Connection con = UtilsBD.conectarBD();
 		// Crear los elementos de la ventana modal
 		Label lblNuevaContraseña = new Label("Nueva Contraseña:");
