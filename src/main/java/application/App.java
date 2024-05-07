@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -212,6 +214,17 @@ public class App extends Application {
 			alert.setContentText("Version: 0.1.0");
 			alert.showAndWait();
 		});
+
+		MenuItem iGithub = new MenuItem("Github");
+
+		iGithub.setOnAction(e -> {
+			try {
+				Desktop.getDesktop().browse(new URI("https://github.com/Jeremy-buendia/Instancias"));
+			} catch (IOException | URISyntaxException e2) {
+				e2.printStackTrace();
+			}
+		});
+
 		MenuItem iNosotros = new MenuItem("Nosotros");
 		iNosotros.setOnAction(event -> {
 			Alert alert = new Alert(AlertType.INFORMATION);
@@ -240,9 +253,9 @@ public class App extends Application {
 			alert.showAndWait();
 		});
 
-		MenuItem iInstancias = new MenuItem("Instancias");
+		MenuItem iManual = new MenuItem("Instancias");
 
-		iInstancias.setOnAction(e -> {
+		iManual.setOnAction(e -> {
 			VBox panel = new VBox();
 			Stage ventanaEmergente = new Stage();
 
@@ -283,7 +296,7 @@ public class App extends Application {
 		mOpcSesion.getItems().addAll(iCerrarSesion, iCambiarSesion);
 		mIdioma.getItems().addAll(iEspanol, iIngles);
 		mApariencia.getItems().addAll(iModo, iFuente, iDiseno);
-		mAcercaDe.getItems().addAll(iVersion, iNosotros, iActualizaciones, iInstancias);
+		mAcercaDe.getItems().addAll(iVersion, iNosotros, iActualizaciones, iManual, iGithub);
 
 		// Agregamos los menús al MenuBar
 		menuSuperior.getMenus().addAll(mPerfil, mBuscar, mConfig, mAyuda);
