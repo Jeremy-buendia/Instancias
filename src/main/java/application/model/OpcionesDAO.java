@@ -7,8 +7,14 @@ import java.sql.SQLException;
 
 public class OpcionesDAO {
 
-	// Función activarNotificaciones: la función activará y desactivará las
-	// notificaciones.
+	/**
+	 * La función activará y desactivará las notificaciones.
+	 * 
+	 * @param idUsuario
+	 * @param activo
+	 * @param con
+	 * @return Numero de filas afectadas o -1
+	 */
 	public static int activarNotificaciones(int idUsuario, int activo, Connection con) {
 		try {
 			boolean campoPrevio = false;
@@ -48,8 +54,14 @@ public class OpcionesDAO {
 		}
 	}
 
-	// Función cambiarModo: la función cambiará el modo (claro u oscuro) de la
-	// aplicación.
+	/**
+	 * la función cambiará el modo (claro u oscuro) de la aplicación.
+	 * 
+	 * @param idUsuario
+	 * @param modo
+	 * @param con
+	 * @return Filas afectadas o 0
+	 */
 	public static int cambiarModo(int idUsuario, int modo, Connection con) {
 		try {
 			boolean campoPrevio = false;
@@ -104,8 +116,14 @@ public class OpcionesDAO {
 		}
 	}
 
-	// Función cambiarDiseño: la función cambiará el diseño de la aplicación.
-	public static int cambiarDiseño(OpcionesDO diseño, Connection con) {
+	/**
+	 * La función cambiará el diseño de la aplicación.
+	 * 
+	 * @param diseno
+	 * @param con
+	 * @return Filas afectadas o -1
+	 */
+	public static int cambiarDiseno(OpcionesDO diseno, Connection con) {
 		try {
 
 			boolean campoPrevio = false;
@@ -113,10 +131,10 @@ public class OpcionesDAO {
 			String query = "UPDATE OPCIONES SET ";
 
 			// Si los campos no son nulos, los vamos añadiendo a la sentencia
-			if (diseño.getDiseño() != -1) {
-				if (diseño.getDiseño() == 0) {
+			if (diseno.getDiseno() != -1) {
+				if (diseno.getDiseno() == 0) {
 					query = query + "Diseño = 'Predeterminado'";
-				} else if (diseño.getDiseño() == 1) {
+				} else if (diseno.getDiseno() == 1) {
 					query = query + "Diseño = 'ampliar'";
 				}
 				campoPrevio = true;
@@ -136,8 +154,8 @@ public class OpcionesDAO {
 			// Si los campos no son nulos, los vamos
 			// añadiendo a la sentencia
 
-			if (diseño.getDiseño() != -1) {
-				pstmt.setInt(posInterrogacion, diseño.getDiseño());
+			if (diseno.getDiseno() != -1) {
+				pstmt.setInt(posInterrogacion, diseno.getDiseno());
 				// Incrementamos la posicion de la
 				// interrogacion para
 				// El siguiente posible campo
@@ -145,7 +163,7 @@ public class OpcionesDAO {
 
 			}
 
-			pstmt.setInt(posInterrogacion, diseño.getIdOpciones());
+			pstmt.setInt(posInterrogacion, diseno.getIdOpciones());
 
 			if (campoPrevio) {
 
@@ -163,8 +181,13 @@ public class OpcionesDAO {
 		}
 	}
 
-	// Función cambiarIdioma: la función cambiará el idioma (español o inglés) de la
-	// aplicación.
+	/**
+	 * La función cambiará el idioma (español o inglés) de la aplicación.
+	 * 
+	 * @param idioma
+	 * @param con
+	 * @return Filas afectadas o 0
+	 */
 
 	public static int cambiarIdioma(OpcionesDO idioma, Connection con) {
 		try {
@@ -208,6 +231,13 @@ public class OpcionesDAO {
 		}
 	}
 
+	/**
+	 * Función que cambia el tamaño de la fuente en la BD
+	 * 
+	 * @param Fuente
+	 * @param con
+	 * @return Filas afectadas o 0
+	 */
 	public static int cambiarFuente(OpcionesDO Fuente, Connection con) {
 		try {
 
@@ -268,6 +298,12 @@ public class OpcionesDAO {
 		}
 	}
 
+	/**
+	 * Función que inserta opciones predeterminadas en la BD vinculadas a un usuario
+	 * 
+	 * @param id
+	 * @param con
+	 */
 	public void crearOpcionesPredeterminadas(int id, Connection con) {
 
 		// Inserta las opciones predeterminadas
@@ -303,7 +339,7 @@ public class OpcionesDAO {
 				opciones.setModo(rs.getInt("Modo"));
 				opciones.setNotificaciones(rs.getInt("Notificaciones"));
 				opciones.setFuente(rs.getInt("Fuente"));
-				opciones.setDiseño(rs.getInt("Diseño"));
+				opciones.setDiseno(rs.getInt("Diseño"));
 				opciones.setUsusario_idUsuario(rs.getInt("Usuario_idUsuario"));
 				return opciones;
 			}

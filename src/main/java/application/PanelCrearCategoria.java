@@ -9,6 +9,9 @@ public class PanelCrearCategoria extends VBox {
 	TextField nombreCategoria;
 	Button crear;
 
+	/**
+	 * Constructor de PanelCrearCategoria
+	 */
 	PanelCrearCategoria() {
 		nombreCategoria = new TextField();
 		crear = new Button("Crear");

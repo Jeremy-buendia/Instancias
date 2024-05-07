@@ -293,6 +293,13 @@ public class PanelLayoutBotones extends GridPane {
 
 	}
 
+	/**
+	 * Funcion que visualiza las imágenes del día seleccionado
+	 * 
+	 * @param stage
+	 * @param con
+	 * @param fechaDia
+	 */
 	public void abrirVentanaVisualizarImg(Stage stage, Connection con, LocalDate fechaDia) {
 		Stage ventanaEmergente = new Stage();
 		PanelVisualizarImagen pnlVisualizarImg = new PanelVisualizarImagen();

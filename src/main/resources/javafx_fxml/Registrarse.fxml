@@ -25,7 +25,7 @@
       <Label layoutX="169.0" layoutY="266.0" text="Correo" />
       <TextField fx:id="CcCorreo" layoutX="220.0" layoutY="262.0" prefHeight="25.0" prefWidth="301.0" />
       <Label layoutX="150.0" layoutY="306.0" text="Contraseña" />
-      <PasswordField fx:id="CcContraseña" layoutX="220.0" layoutY="302.0" prefHeight="25.0" prefWidth="301.0" />
+      <PasswordField fx:id="CcContrasena" layoutX="220.0" layoutY="302.0" prefHeight="25.0" prefWidth="301.0" />
       <Label layoutX="92.0" layoutY="344.0" text="Confirmar Contraseña" />
       <PasswordField fx:id="CcConfCont" layoutX="220.0" layoutY="340.0" prefHeight="25.0" prefWidth="301.0" />
       <CheckBox fx:id="Terminos" layoutX="237.0" layoutY="380.0" mnemonicParsing="false" text="Acepto los Términos y Servicios" />

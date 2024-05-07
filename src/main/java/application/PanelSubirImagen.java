@@ -15,6 +15,9 @@ public class PanelSubirImagen extends VBox {
 	public FileChooser escogerImagen;
 	public Button btnEscogerImg;
 
+	/**
+	 * Constructor del PanelSubirImagen
+	 */
 	public PanelSubirImagen() {
 		/******* ELEMENTOS *******/
 		Label lblDescripcionImg = new Label("Descripción: ");

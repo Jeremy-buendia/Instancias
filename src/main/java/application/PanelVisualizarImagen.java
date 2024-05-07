@@ -28,6 +28,9 @@ public class PanelVisualizarImagen extends BorderPane {
 
 	// int idFoto;
 
+	/**
+	 * Constructor del PanelVisualizarImagen
+	 */
 	PanelVisualizarImagen() {
 		Connection con = UtilsBD.conectarBD();
 

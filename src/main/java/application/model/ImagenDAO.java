@@ -66,6 +66,13 @@ public class ImagenDAO {
 		}
 	}
 
+	/**
+	 * Función que copia una imagen en la carpeta de la App
+	 * 
+	 * @param imagen
+	 * @param objetoImg
+	 * @return
+	 */
 	public static int copiarImagen(File imagen, ImagenDO objetoImg) {
 		try {
 			FileInputStream fis = new FileInputStream(imagen);
@@ -127,7 +134,7 @@ public class ImagenDAO {
 	 * 
 	 * @param imagen
 	 * @param directorio
-	 * @return
+	 * @return 0 o -1
 	 */
 	public static int descargarImagen(File imagen, File directorio) {
 		try {
@@ -174,6 +181,12 @@ public class ImagenDAO {
 		return -1;
 	}
 
+	/**
+	 * Función que busca si la carpeta de la App está creada
+	 * 
+	 * @param con
+	 * @return 0 o -1
+	 */
 	public static int BuscarCarpetaSinImg(Connection con) {
 		String rutaCarpeta = System.getProperty("user.home") + "\\Pictures\\Instancias\\"
 				+ UsuarioDAO.cargarCorreo(con, LoginController.correoUsuario).getId();
@@ -223,6 +236,13 @@ public class ImagenDAO {
 		}
 	}
 
+	/**
+	 * Función que consigue la imagen de la BD por la ruta
+	 * 
+	 * @param con
+	 * @param ruta
+	 * @return
+	 */
 	public static ImagenDO getImagenPorRuta(Connection con, String ruta) {
 		try {
 			String query = "SELECT * FROM imagen WHERE ubicacion=?";
@@ -257,7 +277,7 @@ public class ImagenDAO {
 	 * 
 	 * @param con
 	 * @param fecha
-	 * @return
+	 * @return ArrayList con las rutas o null
 	 */
 	public static ArrayList<String> getDia(Connection con, LocalDate fecha) {
 		String query = "SELECT * FROM imagen WHERE Fecha_Imagen = ? AND Usuario_IdUsuario = ?";
@@ -280,6 +300,12 @@ public class ImagenDAO {
 
 	}
 
+	/**
+	 * Función que consigue las imagenes marcadas de la BD
+	 * 
+	 * @param con
+	 * @return ArrayList con las rutas o null
+	 */
 	public static ArrayList<String> getMarcados(Connection con) {
 		ArrayList<String> rutasCarpeta = new ArrayList<>();
 		String query = "SELECT * FROM imagen WHERE Marcado = 1 AND Usuario_IdUsuario = ?";
@@ -297,6 +323,13 @@ public class ImagenDAO {
 		}
 	}
 
+	/**
+	 * Función que mira en la BD si una imagen está marcada
+	 * 
+	 * @param con
+	 * @param rutaImagen
+	 * @return 1, 0 o -1
+	 */
 	public static int estaMarcado(Connection con, String rutaImagen) {
 		String query = "SELECT Marcado FROM imagen WHERE Ubicacion = ?";
 
@@ -320,6 +353,14 @@ public class ImagenDAO {
 
 	}
 
+	/**
+	 * Función que cambia el campo Marcado en la BD de una imagen
+	 * 
+	 * @param con
+	 * @param rutaImagen
+	 * @param marcar
+	 * @return 0 o -1
+	 */
 	public static int cambiarMarcado(Connection con, String rutaImagen, int marcar) {
 		String query = "UPDATE imagen SET marcado = ? WHERE Ubicacion = ?";
 
@@ -341,7 +382,13 @@ public class ImagenDAO {
 		}
 	}
 
-	// remover imagen de la carpeta y la base de datos provisional necesito revisar
+	/**
+	 * remover imagen de la carpeta y la base de datos provisional necesito revisar
+	 * 
+	 * @param con
+	 * @param imagen
+	 * @return 0 o -1
+	 */
 	public static int eliminarImagen(Connection con, ImagenDO imagen) {
 		try {
 			// Obtener la ubicación de la imagen
@@ -388,6 +435,13 @@ public class ImagenDAO {
 		}
 	}
 
+	/**
+	 * Función que recibe el máximo id de imagen de un usuario
+	 * 
+	 * @param con
+	 * @param idUsuario
+	 * @return el Id de la imagen o -1
+	 */
 	public static int getMaxImg(Connection con, int idUsuario) {
 		String query = "SELECT MAX(idImagen) FROM imagen WHERE Usuario_IdUsuario = ?";
 

@@ -12,7 +12,7 @@ public class UsuarioDAO {
 	 * Funcion que nos muestra al informacion del usuario con la id introducida
 	 * 
 	 * @param con
-	 * @param idUsuario
+	 * @param correo
 	 * @return los datos del usuario
 	 */
 	public static UsuarioDO cargarId(Connection con, String correo) {
@@ -89,10 +89,10 @@ public class UsuarioDAO {
 	 * 
 	 * @param con
 	 * @param correo
-	 * @param contraseña
-	 * @return
+	 * @param contrasena
+	 * @return true o false
 	 */
-	public static boolean verificarContraseña(Connection con, String correo, String contraseña) {
+	public static boolean verificarContrasena(Connection con, String correo, String contrasena) {
 		try {
 			// Obtener el usuario correspondiente al correo proporcionado
 			UsuarioDO usuario = cargarCorreo(con, correo);
@@ -105,7 +105,7 @@ public class UsuarioDAO {
 
 			// Verificar si la contraseña proporcionada coincide con la contraseña
 			// almacenada en la base de datos
-			if (usuario.getContraseña().equals(contraseña)) {
+			if (usuario.getContrasena().equals(contrasena)) {
 				return true;
 			}
 			return false;
@@ -153,7 +153,7 @@ public class UsuarioDAO {
 	 * Funcion que crea el usuario y lo añade a la base de datos
 	 * 
 	 * @param con
-	 * @param usuarioDO
+	 * @param usuario
 	 * @return 0 éxito -1 si hay fallo
 	 */
 	public static int crearUsuario(Connection con, UsuarioDO usuario) {
@@ -165,7 +165,7 @@ public class UsuarioDAO {
 			pstmt.setString(1, usuario.getNombre());
 			pstmt.setString(2, usuario.getApellido());
 			pstmt.setString(3, usuario.getCorreo());
-			pstmt.setString(4, usuario.getContraseña());
+			pstmt.setString(4, usuario.getContrasena());
 
 			pstmt.executeUpdate();
 
@@ -194,14 +194,14 @@ public class UsuarioDAO {
 	 * 
 	 * @param con
 	 * @param correo
-	 * @param nuevaContraseña
+	 * @param nuevaContrasena
 	 * @return filas actualizadas o -1
 	 */
-	public static int actualizarContraseña(Connection con, String correo, String nuevaContraseña) {
+	public static int actualizarContrasena(Connection con, String correo, String nuevaContrasena) {
 		try {
 			String queryUpdate = "UPDATE usuario SET contraseña = ? WHERE correo = ?";
 			PreparedStatement pstmt = con.prepareStatement(queryUpdate);
-			pstmt.setString(1, nuevaContraseña);
+			pstmt.setString(1, nuevaContrasena);
 			pstmt.setString(2, correo);
 
 			int filasActualizadas = pstmt.executeUpdate();

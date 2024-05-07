@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
-
 import application.LoginController;
 import application.utils.UtilsBD;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -21,7 +20,11 @@ public class CalendarioDAO {
 
 	public static boolean calendarioInsertado = false;
 
-	// Método para buscar una fecha usando un DatePicker
+	/**
+	 * Método para buscar una fecha usando un DatePicker
+	 * 
+	 * @return LocalDate
+	 */
 	public static LocalDate buscarFecha() {
 		// Crear un nuevo DatePicker
 		DatePicker datePicker = new DatePicker();
@@ -76,63 +79,63 @@ public class CalendarioDAO {
 	// CALENDARIOS
 
 	public static ArrayList<String> getCalendario(int modo, Connection con) {
-	    if (!calendarioInsertado) {
-	        String query = "INSERT INTO calendario (Fecha, Imagen_Calendario, Usuario_idUsuario) VALUES(?, ?, ?)";
-	        try {
-	            // Creamos un PreparedStatement
-	            PreparedStatement pstmt = con.prepareStatement(query);
-	            // Asignamos los valores a los ?
-	            pstmt.setDate(1, Date.valueOf("2024-04-01"));
-	            // Dependiendo del modo, insertamos una imagen u otra
-	            if (modo == 1) {
-	                pstmt.setString(2, "img\\2024-04-oscuro.jpg");
-	            } else {
-	                pstmt.setString(2, "img\\2024-04.jpg");
-	            }
-	            pstmt.setInt(3, UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
-	            pstmt.executeUpdate();
-	            calendarioInsertado = true;
-	        } catch (SQLException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	        }
-	        try {
-	            // Creamos un PreparedStatement
-	            PreparedStatement pstmt = con.prepareStatement(query);
-	            // Asignamos los valores a los ?
-	            pstmt.setDate(1, Date.valueOf("2024-04-01"));
-	            // Dependiendo del modo, insertamos una imagen u otra
-	            if (modo == 1) {
-	                pstmt.setString(2, "img\\2024-05-oscuro.jpg");
-	            } else {
-	                pstmt.setString(2, "img\\2024-05.jpg");
-	            }
-	            pstmt.setInt(3, UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
-	            pstmt.executeUpdate();
-	            calendarioInsertado = true;
-	        } catch (SQLException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	        }
-	        try {
-	            // Creamos un PreparedStatement
-	            PreparedStatement pstmt = con.prepareStatement(query);
-	            // Asignamos los valores a los ?
-	            pstmt.setDate(1, Date.valueOf("2024-04-01"));
-	            // Dependiendo del modo, insertamos una imagen u otra
-	            if (modo == 1) {
-	                pstmt.setString(2, "img\\2024-06-oscuro.jpg");
-	            } else {
-	                pstmt.setString(2, "img\\2024-06.jpg");
-	            }
-	            pstmt.setInt(3, UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
-	            pstmt.executeUpdate();
-	            calendarioInsertado = true;
-	        } catch (SQLException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	        }
-	    }
+		if (!calendarioInsertado) {
+			String query = "INSERT INTO calendario (Fecha, Imagen_Calendario, Usuario_idUsuario) VALUES(?, ?, ?)";
+			try {
+				// Creamos un PreparedStatement
+				PreparedStatement pstmt = con.prepareStatement(query);
+				// Asignamos los valores a los ?
+				pstmt.setDate(1, Date.valueOf("2024-04-01"));
+				// Dependiendo del modo, insertamos una imagen u otra
+				if (modo == 1) {
+					pstmt.setString(2, "img\\2024-04-oscuro.jpg");
+				} else {
+					pstmt.setString(2, "img\\2024-04.jpg");
+				}
+				pstmt.setInt(3, UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
+				pstmt.executeUpdate();
+				calendarioInsertado = true;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				// Creamos un PreparedStatement
+				PreparedStatement pstmt = con.prepareStatement(query);
+				// Asignamos los valores a los ?
+				pstmt.setDate(1, Date.valueOf("2024-04-01"));
+				// Dependiendo del modo, insertamos una imagen u otra
+				if (modo == 1) {
+					pstmt.setString(2, "img\\2024-05-oscuro.jpg");
+				} else {
+					pstmt.setString(2, "img\\2024-05.jpg");
+				}
+				pstmt.setInt(3, UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
+				pstmt.executeUpdate();
+				calendarioInsertado = true;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				// Creamos un PreparedStatement
+				PreparedStatement pstmt = con.prepareStatement(query);
+				// Asignamos los valores a los ?
+				pstmt.setDate(1, Date.valueOf("2024-04-01"));
+				// Dependiendo del modo, insertamos una imagen u otra
+				if (modo == 1) {
+					pstmt.setString(2, "img\\2024-06-oscuro.jpg");
+				} else {
+					pstmt.setString(2, "img\\2024-06.jpg");
+				}
+				pstmt.setInt(3, UsuarioDAO.cargarId(con, LoginController.correoUsuario).getId());
+				pstmt.executeUpdate();
+				calendarioInsertado = true;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		ArrayList<String> rutasCarpeta = new ArrayList<>();
 		String query = "SELECT * FROM calendario WHERE Usuario_IdUsuario = ?";
 		try {

@@ -18,16 +18,6 @@ import javafx.util.Duration;
 
 public class NotificacionesDAO {
 
-	/**
-	 * LA mostarnotificacion2 no es modal y permite actuar sobre las otra sin
-	 * problam. pero se va directamente detras del la aplicacion por lo que es
-	 * dificil de notar. la segunda se ve claramente y permanece delante, pero no
-	 * podemos actuar sin cerrarla. ambas se cierran solas y podemos ajustar el
-	 * tiempo en la funcion. pongo las dos para que decidais cual es mejor usar.
-	 * 
-	 * @param mensaje
-	 */
-
 	public static void mostrarNotificacion2(String mensaje) {
 		Stage stage = new Stage();
 		stage.setResizable(false);
@@ -50,6 +40,11 @@ public class NotificacionesDAO {
 		stage.show();
 	}
 
+	/**
+	 * Función que muestra una Notificación
+	 * 
+	 * @param mensaje
+	 */
 	public static void mostrarNotificacion(String mensaje) {
 		Connection con = UtilsBD.conectarBD();
 
@@ -81,6 +76,13 @@ public class NotificacionesDAO {
 
 	}
 
+	/**
+	 * Función que consigue las notificaciones de la BD
+	 * 
+	 * @param con
+	 * @param idNotificaciones
+	 * @return NotificacionesDO o null
+	 */
 	public static NotificacionesDO getNotificaciones(Connection con, int idNotificaciones) {
 		String query = "SELECT * FROM notificaciones WHERE idNotificaciones = ?";
 
@@ -108,6 +110,11 @@ public class NotificacionesDAO {
 
 	}
 
+	/**
+	 * Función que inserta en la BD las notificaciones
+	 * 
+	 * @param con
+	 */
 	public static void insertarNotificaciones(Connection con) {
 		// Verificar si hay alguna notificación existente
 		if (!hayNotificaciones(con)) {
@@ -133,6 +140,12 @@ public class NotificacionesDAO {
 		}
 	}
 
+	/**
+	 * Función que revisa si las notificaciones han sido insertadas en la BD
+	 * 
+	 * @param con
+	 * @return true o false
+	 */
 	private static boolean hayNotificaciones(Connection con) {
 		boolean hayNotificaciones = false;
 		String query = "SELECT COUNT(*) AS total FROM notificaciones";

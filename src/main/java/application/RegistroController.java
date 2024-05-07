@@ -28,7 +28,7 @@ public class RegistroController {
 	private PasswordField CcConfCont;
 
 	@FXML
-	private PasswordField CcContraseña;
+	private PasswordField CcContrasena;
 
 	@FXML
 	private Button BttnCcConfi;
@@ -59,18 +59,18 @@ public class RegistroController {
 	    String nombreText = CcNombre.getText();
 	    String apellidoText = CcApellido.getText();
 	    String correoText = CcCorreo.getText();
-	    String contraseñaText = CcContraseña.getText();
-	    String ConfContraseñaText = CcConfCont.getText();
+	    String contrasenaText = CcContrasena.getText();
+	    String ConfContrasenaText = CcConfCont.getText();
 
 	    // Verificar si las contraseñas coinciden
-	    if (contraseñaText.equals(ConfContraseñaText)) {
+	    if (contrasenaText.equals(ConfContrasenaText)) {
 	        // Las contraseñas coinciden, hacer algo con los datos
 	        // Por ejemplo, puedes guardar los datos en un objeto UsuarioDO
 	        UsuarioDO usuario = new UsuarioDO();
 	        usuario.setNombre(nombreText);
 	        usuario.setApellido(apellidoText);
 	        usuario.setCorreo(correoText);
-	        usuario.setContraseña(contraseñaText);
+	        usuario.setContrasena(contrasenaText);
 
 	        Connection con = UtilsBD.conectarBD();
 	        // Llamar a una función para hacer algo con el usuario, como guardarlo en una

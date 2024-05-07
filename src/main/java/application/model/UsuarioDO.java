@@ -6,7 +6,7 @@ public class UsuarioDO {
 	private String nombre;
 	private String apellido;
 	private String correo;
-	private String contraseña;
+	private String contrasena;
 	
 	public int getId() {
 		return id;
@@ -32,19 +32,19 @@ public class UsuarioDO {
 	public void setCorreo(String correo) {
 		this.correo = correo;
 	}
-	public String getContraseña() {
-		return contraseña;
+	public String getContrasena() {
+		return contrasena;
 	}
-	public void setContraseña(String contraseña) {
-		this.contraseña = contraseña;
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
 	}
-	public UsuarioDO(int id, String nombre, String apellido, String correo, String contraseña) {
+	public UsuarioDO(int id, String nombre, String apellido, String correo, String contrasena) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.correo = correo;
-		this.contraseña = contraseña;
+		this.contrasena = contrasena;
 	}
 	public UsuarioDO() {
 		super();
@@ -53,7 +53,7 @@ public class UsuarioDO {
 	@Override
 	public String toString() {
 		return "UsuarioDO [id=" + id + ", nombre=" + nombre + ", apellido=" + apellido + ", correo=" + correo
-				+ ", contraseña=" + contraseña + "]";
+				+ ", contraseña=" + contrasena + "]";
 	}
 	
 }

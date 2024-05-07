@@ -6,7 +6,7 @@ public class OpcionesDO {
 	private int Modo;
 	private int Notificaciones;
 	private int Fuente;
-	private int Diseño;
+	private int Diseno;
 	private int Ususario_idUsuario;
 	
 	public OpcionesDO() {
@@ -15,7 +15,7 @@ public class OpcionesDO {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public OpcionesDO(int idOpciones, int idioma, int modo, int notificaciones, int fuente, int diseño,
+	public OpcionesDO(int idOpciones, int idioma, int modo, int notificaciones, int fuente, int diseno,
 			int ususario_idUsuario) {
 		super();
 		this.idOpciones = idOpciones;
@@ -23,7 +23,7 @@ public class OpcionesDO {
 		Modo = modo;
 		Notificaciones = notificaciones;
 		Fuente = fuente;
-		Diseño = diseño;
+		Diseno = diseno;
 		Ususario_idUsuario = ususario_idUsuario;
 	}
 	
@@ -57,11 +57,11 @@ public class OpcionesDO {
 	public void setFuente(int fuente) {
 		Fuente = fuente;
 	}
-	public int getDiseño() {
-		return Diseño;
+	public int getDiseno() {
+		return Diseno;
 	}
-	public void setDiseño(int diseño) {
-		Diseño = diseño;
+	public void setDiseno(int diseno) {
+		Diseno = diseno;
 	}
 	public int getUsusario_idUsuario() {
 		return Ususario_idUsuario;
@@ -73,7 +73,7 @@ public class OpcionesDO {
 	@Override
 	public String toString() {
 		return "OpcionesDO [idOpciones=" + idOpciones + ", Idioma=" + Idioma + ", Modo=" + Modo + ", Notificaciones="
-				+ Notificaciones + ", Fuente=" + Fuente + ", Diseño=" + Diseño + ", Ususario_idUsuario="
+				+ Notificaciones + ", Fuente=" + Fuente + ", Diseño=" + Diseno + ", Ususario_idUsuario="
 				+ Ususario_idUsuario + "]";
 	}
 

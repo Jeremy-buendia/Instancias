@@ -37,7 +37,7 @@ public class LoginController {
 	public TextField ICorreo;
 
 	@FXML
-	public PasswordField IContraseña;
+	public PasswordField Icontrasena;
 
 	@FXML
 	public Button BttnIniciar;
@@ -46,7 +46,11 @@ public class LoginController {
 
 	private Scene registerScene;
 
-	// Método para establecer la referencia a la ventana
+	/**
+	 * Método para establecer la referencia a la ventana
+	 * 
+	 * @param ventanaActual
+	 */
 	public void setVentanaActual(Stage ventanaActual) {
 		this.ventanaActual = ventanaActual;
 	}
@@ -55,7 +59,7 @@ public class LoginController {
 	public void enviarFormulario(ActionEvent event) {
 		// Obtener los valores del correo y la contraseña introducidos por el usuario
 		String correoText = ICorreo.getText();
-		String contraseñaText = IContraseña.getText();
+		String contrasenaText = Icontrasena.getText();
 		Connection con = UtilsBD.conectarBD();
 
 		if (UsuarioDAO.cargarCorreo(con, ICorreo.getText()) != null) {
@@ -63,11 +67,11 @@ public class LoginController {
 			NotificacionesDAO.insertarNotificaciones(con);
 			System.out.println(NotificacionesDAO.getNotificaciones(con, 1));
 			// Verificar la contraseña
-			boolean contraseñaCorrecta = UsuarioDAO.verificarContraseña(con, correoText, contraseñaText);
+			boolean contrasenaCorrecta = UsuarioDAO.verificarContrasena(con, correoText, contrasenaText);
 
 			// Si la contraseña es correcta, abrir la siguiente ventana (puedes cambiar esto
 			// según tu lógica)
-			if (contraseñaCorrecta) {
+			if (contrasenaCorrecta) {
 				System.out.println("Contraseña correcta. Abriendo siguiente ventana...");
 				NotificacionesDAO.mostrarNotificacion(NotificacionesDAO.getNotificaciones(con, 1).getMensaje());
 				cargarCalendario = true;

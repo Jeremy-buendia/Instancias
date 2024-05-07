@@ -14,12 +14,14 @@ public class PanelCategoria extends VBox {
 	Button btnCrearCat;
 	Button btnAsignar;
 
+	/**
+	 * Constructor de PanelCategoria
+	 */
 	PanelCategoria() {
 		Connection con = UtilsBD.conectarBD();
-		
-	 
+
 		chbCategorias = new ChoiceBox();
-		   CategoriaDAO.cargarCategoriasEnChoiceBox(con, chbCategorias);
+		CategoriaDAO.cargarCategoriasEnChoiceBox(con, chbCategorias);
 		btnCrearCat = new Button("Crear Categoria");
 		btnAsignar = new Button("Asignar");
 

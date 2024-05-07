@@ -10,6 +10,13 @@ import javafx.scene.control.ChoiceBox;
 
 public class CategoriaDAO {
 
+	/**
+	 * Función que inserta una categoria en la BD
+	 * 
+	 * @param con
+	 * @param nombreCat
+	 * @return 0 o -1
+	 */
 	public static int crearCategoria(Connection con, String nombreCat) {
 		try {
 
@@ -27,6 +34,13 @@ public class CategoriaDAO {
 
 	}
 
+	/**
+	 * Función que asigna una categoria en la BD
+	 * 
+	 * @param con
+	 * @param categoria
+	 * @return 0 o -1
+	 */
 	public static int asignarCategoria(Connection con, CategoriaDO categoria) {
 		try {
 
@@ -78,7 +92,14 @@ public class CategoriaDAO {
 		}
 	}
 
-	// Método para añadir una categoría a una imagen
+	/**
+	 * Método para añadir una categoría a una imagen en la BD
+	 * 
+	 * @param con
+	 * @param idCategoria
+	 * @param idImagen
+	 * @param idUsuario
+	 */
 	public static void agregarCategoriaAImagen(Connection con, int idCategoria, int idImagen, int idUsuario) {
 		PreparedStatement pstmt;
 		try {
@@ -110,6 +131,12 @@ public class CategoriaDAO {
 //		}
 	}
 
+	/**
+	 * Función que muestra las categorías de la BD
+	 * 
+	 * @param con
+	 * @return ArrayList con rutas o null
+	 */
 	public static ArrayList<String> MostrarCategoria(Connection con) {
 		ArrayList<String> nombresCategorias = new ArrayList<>();
 		String query = "SELECT Nombre_Categoria FROM categoria";
@@ -128,6 +155,13 @@ public class CategoriaDAO {
 		return nombresCategorias;
 	}
 
+	/**
+	 * Función que consigue una categoria de la BD
+	 * 
+	 * @param con
+	 * @param nombre
+	 * @return CategoriaDO o null
+	 */
 	public static CategoriaDO getCategoria(Connection con, String nombre) {
 		String query = "SELECT * FROM categoria WHERE Nombre_Categoria = ?";
 
@@ -152,6 +186,13 @@ public class CategoriaDAO {
 		}
 	}
 
+	/**
+	 * Función que consigue las categorias de la BD
+	 * 
+	 * @param con
+	 * @param idUsuario
+	 * @return ArrayList de CategoriaDO o null
+	 */
 	public static ArrayList<CategoriaDO> getCategorias(Connection con, int idUsuario) {
 		ArrayList<CategoriaDO> categorias = new ArrayList<>();
 
@@ -180,6 +221,12 @@ public class CategoriaDAO {
 		}
 	}
 
+	/**
+	 * Función que inserta las categorias en el ChoiceBox
+	 * 
+	 * @param con
+	 * @param choiceBox
+	 */
 	public static void cargarCategoriasEnChoiceBox(Connection con, ChoiceBox<String> choiceBox) {
 		ArrayList<String> nombresCategorias = MostrarCategoria(con);
 		if (nombresCategorias != null) {

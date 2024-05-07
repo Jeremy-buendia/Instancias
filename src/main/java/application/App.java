@@ -1,5 +1,6 @@
 package application;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -187,7 +188,7 @@ public class App extends Application {
 			stage1.setHeight(nuevoAlto);
 		});
 
-		MenuItem iDiseño = new MenuItem("Diseño");
+		MenuItem iDiseno = new MenuItem("Diseño");
 
 		// Menú mAyuda
 		Menu mAyuda = new Menu("Ayuda");
@@ -242,18 +243,35 @@ public class App extends Application {
 		MenuItem iInstancias = new MenuItem("Instancias");
 
 		iInstancias.setOnAction(e -> {
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setTitle("Gracias");
-			alert.setHeaderText(null);
+			VBox panel = new VBox();
+			Stage ventanaEmergente = new Stage();
+
+//			Alert alert = new Alert(AlertType.INFORMATION);
+//			alert.setTitle("Gracias");
+//			alert.setHeaderText(null);
+
+			Button javadoc = new Button("Accede al javadoc");
+
+			javadoc.setOnAction(e2 -> {
+				abrirHTML();
+			});
+
+			Scene escena = new Scene(panel, 300, 300);
+			ventanaEmergente.setResizable(false);
+
+			ventanaEmergente.setScene(escena);
+			ventanaEmergente.setTitle("Imagen");
+			ventanaEmergente.show();
 
 			try {
 				String asciiArt = FigletFont.convertOneLine("Instancias");
-				alert.setContentText(asciiArt);
+				Label texto = new Label(asciiArt);
+
+				panel.getChildren().addAll(texto, javadoc);
 			} catch (Exception e2) {
 
 			}
 
-			alert.showAndWait();
 		});
 
 		// Añadimos los MenuItems y los subemnús a los menús
@@ -264,7 +282,7 @@ public class App extends Application {
 
 		mOpcSesion.getItems().addAll(iCerrarSesion, iCambiarSesion);
 		mIdioma.getItems().addAll(iEspanol, iIngles);
-		mApariencia.getItems().addAll(iModo, iFuente, iDiseño);
+		mApariencia.getItems().addAll(iModo, iFuente, iDiseno);
 		mAcercaDe.getItems().addAll(iVersion, iNosotros, iActualizaciones, iInstancias);
 
 		// Agregamos los menús al MenuBar
@@ -343,7 +361,7 @@ public class App extends Application {
 				// Crea un nuevo label
 				Label labelModo = new Label("Modo");
 				Label labelFuente = new Label("Fuente");
-				Label labelDiseño = new Label("Diseño");
+				Label labelDiseno = new Label("Diseño");
 				Label labelIdioma = new Label("Idioma");
 				Label labelNotificaciones = new Label("Notificaciones");
 				Label labelApariencia = new Label("Apariencia");
@@ -371,7 +389,7 @@ public class App extends Application {
 					// Cambia a 12 el tamaño de fuente original que desees
 					labelModo.setFont(new Font("System", 12));
 					labelFuente.setFont(new Font("System", 12));
-					labelDiseño.setFont(new Font("System", 12));
+					labelDiseno.setFont(new Font("System", 12));
 					labelIdioma.setFont(new Font("System", 12));
 					labelNotificaciones.setFont(new Font("System", 12));
 					labelApariencia.setFont(new Font("System", 12));
@@ -394,7 +412,7 @@ public class App extends Application {
 					// Cambia el color a negro de la fuente original que desees
 					labelModo.setTextFill(Color.BLACK);
 					labelFuente.setTextFill(Color.BLACK);
-					labelDiseño.setTextFill(Color.BLACK);
+					labelDiseno.setTextFill(Color.BLACK);
 					labelIdioma.setTextFill(Color.BLACK);
 					labelNotificaciones.setTextFill(Color.BLACK);
 					labelApariencia.setTextFill(Color.BLACK);
@@ -421,7 +439,7 @@ public class App extends Application {
 					// Cambia a 20 el tamaño de fuente ampliado que desees
 					labelModo.setText("Way");
 					labelFuente.setText("Fountain");
-					labelDiseño.setText("Design");
+					labelDiseno.setText("Design");
 					labelIdioma.setText("Language");
 					labelNotificaciones.setText("Notifications");
 					labelApariencia.setText("Appearance");
@@ -444,7 +462,7 @@ public class App extends Application {
 					// Cambia el color a negro de la fuente original que desees
 					labelModo.setTextFill(Color.BLACK);
 					labelFuente.setTextFill(Color.BLACK);
-					labelDiseño.setTextFill(Color.BLACK);
+					labelDiseno.setTextFill(Color.BLACK);
 					labelIdioma.setTextFill(Color.BLACK);
 					labelNotificaciones.setTextFill(Color.BLACK);
 					labelApariencia.setTextFill(Color.BLACK);
@@ -470,7 +488,7 @@ public class App extends Application {
 				// Elimina el texto del CheckMenuItem
 				iModo.setText("");
 				iFuente.setText("");
-				iDiseño.setText("");
+				iDiseno.setText("");
 				mIdioma.setText("");
 				iNotificaciones.setText("");
 				mApariencia.setText("");
@@ -493,7 +511,7 @@ public class App extends Application {
 				// Establece el label como el gráfico del CheckMenuItem
 				iModo.setGraphic(labelModo);
 				iFuente.setGraphic(labelFuente);
-				iDiseño.setGraphic(labelDiseño);
+				iDiseno.setGraphic(labelDiseno);
 				mIdioma.setGraphic(labelIdioma);
 				iNotificaciones.setGraphic(labelNotificaciones);
 				mApariencia.setGraphic(labelApariencia);
@@ -535,7 +553,7 @@ public class App extends Application {
 				// Crea un nuevo label
 				Label labelModo = new Label("Modo");
 				Label labelFuente = new Label("Fuente");
-				Label labelDiseño = new Label("Diseño");
+				Label labelDiseno = new Label("Diseño");
 				Label labelIdioma = new Label("Idioma");
 				Label labelNotificaciones = new Label("Notificaciones");
 				Label labelApariencia = new Label("Apariencia");
@@ -563,7 +581,7 @@ public class App extends Application {
 					// Cambia a 12 el tamaño de fuente original que desees
 					labelModo.setFont(new Font("System", 12));
 					labelFuente.setFont(new Font("System", 12));
-					labelDiseño.setFont(new Font("System", 12));
+					labelDiseno.setFont(new Font("System", 12));
 					labelIdioma.setFont(new Font("System", 12));
 					labelNotificaciones.setFont(new Font("System", 12));
 					labelApariencia.setFont(new Font("System", 12));
@@ -586,7 +604,7 @@ public class App extends Application {
 					// Cambia el color a negro de la fuente original que desees
 					labelModo.setTextFill(Color.BLACK);
 					labelFuente.setTextFill(Color.BLACK);
-					labelDiseño.setTextFill(Color.BLACK);
+					labelDiseno.setTextFill(Color.BLACK);
 					labelIdioma.setTextFill(Color.BLACK);
 					labelNotificaciones.setTextFill(Color.BLACK);
 					labelApariencia.setTextFill(Color.BLACK);
@@ -613,7 +631,7 @@ public class App extends Application {
 					// Cambia a 20 el tamaño de fuente ampliado que desees
 					labelModo.setFont(new Font("System", 20));
 					labelFuente.setFont(new Font("System", 20));
-					labelDiseño.setFont(new Font("System", 20));
+					labelDiseno.setFont(new Font("System", 20));
 					labelIdioma.setFont(new Font("System", 20));
 					labelNotificaciones.setFont(new Font("System", 20));
 					labelApariencia.setFont(new Font("System", 20));
@@ -636,7 +654,7 @@ public class App extends Application {
 					// Cambia el color a negro de la fuente original que desees
 					labelModo.setTextFill(Color.BLACK);
 					labelFuente.setTextFill(Color.BLACK);
-					labelDiseño.setTextFill(Color.BLACK);
+					labelDiseno.setTextFill(Color.BLACK);
 					labelIdioma.setTextFill(Color.BLACK);
 					labelNotificaciones.setTextFill(Color.BLACK);
 					labelApariencia.setTextFill(Color.BLACK);
@@ -662,7 +680,7 @@ public class App extends Application {
 				// Elimina el texto del CheckMenuItem
 				iModo.setText("");
 				iFuente.setText("");
-				iDiseño.setText("");
+				iDiseno.setText("");
 				mIdioma.setText("");
 				iNotificaciones.setText("");
 				mApariencia.setText("");
@@ -685,7 +703,7 @@ public class App extends Application {
 				// Establece el label como el gráfico del CheckMenuItem
 				iModo.setGraphic(labelModo);
 				iFuente.setGraphic(labelFuente);
-				iDiseño.setGraphic(labelDiseño);
+				iDiseno.setGraphic(labelDiseno);
 				mIdioma.setGraphic(labelIdioma);
 				iNotificaciones.setGraphic(labelNotificaciones);
 				mApariencia.setGraphic(labelApariencia);
@@ -1319,6 +1337,16 @@ public class App extends Application {
 
 	}
 
+	/**
+	 * Función que carga la visualización del calendario, llamando también a la
+	 * clase de los botones de cada día
+	 * 
+	 * @param con
+	 * @param mesAnterior
+	 * @param mesPosterior
+	 * @param pnlDistribucion
+	 * @param stage
+	 */
 	public static void visualizarCalendario(Connection con, Button mesAnterior, Button mesPosterior,
 			BorderPane pnlDistribucion, Stage stage) {
 		LocalDate fechaActual = LocalDate.now();
@@ -1368,18 +1396,28 @@ public class App extends Application {
 		}
 	}
 
+	/**
+	 * Función que cierra la aplicación
+	 * 
+	 * @param stage
+	 */
 	public void cerrarSesion(Stage stage) {
 		stage.close();
 
 	}
 
+	/**
+	 * Función que abre el panel para cambiar la contraseña
+	 * 
+	 * @param primaryStage
+	 */
 	public static void cambiarContrasena(Stage primaryStage) {
 		Connection con = UtilsBD.conectarBD();
 		// Crear los elementos de la ventana modal
-		Label lblNuevaContraseña = new Label("Nueva Contraseña:");
-		Label lblConfirmarContraseña = new Label("Confirmar Contraseña:");
-		PasswordField txtNuevaContraseña = new PasswordField();
-		PasswordField txtConfirmarContraseña = new PasswordField();
+		Label lblNuevaContrasena = new Label("Nueva Contraseña:");
+		Label lblConfirmarContrasena = new Label("Confirmar Contraseña:");
+		PasswordField txtNuevaContrasena = new PasswordField();
+		PasswordField txtConfirmarContrasena = new PasswordField();
 		Button btnConfirmar = new Button("Confirmar");
 		Button btnCerrar = new Button("Cerrar");
 
@@ -1389,10 +1427,10 @@ public class App extends Application {
 		grid.setVgap(10);
 		grid.setPadding(new Insets(10));
 
-		grid.add(lblNuevaContraseña, 0, 0);
-		grid.add(txtNuevaContraseña, 1, 0);
-		grid.add(lblConfirmarContraseña, 0, 1);
-		grid.add(txtConfirmarContraseña, 1, 1);
+		grid.add(lblNuevaContrasena, 0, 0);
+		grid.add(txtNuevaContrasena, 1, 0);
+		grid.add(lblConfirmarContrasena, 0, 1);
+		grid.add(txtConfirmarContrasena, 1, 1);
 
 		HBox buttons = new HBox(10);
 		buttons.getChildren().addAll(btnConfirmar, btnCerrar);
@@ -1410,13 +1448,13 @@ public class App extends Application {
 
 		// Configurar acción para el botón Confirmar
 		btnConfirmar.setOnAction(e -> {
-			String nuevaContraseña = txtNuevaContraseña.getText();
-			String confirmarContraseña = txtConfirmarContraseña.getText();
+			String nuevaContrasena = txtNuevaContrasena.getText();
+			String confirmarContrasena = txtConfirmarContrasena.getText();
 			// Aquí puedes realizar la validación de las contraseñas y realizar acciones
 			// correspondientes
 			// Por ejemplo, cerrar la ventana si las contraseñas coinciden
-			if (nuevaContraseña.equals(confirmarContraseña)) {
-				UsuarioDAO.actualizarContraseña(con, LoginController.correoUsuario, confirmarContraseña);
+			if (nuevaContrasena.equals(confirmarContrasena)) {
+				UsuarioDAO.actualizarContrasena(con, LoginController.correoUsuario, confirmarContrasena);
 				stage.close(); // Cerrar la ventana modal
 			} else {
 				// Mostrar un mensaje de error o realizar otras acciones si las contraseñas no
@@ -1432,6 +1470,11 @@ public class App extends Application {
 		stage.showAndWait();
 	}
 
+	/**
+	 * Función que abre el panel para cambiar correo
+	 * 
+	 * @param primaryStage
+	 */
 	public static void cambiarCorreo(Stage primaryStage) {
 		Connection con = UtilsBD.conectarBD();
 		// Crear los elementos de la ventana modal
@@ -1491,6 +1534,9 @@ public class App extends Application {
 		stage.showAndWait();
 	}
 
+	/**
+	 * Función que abre la cámara desde el cmd
+	 */
 	public static void abrirCamara() {
 		Connection con = UtilsBD.conectarBD();
 
@@ -1503,6 +1549,9 @@ public class App extends Application {
 		}
 	}
 
+	/**
+	 * Función que cierra la cámara desde el cmd
+	 */
 	public static void cerrarCamara() {
 		try {
 			ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", "taskkill /F /IM WindowsCamera.exe");
@@ -1512,6 +1561,12 @@ public class App extends Application {
 		}
 	}
 
+	/**
+	 * Función que monitoriza la carpeta de las imágenes de la cámara para copiarlas
+	 * 
+	 * @param con
+	 * @param stage
+	 */
 	public static void monitoreoDeCarpeta(Connection con, Stage stage) {
 		Path rutaOrigen = Paths.get(System.getProperty("user.home") + "/Pictures/Screenshots/Camera Roll");
 		Path rutaDestino = Paths.get(System.getProperty("user.home") + "\\Pictures\\Instancias\\"
@@ -1546,10 +1601,10 @@ public class App extends Application {
 							try {
 								Path rutaFile = rutaOrigen.resolve(nombreArchivo);
 
-								long tamañoArchivo = Files.size(rutaFile);
-								System.out.println(tamañoArchivo);
+								long tamanoArchivo = Files.size(rutaFile);
+								System.out.println(tamanoArchivo);
 
-								if (tamañoArchivo > 1) {
+								if (tamanoArchivo > 1) {
 									if (nombreArchivo.toString().endsWith(".jpg")) {
 										String rutaArchivo = rutaOrigen.resolve(nombreArchivo).toString();
 
@@ -1594,6 +1649,15 @@ public class App extends Application {
 			exp.printStackTrace();
 		}
 
+	}
+
+	private void abrirHTML() {
+		try {
+			File file = new File("doc/index.html"); // Ruta a tu archivo HTML
+			Desktop.getDesktop().browse(file.toURI());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {
