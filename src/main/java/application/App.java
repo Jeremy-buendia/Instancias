@@ -1638,7 +1638,8 @@ public class App extends Application {
 						cerrarCamara();
 					}
 				} catch (Exception exp) {
-					exp.printStackTrace();
+					NotificacionesDAO.mostrarNotificacion(NotificacionesDAO.getNotificaciones(con, 7).getMensaje());
+					// exp.printStackTrace();
 				}
 			});
 
